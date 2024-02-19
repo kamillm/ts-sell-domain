@@ -1,0 +1,39 @@
+{
+  "name": "zns-connect-dapp",
+  "version": "0.1.0",
+  "private": true,
+  "author": "ZNS Connect Team <team@znsconnect.io>",
+  "homepage": "https://znsconnect.io",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "static": "npx serve@latest out",
+    "lint": "next lint --fix",
+    "prepare": "husky install"
+  },
+  "dependencies": {
+    "next": "14.1.0",
+    "react": "^18",
+    "react-dom": "^18",
+    "react-icons": "^5.0.1",
+    "sharp": "^0.33.2"
+  },
+  "devDependencies": {
+    "@types/node": "^20",
+    "@types/react": "^18",
+    "@types/react-dom": "^18",
+    "autoprefixer": "^10.0.1",
+    "eslint": "^8",
+    "eslint-config-next": "14.1.0",
+    "husky": "^9.0.11",
+    "lint-staged": "^15.2.2",
+    "postcss": "^8",
+    "prettier": "^3.2.5",
+    "tailwindcss": "^3.3.0",
+    "typescript": "^5"
+  },
+  "lint-staged": {
+    "*/**/*.{jsx?,tsx?}": "npm run lint"
+  }
+}

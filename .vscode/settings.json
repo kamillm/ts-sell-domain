@@ -1,0 +1,13 @@
+{
+  "cSpell.words": ["znsconnect", "domain", "name service"],
+  "search.exclude": {
+    "**/.yarn": true,
+    "**/.pnp.*": true
+  },
+  "workbench.colorCustomizations": {
+    "titleBar.activeBackground": "#CAFC0190",
+    "titleBar.inactiveBackground": "#CAFC0190",
+    "titleBar.activeForeground": "#FFFFFF",
+    "titleBar.inactiveForeground": "#FFFFFF"
+  }
+}
