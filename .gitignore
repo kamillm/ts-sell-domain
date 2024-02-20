@@ -9,6 +9,9 @@
 # testing
 /coverage
 
+# cache
+.eslintcache
+
 # next.js
 /.next/
 /out/

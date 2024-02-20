@@ -4,6 +4,8 @@
     "**/.yarn": true,
     "**/.pnp.*": true
   },
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.formatOnSave": true,
   "workbench.colorCustomizations": {
     "titleBar.activeBackground": "#CAFC0190",
     "titleBar.inactiveBackground": "#CAFC0190",

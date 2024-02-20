@@ -1,4 +1,4 @@
-import { CSSProperties, PropsWithChildren } from "react";
+import { CSSProperties, MouseEventHandler, PropsWithChildren, TouchEventHandler } from "react";
 import { ImageLoader, StaticImageData } from "next/image";
 
 import { UrlObject } from "url";
@@ -20,9 +20,9 @@ export interface LinkProps extends ComponentProps {
   prefetch?: boolean;
   locale?: string | false;
   legacyBehavior?: boolean;
-  onMouseEnter?: React.MouseEventHandler<HTMLAnchorElement>;
-  onTouchStart?: React.TouchEventHandler<HTMLAnchorElement>;
-  onClick?: React.MouseEventHandler<HTMLAnchorElement>;
+  onMouseEnter?: MouseEventHandler<HTMLAnchorElement>;
+  onTouchStart?: TouchEventHandler<HTMLAnchorElement>;
+  onClick?: MouseEventHandler<HTMLAnchorElement>;
 }
 
 export interface ImageProps extends ExtraTWClassProps {
@@ -40,5 +40,5 @@ export interface ImageProps extends ExtraTWClassProps {
   unoptimized?: boolean | undefined;
   sizes?: string;
   style?: CSSProperties | undefined;
-  onClick?: React.MouseEventHandler<HTMLImageElement>;
+  onClick?: MouseEventHandler<HTMLImageElement>;
 }

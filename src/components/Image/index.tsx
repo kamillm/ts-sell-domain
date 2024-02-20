@@ -44,19 +44,9 @@ export default function Image({
       {...blurProperty}
       onLoad={() => setLoading(false)}
       onClick={onClick}
-      className={`${
-        isLoading ? "blur-sm" : "blur-0"
-      } duration-100 ease-in max-w-full h-auto ${className}`}
+      className={`${isLoading ? "blur-sm" : "blur-0"} duration-100 ease-in max-w-full h-auto ${className}`}
     />
   ) : (
-    <NextImage
-      src={src}
-      alt={alt}
-      placeholder="blur"
-      quality={100}
-      fill
-      sizes="100vw"
-      style={{ objectFit: "cover" }}
-    />
+    <NextImage src={src} alt={alt} placeholder="blur" quality={100} fill sizes="100vw" style={{ objectFit: "cover" }} />
   );
 }
