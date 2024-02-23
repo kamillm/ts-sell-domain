@@ -1,3 +1,68 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.bage_type_slider .swiper {
+  width: 100%;
+  height: 100%;
+}
+.bage_type_slider .swiper-wrapper {
+  padding-bottom: 50px;
+}
+
+.bage_type_slider .swiper-slide {
+  display: flex;
+  justify-content: center;
+  align-items: start;
+}
+
+.bage_type_slider .swiper-pagination {
+  bottom: -5px !important;
+}
+
+.bage_type_slider .swiper-pagination-bullet {
+  background: #cafc01;
+}
+
+.bage_type_slider .swiper-pagination-bullet-active {
+  background: #cafc01;
+  width: 10px;
+  height: 10px;
+}
+
+.card_effect_swiper .swiper-slide-visible {
+  padding: 10px;
+}
+.card_effect_swiper .swiper-slide {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.overflow_effect_swiper .swiper-slide {
+  width: 300px;
+  @media (max-width: 768px) {
+    width: 250px;
+  }
+}
+
+.badge_effect_swiper .swiper-wrapper {
+  right: -23%;
+  @media (max-width: 1024px) {
+    right: -33%;
+  }
+  @media (max-width: 768px) {
+    right: -30%;
+  }
+  @media (max-width: 520px) {
+    right: -22%;
+  }
+  @media (max-width: 430px) {
+    right: -17%;
+  }
+}
+
+.MuiAutocomplete-paper {
+  margin-top: 10px;
+  border-radius: 20px;
+}

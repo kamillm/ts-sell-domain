@@ -1,18 +1,18 @@
 import type { Config } from "tailwindcss";
+import defaultTheme from "tailwindcss/defaultTheme";
 
 const config: Config = {
   content: ["./src/**/*.{js,ts,jsx,tsx,mdx}"],
   theme: {
     screens: {
-      1920: { max: "1920px" },
-      1440: { max: "1440px" },
-      1280: { max: "1280px" },
-      1024: { max: "1024px" },
-      768: { max: "768px" },
-      640: { max: "640px" },
-      430: { max: "430px" },
-      375: { max: "375px" },
-      320: { max: "320px" }
+      tv: { max: "1920px" },
+      mac: { max: "1440px" },
+      desktop: { max: "1280px" },
+      laptop: { max: "1024px" },
+      tablet: { max: "768px" },
+      small: { max: "640px" },
+      mobile: { max: "430px" },
+      final: { max: "375px" }
     },
     extend: {
       colors: {
@@ -28,6 +28,7 @@ const config: Config = {
           100: "#1B1B1B",
           200: "#2B2B2B",
           300: "#3B3B3B",
+          400: "#CCCCCC",
           900: "#858585 "
         },
         white: {
@@ -55,6 +56,11 @@ const config: Config = {
           DEFAULT: "#000000"
         }
       },
+      fontFamily: {
+        poppins: ["var(--font-poppins)", ...defaultTheme.fontFamily.sans],
+        space_mono: ["var(--font-space-mono)", ...defaultTheme.fontFamily.sans],
+        space_grotesk: ["var(--font-space-grotesk)", ...defaultTheme.fontFamily.sans]
+      },
       fontWeight: {
         100: "100",
         200: "200",
@@ -68,7 +74,16 @@ const config: Config = {
       },
       backgroundImage: {
         primary_gradient_tab: "linear-gradient(101deg, #FCC501 -5.36%, #ABFF68 81.92%)",
-        primary_gradient_text: "linear-gradient(97deg, #FCC501 8.85%, #ABFF68 97.33%)"
+        primary_gradient_text: "linear-gradient(97deg, #FCC501 8.85%, #ABFF68 97.33%)",
+
+        primary_gradient_button:
+          "linear-gradient(274deg, #000 20.77%, rgba(120, 120, 120, 0.53) 99.65%, rgba(255, 255, 255, 0.00) 100.9%)",
+        primary_gradient_mask:
+          "linear-gradient(266deg, #000 9.07%, rgba(104, 104, 104, 0.16) 61.8%, rgba(255, 255, 255, 0.00) 87.59%)",
+        decoration: "url('/img/bg-decoration.png')"
+      },
+      borderRadius: {
+        full: "99px"
       }
     }
   },

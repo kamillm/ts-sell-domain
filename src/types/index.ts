@@ -9,6 +9,35 @@ export interface ExtraTWClassProps {
 
 export type ComponentProps = PropsWithChildren<ExtraTWClassProps>;
 
+export interface ButtonProps extends ComponentProps {
+  hover?: MouseEventHandler<HTMLButtonElement | HTMLDivElement>;
+  action?: MouseEventHandler<HTMLButtonElement | HTMLDivElement>;
+  outline?: boolean;
+  disabled?: boolean;
+  isLoading?: boolean;
+  type?: "button" | "reset" | "submit";
+}
+
+export interface FlexProps extends ComponentProps {
+  id?: string;
+  direction?: "flex-row" | "flex-row-reverse" | "flex-col" | "flex-col-reverse";
+  align?: "items-start" | "items-end" | "items-center" | "items-baseline" | "items-stretch";
+  justifyContent?:
+    | "justify-normal"
+    | "justify-start"
+    | "justify-end"
+    | "justify-center"
+    | "justify-between"
+    | "justify-around"
+    | "justify-evenly"
+    | "justify-stretch";
+}
+
+export interface GridProps extends ComponentProps {
+  rows?: "grid-rows-1" | "grid-rows-2" | "grid-rows-3" | "grid-rows-4" | "grid-rows-5";
+  cols?: "grid-cols-1" | "grid-cols-2" | "grid-cols-3" | "grid-cols-4" | "grid-cols-5";
+}
+
 export interface LinkProps extends ComponentProps {
   external?: boolean;
   href: string;

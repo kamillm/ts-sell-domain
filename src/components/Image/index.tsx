@@ -20,7 +20,7 @@ export default function Image({
   sizes = "",
   priority = false,
   onClick,
-  className = "",
+  className = ""
 }: ImageProps) {
   const [isLoading, setLoading] = useState(true);
 

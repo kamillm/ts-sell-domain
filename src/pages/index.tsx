@@ -1,7 +1,27 @@
-import { Inter } from "next/font/google";
+import type { NextPage } from "next";
 
-const inter = Inter({ subsets: ["latin"] });
+import {
+  HeroView,
+  IdentifyView,
+  BadgesView,
+  MultiChainView,
+  HowItWorksView,
+  PersonalizedView,
+  UtilityView
+} from "@/views/home";
 
-export default function Home() {
-  return <div className={`${inter.className}`}></div>;
-}
+const Home: NextPage = () => {
+  return (
+    <>
+      <HeroView />
+      <IdentifyView />
+      <BadgesView />
+      <MultiChainView />
+      <HowItWorksView />
+      <PersonalizedView />
+      <UtilityView />
+    </>
+  );
+};
+
+export default Home;

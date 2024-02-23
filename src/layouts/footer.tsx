@@ -1,0 +1,90 @@
+import React from "react";
+
+import { Flex, Image, Link } from "@/components";
+import { MEDIA_LIST, MENU_LIST, SOCIAL_LIST } from "@/utils/constants";
+import { Container } from "@/components";
+
+export default function Footer() {
+  return (
+    <Container>
+      <Flex justifyContent="justify-between" className="laptop:flex-col laptop:space-y-[103px]">
+        {/* ZNC Connect */}
+        <Flex direction="flex-col" className="space-y-8">
+          <Flex align="items-center" className="space-x-4">
+            <Image src="/img/zns-logo.png" alt="ZNS logo" width={44} height={44} />
+            <p className="text-[24px] font-700 desktop:text-[20px]">ZNS Connect</p>
+          </Flex>
+          <p className="max-w-[267px] text-[18px] font-400 text-main-400 desktop:text-[14px]">
+            Empowering Web3 Identity, One Domain at a Time.
+          </p>
+          <p className="text-[18px] font-400 text-main-400 desktop:text-[14px]">Join our community</p>
+
+          <Flex direction="flex-row" className="space-x-4">
+            {SOCIAL_LIST.map((item, index) => (
+              <Link key={`social_link_${index}`} href={item.link} className="cursor-pointer">
+                {<item.icon className="w-10 h-10 text-dark desktop:w-8" />}
+              </Link>
+            ))}
+          </Flex>
+        </Flex>
+        {/* Explore & Media */}
+        <Flex className="space-x-32 desktop:space-x-8">
+          {/* Explore */}
+          <Flex align="items-start" direction="flex-col" className="space-y-8">
+            <p className="font-space_mono text-[24px] font-700 desktop:text-[20px]">Explore</p>
+            <Flex direction="flex-col" className="space-y-6 text-[18px] font-400 desktop:text-[14px]">
+              {MENU_LIST.map((menu, index) => (
+                <Link
+                  key={`navbar_menu_${index}`}
+                  href={menu.link}
+                  className={"text-main-400 hover:underline cursor-pointer"}
+                >
+                  {menu.name}
+                </Link>
+              ))}
+            </Flex>
+          </Flex>
+          {/* Media  */}
+          <Flex align="items-start" direction="flex-col" className="space-y-8">
+            <p className="font-space_mono text-[24px] font-700 desktop:text-[20px]">Media</p>
+            <Flex direction="flex-col" className="space-y-6 text-[18px] font-400 desktop:text-[14px]">
+              {MEDIA_LIST.map((menu, index) => (
+                <Link
+                  key={`navbar_menu_${index}`}
+                  href={menu.link}
+                  className={"text-main-400 hover:underline cursor-pointer"}
+                >
+                  {menu.name}
+                </Link>
+              ))}
+            </Flex>
+          </Flex>
+        </Flex>
+
+        {/* Join our weekly digest */}
+        <Flex align="items-start" direction="flex-col" className="space-y-8">
+          <p className="font-space_mono text-[24px] font-700 desktop:text-[20px]">Join Our Weekly Digest</p>
+          <p className="text-[18px] font-400 text-main-400 desktop:text-[14px]">Weekly updates, no spams, guaranteed</p>
+
+          <div className="w-full laptop:max-w-[300px] relative h-[67px] desktop:h-[55px]">
+            <input
+              placeholder="Enter your email here"
+              className="w-full h-full px-6 py-4 text-[18px] font-400  text-black rounded-3xl border-none outline-none desktop:text-[14px]"
+            />
+
+            <button
+              type="submit"
+              className="absolute right-0 bg-primary h-full w-1/3 rounded-3xl text-center text-black font-600 text-[18px] desktop:text-[14px]"
+            >
+              Subscribe
+            </button>
+          </div>
+        </Flex>
+      </Flex>
+
+      <div className="py-[22.5px] border-t border-solid border-primary opacity-45 mt-[83px]">
+        <span className="text-[13.5px] font-400">Ⓒ ZNC Connect . All Rights Reserved.</span>
+      </div>
+    </Container>
+  );
+}

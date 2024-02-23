@@ -19,13 +19,26 @@
     "yarn": ">=1.22.0",
     "npm": "please-use-yarn"
   },
+  "browserslist": [
+    "chrome 64",
+    "edge 79",
+    "firefox 67",
+    "opera 51",
+    "safari 12"
+  ],
   "dependencies": {
+    "@emotion/react": "^11.11.3",
+    "@emotion/styled": "^11.11.0",
+    "@mui/material": "^5.15.10",
+    "@wojtekmaj/react-qr-svg": "^1.0.0",
+    "clsx": "^2.1.0",
     "framer-motion": "^11.0.5",
     "next": "14.1.0",
     "react": "^18",
     "react-dom": "^18",
     "react-icons": "^5.0.1",
-    "sharp": "^0.33.2"
+    "sharp": "^0.33.2",
+    "swiper": "^11.0.6"
   },
   "devDependencies": {
     "@types/node": "^20",
