@@ -12,6 +12,7 @@ import { Container, Flex, GradientText } from "@/components";
 import { DomainCard } from "@/components/Card";
 import { DOMAIN_CARD_LIST } from "@/utils/constants";
 import { List, Paper } from "@mui/material";
+
 import { fetchDomainDetails } from "@/utils/web3/lookup";
 import { useDomainDetails } from "@/utils/web3/useDomainDetails";
 // import { abi } from "../../../utils/web3/abi";
@@ -30,7 +31,7 @@ function HeroView() {
   const [domainStatus, setDomainStatus] = useState<boolean>(false);
   // const { domainData, domainQuery } = useDomainDetails(searchedDomain);
 
-  const timeoutId = useRef(null);
+  const timeoutId = useRef<undefined | ReturnType<typeof setTimeout>>(undefined);
   const options = [
     {
       title: searchedDomain,
@@ -61,16 +62,6 @@ function HeroView() {
       const domainData = await fetchDomainDetails(inputText);
       // queryClient.invalidateQueries({ queryKey: domainQuery });
 
-      // if (domainData) {
-      //   if (domainData.domainName === "") {
-      //     setDomainStatus(true);
-      //     console.log("Available");
-      //   } else {
-      //     setDomainStatus(false);
-      //     console.log("Not Available");
-      //   }
-      // }
-      // setDomainDetails(domainData);
       console.log(domainData);
 
       if (domainData?.domainName === "") {
