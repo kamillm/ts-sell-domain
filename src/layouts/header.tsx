@@ -8,6 +8,9 @@ import { useMenu } from "@/contexts";
 // icons
 import { MdOutlineSearch as Search, MdOutlineMenu as Menu } from "react-icons/md";
 
+// TODO: Add CSS for wallet operations
+import ConnectButton from "@/components/ConnectBtn/ConnectBtn";
+
 export default function Header() {
   const router = useRouter();
   const { setShowMenu, showMenu } = useMenu();
@@ -66,7 +69,10 @@ export default function Header() {
             <button className="hidden laptop:block" onClick={() => setShowMenu(true)}>
               <Menu className="w-[24px] h-[24px]" />
             </button>
-            <button className="w-[141px] h-10 text-black bg-primary rounded-full laptop:hidden">Connect</button>
+            {/* <button className="w-[141px] h-10 text-black bg-primary rounded-full laptop:hidden">
+              <ConnectButton />
+            </button> */}
+            <ConnectButton />
           </Flex>
         </Flex>
       </Container>
