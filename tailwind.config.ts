@@ -83,7 +83,7 @@ const config: Config = {
         decoration: "url('/img/bg-decoration.png')"
       },
       borderRadius: {
-        full: "99px"
+        full: "9999px"
       }
     }
   },

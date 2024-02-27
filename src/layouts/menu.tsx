@@ -1,5 +1,5 @@
 import React from "react";
-import { useMenu } from "@/contexts";
+import { useConnect, useMenu } from "@/contexts";
 import { Container, Flex, Link } from "@/components";
 import { MdOutlineSearch, MdCancel } from "react-icons/md";
 import { MENU_ICON_LIST, MENU_LIST } from "@/utils/constants";
@@ -8,6 +8,7 @@ import { useRouter } from "next/router";
 const Menu: React.FC = () => {
   const router = useRouter();
   const { showMenu, setShowMenu } = useMenu();
+  const { isConnect } = useConnect();
 
   const handleClose = () => setShowMenu(!showMenu);
 
@@ -48,12 +49,14 @@ const Menu: React.FC = () => {
                 {menu.name}
               </Link>
             ))}
-            <Link
-              href="#"
-              className={`animated-border hover:text-primary/50 text-[20px] mobile:text-[18px]  font-400" cursor-pointer`}
-            >
-              Connect
-            </Link>
+            {!isConnect && (
+              <Link
+                href="#"
+                className={`animated-border hover:text-primary/50 text-[20px] mobile:text-[18px]  font-400" cursor-pointer`}
+              >
+                Connect
+              </Link>
+            )}
           </Flex>
           <Flex className="space-x-5">
             {MENU_ICON_LIST.map((menu, index) => (

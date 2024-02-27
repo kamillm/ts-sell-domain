@@ -4,7 +4,7 @@ import { Flex, Image } from "..";
 import clsx from "clsx";
 import { GeneralCardProps } from "@/types/card";
 
-const GeneralCard: React.FC<GeneralCardProps> = ({ name, avatar, type, src, borderColor }) => {
+const GeneralCard: React.FC<GeneralCardProps> = ({ name, avatar, type, src, borderColor, tld }) => {
   return (
     <Flex
       direction="flex-col"
@@ -39,16 +39,21 @@ const GeneralCard: React.FC<GeneralCardProps> = ({ name, avatar, type, src, bord
       </div>
 
       <Flex className="font-space_grotesk" direction="flex-col" align="items-center">
-        <p className="font-500 text-[48px] bg-primary_gradient_text text-transparent bg-clip-text  tablet:text-[38px]">
+        <p
+          className={clsx(
+            "font-500 bg-primary_gradient_text text-transparent bg-clip-text  tablet:text-[38px]",
+            type === "card_1" ? " text-[40px]" : "text-[34px]"
+          )}
+        >
           {name}
         </p>
         <p className="font-700 text-[16px]">
           {type === "card_1" ? (
             <>
-              Followers <span className="text-primary">8001</span>
+              Followers <span className="text-primary">{tld}</span>
             </>
           ) : (
-            "Own 3 domains on ZNS"
+            <span>{tld}</span>
           )}
         </p>
       </Flex>

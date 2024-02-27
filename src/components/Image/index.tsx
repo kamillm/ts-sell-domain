@@ -47,6 +47,8 @@ export default function Image({
       className={`${isLoading ? "blur-sm" : "blur-0"} duration-100 ease-in max-w-full h-auto ${className}`}
     />
   ) : (
-    <NextImage src={src} alt={alt} placeholder="blur" quality={100} fill sizes="100vw" style={{ objectFit: "cover" }} />
+    <div className={`relative overflow-hidden ${className}`}>
+      <NextImage src={src} alt={alt} fill sizes="100vw" style={{ objectFit: "cover" }} />
+    </div>
   );
 }

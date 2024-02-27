@@ -4,13 +4,17 @@ import { useRouter } from "next/router";
 import { Flex, Image, Link } from "@/components";
 import { MENU_ICON_LIST, MENU_LIST } from "@/utils/constants";
 import { Container } from "@/components";
-import { useMenu } from "@/contexts";
+import { useConnect, useHambuger, useMenu } from "@/contexts";
 // icons
 import { MdOutlineSearch as Search, MdOutlineMenu as Menu } from "react-icons/md";
+import ProfileMenu from "./profilemenu";
+import { FaCircleUser as Profile } from "react-icons/fa6";
 
 export default function Header() {
   const router = useRouter();
-  const { setShowMenu, showMenu } = useMenu();
+  const { showMenu, setShowMenu } = useMenu();
+  const { isConnect, setConnect } = useConnect();
+  const { setHambuger } = useHambuger();
   const [unScrolled, setUnScrolled] = useState(true);
 
   useEffect(() => {
@@ -45,7 +49,7 @@ export default function Header() {
               </Link>
             ))}
           </Flex>
-          <Flex align="items-center" justifyContent="justify-between" className="space-x-4">
+          <Flex align="items-center" justifyContent="justify-between" className="space-x-7 desktop:space-x-3">
             <div className="relative border border-white-200 bg-black-400 rounded-full mobile:hidden">
               <input
                 placeholder="Search"
@@ -64,11 +68,23 @@ export default function Header() {
               ))}
             </Flex>
             <button className="hidden laptop:block" onClick={() => setShowMenu(true)}>
-              <Menu className="w-[24px] h-[24px]" />
+              <Menu className="w-6 h-6" />
             </button>
-            <button className="w-[141px] h-10 text-black bg-primary rounded-full laptop:hidden">Connect</button>
+            {!isConnect ? (
+              <button
+                onClick={() => setConnect(true)}
+                className="w-[141px] h-10 text-black bg-primary rounded-full laptop:hidden"
+              >
+                Connect
+              </button>
+            ) : (
+              <button onClick={() => setHambuger(true)} className="laptop:hidden">
+                <Profile className="w-6 h-6" />
+              </button>
+            )}
           </Flex>
         </Flex>
+        <ProfileMenu />
       </Container>
     </div>
   );
