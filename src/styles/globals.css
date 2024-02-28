@@ -46,7 +46,12 @@
   }
 }
 
+.overflow_effect_swiper .swiper-wrapper {
+  padding-bottom: 10px;
+}
+
 .badge_effect_swiper .swiper-wrapper {
+  padding-bottom: 10px;
   right: -23%;
   @media (max-width: 1024px) {
     right: -33%;
@@ -60,9 +65,16 @@
   @media (max-width: 430px) {
     right: -17%;
   }
+  @media (max-width: 320px) {
+    right: -8%;
+  }
 }
 
 .MuiAutocomplete-paper {
   margin-top: 10px;
   border-radius: 20px;
+}
+
+.group:hover .group-hover\:opacity-100 {
+  opacity: 1;
 }

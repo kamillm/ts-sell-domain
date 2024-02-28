@@ -2,7 +2,7 @@ import React from "react";
 import { Flex, Image } from "..";
 
 import clsx from "clsx";
-import QrSvg from "@wojtekmaj/react-qr-svg";
+import { QRCode } from "react-qrcode-logo";
 import { DomainCardProps } from "@/types/card";
 
 const DomainCard: React.FC<DomainCardProps> = ({ name, tld, src, borderColor }) => {
@@ -31,12 +31,20 @@ const DomainCard: React.FC<DomainCardProps> = ({ name, tld, src, borderColor }) 
         <Image src="/img/zns-logo.png" alt="ZNS logo" width={40} height={40} className="absolute left-2 top-2" />
       </div>
       <Flex direction="flex-col">
-        <p className="font-500 text-[60px] bg-primary_gradient_text text-transparent bg-clip-text tablet:text-[45px]">
+        <p className="font-500 text-[44px] bg-primary_gradient_text text-transparent bg-clip-text tablet:text-[45px]">
           {name}
         </p>
         <Flex justifyContent="justify-between">
           <p className="text-[30px] font-700">.{tld}</p>
-          <QrSvg height={48} width={48} bgColor="transparent" fgColor="white" value={""} />
+          <QRCode
+            size={60}
+            bgColor="transparent"
+            fgColor="white"
+            value={""}
+            logoImage={"/img/zns-logo.png"}
+            logoWidth={20}
+            logoHeight={20}
+          />
         </Flex>
       </Flex>
     </Flex>

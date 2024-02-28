@@ -5,7 +5,7 @@ import { GeneralCard } from "@/components/Card";
 import { GENERAL_CARD_LIST_1 } from "@/utils/constants";
 
 import { Swiper, SwiperSlide } from "swiper/react";
-import { EffectCards, Autoplay } from "swiper/modules";
+import { EffectCards } from "swiper/modules";
 
 function IdentifyView() {
   return (
@@ -58,17 +58,18 @@ function IdentifyView() {
               className="text-main-400 text-[16px] font-400 desktop:text-[14px] mobile:text-[12px]"
             >
               <p>
-                Lorem ipsum is placeholder text commonly used in the graphic, print, and publishing industries for
-                previewing layouts and visual mockups.
+                {
+                  "Creating your digital identity on ZNS is a simple and straightforward process. Follow these steps to get started:"
+                }
               </p>
               <br />
-              <p>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
-                dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
-                ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
-                fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia
-                deserunt mollit anim id est laborum.
-              </p>
+              <ul className="list-decimal pl-5">
+                <li>{"Visit ZNS Connect: Go to ZNS Connect and connect your wallet."}</li>
+                <li>{"Mint Your Domain: Choose and mint your unique domain name."}</li>
+                <li>{"Add Information: Customize your identity with social links, name, location, and bio."}</li>
+                <li>{"Save and Verify: Save changes and verify your identity on the blockchain."}</li>
+                <li>{"Explore and Interact: Start exploring the decentralized web and interacting with dApps."}</li>
+              </ul>
             </Flex>
 
             <button className="max-w-[528px] h-[80px] flex-shrink-0 rounded-[53px] border border-solid border-main-300 bg-primary_gradient_button  desktop:h-[60px]  mobile:h-[60px] laptop:px-20 tablet:px-4">

@@ -1,16 +1,22 @@
 import {
   MdOutlineFavoriteBorder as FavoriteBorder,
-  // MdOutlineFavorite as FavoriteFilled,
   MdOutlineSettings as Settings,
-  MdOutlineShoppingCart as Cart
+  MdOutlineShoppingCart as Cart,
+  MdLockOutline as Lock
 } from "react-icons/md";
-
+import { BsCopy as Copy } from "react-icons/bs";
+import { TbShare as Share } from "react-icons/tb";
+import { IoExitOutline as Exit } from "react-icons/io5";
+import { FaInstagram as Instagram } from "react-icons/fa";
 import { RiGlobalLine as Global } from "react-icons/ri";
 import { TfiTwitter as Twitter } from "react-icons/tfi";
 import { LiaDiscord as Discord, LiaTelegram as Telegram } from "react-icons/lia";
-import { FaMedium as Medium } from "react-icons/fa6";
+import { FaMedium as Medium, FaCircleUser as Profile, FaLink as Domain } from "react-icons/fa6";
 import { PiYoutubeLogoLight as YouTube } from "react-icons/pi";
-import { DomainCardProps, GeneralCardProps } from "@/types/card";
+import { CiLinkedin as Linkedin } from "react-icons/ci";
+import { GoCreditCard } from "react-icons/go";
+
+import { CardProps, DomainCardProps, GeneralCardProps } from "@/types/card";
 
 export const MENU_LIST = [
   { name: "Home", link: "/" },
@@ -59,7 +65,7 @@ export const SOCIAL_LIST = [
 
 export const DOMAIN_CARD_LIST: DomainCardProps[] = [
   {
-    name: "clubman",
+    name: "boss.poly",
     tld: "zeta",
     src: "/img/home/hero/clubman.png",
     hoverScale: true,
@@ -67,7 +73,7 @@ export const DOMAIN_CARD_LIST: DomainCardProps[] = [
     borderColor: "border-primary"
   },
   {
-    name: "zkme",
+    name: "bitcoin.bera",
     tld: "zeta",
     src: "/img/home/hero/zkme.png",
     hoverScale: true,
@@ -75,7 +81,7 @@ export const DOMAIN_CARD_LIST: DomainCardProps[] = [
     borderColor: "border-warning"
   },
   {
-    name: "monkey",
+    name: "money.x1",
     tld: "zeta",
     src: "/img/home/hero/monkey.png",
     hoverScale: true,
@@ -168,123 +174,187 @@ export const DOMAIN_CARD_TYPES = [
 
 export const GENERAL_CARD_LIST_1: GeneralCardProps[] = [
   {
-    name: "Boss.zeta",
+    name: "clubman.zeta",
     type: "card_1",
     src: "/img/home/badges/NFT.png",
     hoverScale: true,
     heroEmbed: true,
     avatar: "/img/home/badges/con2.png",
-    borderColor: "border-primary"
+    borderColor: "border-primary",
+    tld: "8001"
   },
   {
-    name: "Boss.zeta",
+    name: "moon.x1",
     type: "card_1",
     src: "/img/home/badges/june.zero.png",
     hoverScale: true,
     heroEmbed: true,
     avatar: "/img/home/badges/con3.png",
-    borderColor: "border-warning"
+    borderColor: "border-warning",
+    tld: "5691"
   },
   {
-    name: "Boss.zeta",
+    name: "polychain.bera",
     type: "card_1",
     src: "/img/home/badges/crypto.zero.png",
     hoverScale: true,
     heroEmbed: true,
     avatar: "/img/home/badges/con1.png",
-    borderColor: "border-main-900"
+    borderColor: "border-main-900",
+    tld: "6208"
   }
-  // {
-  //   name: "Boss.zeta",
-  //   type: "card_1",
-  //   src: "/img/home/badges/NFT.png",
-  //   hoverScale: true,
-  //   heroEmbed: true,
-  //   avatar: "/img/home/badges/con2.png",
-  //   borderColor: "border-primary"
-  // },
-  // {
-  //   name: "Boss.zeta",
-  //   type: "card_1",
-  //   src: "/img/home/badges/june.zero.png",
-  //   hoverScale: true,
-  //   heroEmbed: true,
-  //   avatar: "/img/home/badges/con3.png",
-  //   borderColor: "border-warning"
-  // },
-  // {
-  //   name: "Boss.zeta",
-  //   type: "card_1",
-  //   src: "/img/home/badges/crypto.zero.png",
-  //   hoverScale: true,
-  //   heroEmbed: true,
-  //   avatar: "/img/home/badges/con1.png",
-  //   borderColor: "border-main-900"
-  // },
-  // {
-  //   name: "Boss.zeta",
-  //   type: "card_1",
-  //   src: "/img/home/badges/crypto.zero.png",
-  //   hoverScale: true,
-  //   heroEmbed: true,
-  //   avatar: "/img/home/badges/con1.png",
-  //   borderColor: "border-main-900"
-  // }
 ];
 
 export const GENERAL_CARD_LIST_2: GeneralCardProps[] = [
   {
-    name: "3 domains",
+    name: "1000 followers",
     type: "card_2",
     src: "/img/home/badges/crypto.zero.png",
     hoverScale: true,
     heroEmbed: true,
     avatar: "/img/home/badges/june.zero.png",
-    borderColor: "border-primary"
+    borderColor: "border-primary",
+    tld: "Connected with 1000 followers"
   },
   {
-    name: "3 domains",
+    name: "365 days",
     type: "card_2",
     src: "/img/home/badges/june.zero.png",
     hoverScale: true,
     heroEmbed: true,
     avatar: "/img/home/badges/life.zeta.png",
-    borderColor: "border-warning"
+    borderColor: "border-warning",
+    tld: "Minted domain 365 days ago"
   },
   {
-    name: "3 domains",
+    name: "5 domains",
     type: "card_2",
     src: "/img/home/badges/NFT.png",
     hoverScale: true,
     heroEmbed: true,
     avatar: "/img/home/badges/smart.zero.png",
-    borderColor: "border-main-900"
+    borderColor: "border-main-900",
+    tld: "Own 5 domains on ZNS"
   },
   {
-    name: "3 domains",
+    name: "100 days",
     type: "card_2",
-    src: "/img/home/badges/crypto.zero.png",
+    src: "/img/home/badges/life.zeta.png",
     hoverScale: true,
     heroEmbed: true,
-    avatar: "/img/home/badges/june.zero.png",
-    borderColor: "border-primary"
-  },
-  {
-    name: "3 domains",
-    type: "card_2",
-    src: "/img/home/badges/june.zero.png",
-    hoverScale: true,
-    heroEmbed: true,
-    avatar: "/img/home/badges/life.zeta.png",
-    borderColor: "border-warning"
-  },
-  {
-    name: "3 domains",
-    type: "card_2",
-    src: "/img/home/badges/NFT.png",
-    hoverScale: true,
-    heroEmbed: true,
-    avatar: "/img/home/badges/smart.zero.png",
-    borderColor: "border-main-900"
+    avatar: "/img/home/badges/crypto.zero.png",
+    borderColor: "border-main-900",
+    tld: "Own 5 domains on ZNS"
   }
+];
+
+export const HAMBUGER_MENU = [
+  { icon: Profile, label: "My Profile", link: "/profile", type: false },
+  { icon: Domain, label: "My Domains", link: "", type: false },
+  { icon: Copy, label: "Copy Address", link: "", type: false },
+  { icon: Share, label: "Change Network", link: "", type: false },
+  { icon: Exit, label: "Disconnect Wallet", link: "", type: true }
+];
+
+export const TAB_ITEMS = [
+  { index: 1, label: "Gallery", count: 302 },
+  { index: 2, label: "Badges", count: 67 },
+  { index: 3, label: "Followers", count: 4 }
+];
+
+export const GALLERY_ITEMS: CardProps[] = [
+  { src: "/img/profile/1.png", name: "BIT HARMONY", count: "Positive Vibes" },
+  { src: "/img/profile/2.png", name: "BIT HARMONY", count: "Positive Vibes" },
+  { src: "/img/profile/3.png", name: "BIT HARMONY", count: "Positive Vibes" },
+  { src: "/img/profile/4.png", name: "BIT HARMONY", count: "Positive Vibes" },
+  { src: "/img/profile/5.png", name: "BIT HARMONY", count: "Positive Vibes" },
+  { src: "/img/profile/6.png", name: "BIT HARMONY", count: "Positive Vibes" },
+  { src: "/img/profile/7.png", name: "BIT HARMONY", count: "Positive Vibes" },
+  { src: "/img/profile/8.png", name: "BIT HARMONY", count: "Positive Vibes" },
+  { src: "/img/profile/9.png", name: "BIT HARMONY", count: "Positive Vibes" },
+  { src: "/img/profile/10.png", name: "BIT HARMONY", count: "Positive Vibes" },
+  { src: "/img/profile/11.png", name: "BIT HARMONY", count: "Positive Vibes" }
+];
+
+export const MINT_ITEMS: CardProps[] = [
+  { src: "/img/profile/1.png", name: "100", count: "57", type: 1 },
+  { src: "/img/profile/2.png", name: "100", count: "57", type: 2 },
+  { src: "/img/profile/3.png", name: "100", count: "57", type: 3 },
+  { src: "/img/profile/4.png", name: "100", count: "57", type: 1 },
+  { src: "/img/profile/5.png", name: "100", count: "57", type: 1 },
+  { src: "/img/profile/6.png", name: "100", count: "57", type: 1 },
+  { src: "/img/profile/7.png", name: "100", count: "57", type: 1 },
+  { src: "/img/profile/8.png", name: "100", count: "57", type: 1 },
+  { src: "/img/profile/9.png", name: "100", count: "57", type: 1 },
+  { src: "/img/profile/10.png", name: "100", count: "57", type: 1 },
+  { src: "/img/profile/11.png", name: "100", count: "57", type: 1 }
+];
+
+export const FOLLOWER_ITEMS = [
+  {
+    src: "/img/profile/1.png",
+    name: "znsconnect.zeta",
+    isfollow: true
+  },
+  {
+    src: "/img/profile/2.png",
+    name: "dyor.zeta",
+    isfollow: false
+  },
+  { src: "/img/profile/3.png", name: "LiviaRosser.zeta", isfollow: true },
+  { src: "/img/profile/4.png", name: "@supergirl", isfollow: true },
+  { src: "/img/profile/5.png", name: "Kianna.zeta", isfollow: true }
+];
+
+export const USER_SOCIAL_LINKS = [
+  { icon: Instagram, link: "", isVerify: false },
+  { icon: Twitter, link: "", isVerify: true },
+  { icon: Discord, link: "", isVerify: false },
+  { icon: Linkedin, link: "", isVerify: false },
+  { icon: Telegram, link: "", isVerify: false }
+];
+
+// profile settings
+export const PROFILE_SETTINGS = [
+  { icon: Profile, label: "profile" },
+  { icon: Settings, label: "account" },
+  { icon: Lock, label: "security" },
+  { icon: Global, label: "domains" }
+];
+
+export const CREDIT_SETTINGS = [
+  { icon: GoCreditCard, label: "credit" },
+  { icon: FavoriteBorder, label: "favorite" }
+];
+
+// categroy list
+export const CATEGORY_LIST = [
+  { id: 1, label: "Digital creator" },
+  { id: 2, label: "Blockchain enthusiast" },
+  { id: 3, label: "Social creator" },
+  { id: 4, label: "Financial wizard" },
+  { id: 5, label: "Tech innovator" },
+  { id: 6, label: "Gamer" }
+];
+
+export const FAVORITE_ITEMS = [
+  {
+    src: "/img/profile/1.png",
+    name: "znsconnect.zeta",
+    isfollow: true,
+    count: 2,
+    minted: true,
+    price: "10 USDT"
+  },
+  { src: "/img/profile/2.png", name: "dyor.zeta", isfollow: false, count: 456, minted: false, price: "10 USDT" },
+  {
+    src: "/img/profile/3.png",
+    name: "LiviaRosser.zeta",
+    isfollow: false,
+    count: 2344,
+    minted: false,
+    price: "10 USDT"
+  },
+  { src: "/img/profile/4.png", name: "@supergirl", isfollow: true, count: 23432, minted: true, price: "10 USDT" },
+  { src: "/img/profile/5.png", name: "Kianna.zeta", isfollow: true, count: 80, minted: true, price: "10 USDT" }
 ];

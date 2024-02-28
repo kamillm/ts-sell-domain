@@ -11,7 +11,6 @@ import { HiOutlineRocketLaunch as Rocket } from "react-icons/hi2";
 import { Container, Flex, GradientText } from "@/components";
 import { DomainCard } from "@/components/Card";
 import { DOMAIN_CARD_LIST } from "@/utils/constants";
-import { List, Paper } from "@mui/material";
 
 import { fetchDomainDetails } from "@/utils/web3/lookup";
 import { useDomainDetails } from "@/utils/web3/useDomainDetails";
@@ -88,7 +87,10 @@ function HeroView() {
   };
   return (
     <Container>
-      <Flex align="items-center" className="space-x-12 laptop:flex-col-reverse tablet:space-x-0 tablet:pt-10">
+      <Flex
+        align="items-center"
+        className="space-x-12 laptop:flex-col-reverse tablet:space-x-0 pt-[200px] tablet:pt-[150px]"
+      >
         <div className="w-1/2 laptop:w-full">
           <Flex direction="flex-col" className="font-space_grotesk space-y-[35px] laptop:pt-[57px]">
             <Flex direction="flex-col" className="font-700 uppercase">

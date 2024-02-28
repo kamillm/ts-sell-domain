@@ -21,6 +21,7 @@ export interface CardProps {
   src: string;
   name: string;
   count: string;
+  type?: number;
 }
 
 export interface DomainOwnCardProps {

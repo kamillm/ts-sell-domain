@@ -7,9 +7,9 @@ import { Container } from "@/components";
 export default function Footer() {
   return (
     <Container>
-      <Flex justifyContent="justify-between" className="laptop:flex-col laptop:space-y-[103px]">
+      <Flex justifyContent="justify-between" className="laptop:flex-col laptop:space-y-[103px]  mt-[150px]">
         {/* ZNC Connect */}
-        <Flex direction="flex-col" className="space-y-8">
+        <Flex direction="flex-col" className="space-y-9">
           <Flex align="items-center" className="space-x-4">
             <Image src="/img/zns-logo.png" alt="ZNS logo" width={44} height={44} />
             <p className="text-[24px] font-700 desktop:text-[20px]">ZNS Connect</p>
@@ -19,7 +19,7 @@ export default function Footer() {
           </p>
           <p className="text-[18px] font-400 text-main-400 desktop:text-[14px]">Join our community</p>
 
-          <Flex direction="flex-row" className="space-x-4">
+          <Flex direction="flex-row" className="space-x-4 flex-wrap">
             {SOCIAL_LIST.map((item, index) => (
               <Link key={`social_link_${index}`} href={item.link} className="cursor-pointer">
                 {<item.icon className="w-10 h-10 text-dark desktop:w-8" />}
@@ -32,7 +32,7 @@ export default function Footer() {
           {/* Explore */}
           <Flex align="items-start" direction="flex-col" className="space-y-8">
             <p className="font-space_mono text-[24px] font-700 desktop:text-[20px]">Explore</p>
-            <Flex direction="flex-col" className="space-y-6 text-[18px] font-400 desktop:text-[14px]">
+            <Flex direction="flex-col" className="space-y-4 text-[18px] font-400 desktop:text-[14px]">
               {MENU_LIST.map((menu, index) => (
                 <Link
                   key={`navbar_menu_${index}`}
@@ -47,7 +47,7 @@ export default function Footer() {
           {/* Media  */}
           <Flex align="items-start" direction="flex-col" className="space-y-8">
             <p className="font-space_mono text-[24px] font-700 desktop:text-[20px]">Media</p>
-            <Flex direction="flex-col" className="space-y-6 text-[18px] font-400 desktop:text-[14px]">
+            <Flex direction="flex-col" className="space-y-4 text-[18px] font-400 desktop:text-[14px]">
               {MEDIA_LIST.map((menu, index) => (
                 <Link
                   key={`navbar_menu_${index}`}
