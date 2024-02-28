@@ -7,3 +7,4 @@ export { default as Image } from "./Image";
 export { default as Link } from "./Link";
 
 export { default as GradientText } from "./Text/GradientText";
+export { default as ConnectButton } from "./ConnectBtn/ConnectBtn";

@@ -10,6 +10,9 @@ import { MdOutlineSearch as Search, MdOutlineMenu as Menu } from "react-icons/md
 import ProfileMenu from "./profilemenu";
 import { FaCircleUser as Profile } from "react-icons/fa6";
 
+// TODO: Add CSS for wallet operations
+import ConnectButton from "@/components/ConnectBtn/ConnectBtn";
+
 export default function Header() {
   const router = useRouter();
   const { showMenu, setShowMenu } = useMenu();
@@ -70,6 +73,9 @@ export default function Header() {
             <button className="hidden laptop:block" onClick={() => setShowMenu(true)}>
               <Menu className="w-6 h-6" />
             </button>
+            {/* <button className="w-[141px] h-10 text-black bg-primary rounded-full laptop:hidden">
+              <ConnectButton />
+            </button> */}
             {!isConnect ? (
               <button
                 onClick={() => setConnect(true)}

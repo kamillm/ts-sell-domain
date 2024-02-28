@@ -1,5 +1,5 @@
-import React from "react";
-
+import React, { useEffect, useRef } from "react";
+import { useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { EffectCards } from "swiper/modules";
 import Autocomplete from "@mui/material/Autocomplete";
@@ -12,12 +12,79 @@ import { Container, Flex, GradientText } from "@/components";
 import { DomainCard } from "@/components/Card";
 import { DOMAIN_CARD_LIST } from "@/utils/constants";
 
+import { fetchDomainDetails } from "@/utils/web3/lookup";
+import { useDomainDetails } from "@/utils/web3/useDomainDetails";
+// import { abi } from "../../../utils/web3/abi";
+// import { useReadContract } from "wagmi";
+// const contractAddress = "0x896704641275a31C9D55430F0f636ED2E383Cc9a";
+import { queryClient } from "@/pages/_app";
+
 const customData = [
   { title: "Znsconnect", status: true },
   { title: "Znsconnect", status: false }
 ];
 
 function HeroView() {
+  const [searchedDomain, setSearchedDomain] = useState<string>("");
+  // const [domainDetails, setDomainDetails] = useState<any>(null);
+  const [domainStatus, setDomainStatus] = useState<boolean>(false);
+  // const { domainData, domainQuery } = useDomainDetails(searchedDomain);
+
+  const timeoutId = useRef<undefined | ReturnType<typeof setTimeout>>(undefined);
+  const options = [
+    {
+      title: searchedDomain,
+      status: domainStatus
+    }
+  ];
+  // useEffect(() => {
+  //   queryClient.invalidateQueries({ queryKey: domainQuery });
+  //   console.log(domainData);
+  //   if (domainData) {
+  //     if (domainData.domainName === "") {
+  //       setDomainStatus(true);
+  //       console.log("Available");
+  //     } else {
+  //       setDomainStatus(false);
+  //       console.log("Not Available");
+  //     }
+  //   }
+  // }, [searchedDomain]);
+
+  const handleInputChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const inputText = e.target.value;
+
+    clearTimeout(timeoutId.current);
+    setSearchedDomain(inputText);
+
+    timeoutId.current = setTimeout(async () => {
+      const domainData = await fetchDomainDetails(inputText);
+      // queryClient.invalidateQueries({ queryKey: domainQuery });
+
+      console.log(domainData);
+
+      if (domainData?.domainName === "") {
+        setDomainStatus(true);
+        console.log("Available");
+      } else {
+        setDomainStatus(false);
+        console.log("Not Available");
+      }
+    }, 300);
+  };
+
+  const handleButtonClick = async () => {
+    // // const result = useDomainDetails(searchedDomain);
+    // // queryClient.invalidateQueries({ queryKey: domainQuery });
+    // setDomainDetails(domainData);
+    // if (domainDetails?.owner == "0x0000000000000000000000000000000000000000") {
+    //   // setDomainStatus(true);
+    //   console.log("Available");
+    // } else {
+    //   // setDomainStatus(false);
+    //   console.log("Not Available");
+    // }
+  };
   return (
     <Container>
       <Flex
@@ -39,7 +106,7 @@ function HeroView() {
             </Flex>
             <div className="relative uppercase">
               <Autocomplete
-                options={customData}
+                options={options}
                 renderOption={(props, option) => {
                   return (
                     <Flex
@@ -57,12 +124,15 @@ function HeroView() {
                   <div ref={params.InputProps.ref}>
                     <input
                       {...params.inputProps}
+                      value={searchedDomain}
+                      onChange={handleInputChange}
                       placeholder="Search domain names"
                       className="w-full h-[56px] px-6 py-4 text-[18px] font-400 rounded-2xl border-none outline-none text-black mobile:h-[50px]"
                     />
                     <button
                       type="submit"
                       className="absolute right-0 bg-primary h-full w-[110px] rounded-2xl text-black font-600 text-[18px] inline-flex items-center justify-center"
+                      onClick={handleButtonClick}
                     >
                       <Search className="text-black w-8 h-8" />
                     </button>
