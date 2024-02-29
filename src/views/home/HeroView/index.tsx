@@ -11,27 +11,23 @@ import { HiOutlineRocketLaunch as Rocket } from "react-icons/hi2";
 import { Container, Flex, GradientText } from "@/components";
 import { DomainCard } from "@/components/Card";
 import { DOMAIN_CARD_LIST } from "@/utils/constants";
-
 import { fetchDomainDetails } from "@/utils/web3/lookup";
-
-// const customData = [
-//   { title: "Znsconnect", status: true },
-//   { title: "Znsconnect", status: false }
-// ];
 
 function HeroView() {
   const [searchedDomain, setSearchedDomain] = useState<string>("");
-  // const [domainDetails, setDomainDetails] = useState<any>(null);
   const [domainStatus, setDomainStatus] = useState<boolean>(false);
   // const { domainData, domainQuery } = useDomainDetails(searchedDomain);
 
   const timeoutId = useRef<undefined | ReturnType<typeof setTimeout>>(undefined);
+
   const options = [
     {
       title: searchedDomain,
-      status: domainStatus
+      status: searchedDomain === "" ? "" : domainStatus
     }
   ];
+
+  console.log(options);
 
   const handleInputChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const inputText = e.target.value;
@@ -42,8 +38,6 @@ function HeroView() {
     timeoutId.current = setTimeout(async () => {
       const domainData = await fetchDomainDetails(inputText);
       // queryClient.invalidateQueries({ queryKey: domainQuery });
-
-      console.log(domainData);
 
       if (domainData?.domainName === "") {
         setDomainStatus(true);
@@ -56,9 +50,6 @@ function HeroView() {
   };
 
   const handleButtonClick = async () => {
-    // // const result = useDomainDetails(searchedDomain);
-    // // queryClient.invalidateQueries({ queryKey: domainQuery });
-    // setDomainDetails(domainData);
     // if (domainDetails?.owner == "0x0000000000000000000000000000000000000000") {
     //   // setDomainStatus(true);
     //   console.log("Available");
@@ -97,7 +88,8 @@ function HeroView() {
                     >
                       <p className="text-5- font-600 text-main-300">{option.title}</p>
                       <p className={`text-4 font-500 ${option.status ? "text-red-500" : "text-blue-500"}`}>
-                        {option.status ? "Available" : "Not Available"}
+                        {option.status === "" ? "" : option.status ? "Available" : "Not Available"}
+                        {/* {option.status ? "Available" : "Not Available"} */}
                       </p>
                     </Flex>
                   );
