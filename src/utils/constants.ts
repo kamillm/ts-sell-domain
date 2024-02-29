@@ -6,7 +6,7 @@ import {
 } from "react-icons/md";
 import { BsCopy as Copy } from "react-icons/bs";
 import { TbShare as Share } from "react-icons/tb";
-import { IoExitOutline as Exit } from "react-icons/io5";
+// import { IoExitOutline as Exit } from "react-icons/io5";
 import { FaInstagram as Instagram } from "react-icons/fa";
 import { RiGlobalLine as Global } from "react-icons/ri";
 import { TfiTwitter as Twitter } from "react-icons/tfi";
@@ -253,7 +253,7 @@ export const HAMBUGER_MENU = [
   { icon: Domain, label: "My Domains", link: "", type: false },
   { icon: Copy, label: "Copy Address", link: "", type: false },
   { icon: Share, label: "Change Network", link: "", type: false },
-  { icon: Exit, label: "Disconnect Wallet", link: "", type: true }
+  // { icon: Exit, label: "Disconnect Wallet", link: "", type: true }
 ];
 
 export const TAB_ITEMS = [

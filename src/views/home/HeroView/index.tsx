@@ -1,5 +1,5 @@
-import React, { useEffect, useRef } from "react";
-import { useState } from "react";
+import React from "react";
+import { useState, useRef } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { EffectCards } from "swiper/modules";
 import Autocomplete from "@mui/material/Autocomplete";
@@ -13,16 +13,11 @@ import { DomainCard } from "@/components/Card";
 import { DOMAIN_CARD_LIST } from "@/utils/constants";
 
 import { fetchDomainDetails } from "@/utils/web3/lookup";
-import { useDomainDetails } from "@/utils/web3/useDomainDetails";
-// import { abi } from "../../../utils/web3/abi";
-// import { useReadContract } from "wagmi";
-// const contractAddress = "0x896704641275a31C9D55430F0f636ED2E383Cc9a";
-import { queryClient } from "@/pages/_app";
 
-const customData = [
-  { title: "Znsconnect", status: true },
-  { title: "Znsconnect", status: false }
-];
+// const customData = [
+//   { title: "Znsconnect", status: true },
+//   { title: "Znsconnect", status: false }
+// ];
 
 function HeroView() {
   const [searchedDomain, setSearchedDomain] = useState<string>("");
@@ -37,19 +32,6 @@ function HeroView() {
       status: domainStatus
     }
   ];
-  // useEffect(() => {
-  //   queryClient.invalidateQueries({ queryKey: domainQuery });
-  //   console.log(domainData);
-  //   if (domainData) {
-  //     if (domainData.domainName === "") {
-  //       setDomainStatus(true);
-  //       console.log("Available");
-  //     } else {
-  //       setDomainStatus(false);
-  //       console.log("Not Available");
-  //     }
-  //   }
-  // }, [searchedDomain]);
 
   const handleInputChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const inputText = e.target.value;

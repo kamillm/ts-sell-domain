@@ -11,7 +11,9 @@ import ProfileMenu from "./profilemenu";
 import { FaCircleUser as Profile } from "react-icons/fa6";
 
 // TODO: Add CSS for wallet operations
-import ConnectButton from "@/components/ConnectBtn/ConnectBtn";
+import NetworkBtn from "@/components/NetworkBtn/NetworkBtn";
+import { useAccount } from "wagmi";
+import { useConnectModal } from "@rainbow-me/rainbowkit";
 
 export default function Header() {
   const router = useRouter();
@@ -19,6 +21,15 @@ export default function Header() {
   const { isConnect, setConnect } = useConnect();
   const { setHambuger } = useHambuger();
   const [unScrolled, setUnScrolled] = useState(true);
+
+  // Account Details Reflection
+  const { isConnected } = useAccount();
+  const { openConnectModal } = useConnectModal();
+  useEffect(() => {
+    if (isConnected) {
+      setConnect(true);
+    }
+  }, [isConnected, setConnect]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -73,12 +84,10 @@ export default function Header() {
             <button className="hidden laptop:block" onClick={() => setShowMenu(true)}>
               <Menu className="w-6 h-6" />
             </button>
-            {/* <button className="w-[141px] h-10 text-black bg-primary rounded-full laptop:hidden">
-              <ConnectButton />
-            </button> */}
+            {isConnected && <NetworkBtn />}
             {!isConnect ? (
               <button
-                onClick={() => setConnect(true)}
+                onClick={openConnectModal}
                 className="w-[141px] h-10 text-black bg-primary rounded-full laptop:hidden"
               >
                 Connect
