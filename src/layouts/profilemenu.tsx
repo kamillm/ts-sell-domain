@@ -4,9 +4,10 @@ import { useConnect, useHambuger } from "@/contexts";
 import { Flex, GradientText } from "@/components";
 import { HAMBUGER_MENU } from "@/utils/constants";
 import { useRouter } from "next/router";
-import { useAccount, useBalance } from "wagmi";
-import { useAccountModal } from "@rainbow-me/rainbowkit";
+import { useAccount, useBalance, useDisconnect } from "wagmi";
+// import { useAccountModal } from "@rainbow-me/rainbowkit";
 import { IoExitOutline as Exit } from "react-icons/io5";
+import { BsCopy as Copy } from "react-icons/bs";
 
 const ProfileMenu: React.FC = () => {
   const router = useRouter();
@@ -17,16 +18,33 @@ const ProfileMenu: React.FC = () => {
   // Account Details Reflection
   const { address, isDisconnected } = useAccount();
   const { data } = useBalance({ address: address });
-  const shortenedAddress = `${address?.slice(0, 6)}...${address?.slice(-4)}`;
+  const shortenedAddress = address ? `${address?.slice(0, 6)}...${address?.slice(-4)}` : "";
   const balance = data?.formatted.slice(0, 5);
   const symbol = data?.symbol;
-  const { openAccountModal } = useAccountModal();
+  // const { openAccountModal } = useAccountModal();
+  const { disconnect } = useDisconnect();
 
   useEffect(() => {
     if (isDisconnected) {
+      setHambuger(false);
       setConnect(false);
     }
-  }, [isDisconnected, setConnect]);
+  }, [isDisconnected, setConnect, setHambuger]);
+
+  const copyToClipboard = (text: string) => {
+    if (!navigator.clipboard) {
+      console.error("Clipboard API not supported");
+      return;
+    }
+    navigator.clipboard.writeText(text).then(
+      () => {
+        console.log("Copied to clipboard!");
+      },
+      (err) => {
+        console.error("Failed to copy:", err);
+      }
+    );
+  };
 
   const handleClickOutside = useCallback(() => {
     setHambuger(false);
@@ -87,7 +105,15 @@ const ProfileMenu: React.FC = () => {
             <Flex
               align="items-center"
               className="p-5 bg-black/40 rounded-xl space-x-3 cursor-pointer hover:text-primary"
-              action={openAccountModal}
+              action={() => copyToClipboard(String(address))}
+            >
+              <Copy className="w-5 h-5" />
+              <p className="text-[14px] font-500">Copy Address</p>
+            </Flex>
+            <Flex
+              align="items-center"
+              className="p-5 bg-black/40 rounded-xl space-x-3 cursor-pointer hover:text-primary"
+              action={() => disconnect()}
             >
               <Exit className="w-5 h-5" />
               <p className="text-[14px] font-500">Disconnect Wallet</p>
