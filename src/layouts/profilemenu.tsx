@@ -1,13 +1,12 @@
 import React, { useCallback, useEffect, useRef } from "react";
-
 import { useConnect, useHambuger } from "@/contexts";
 import { Flex, GradientText } from "@/components";
 import { HAMBUGER_MENU } from "@/utils/constants";
 import { useRouter } from "next/router";
 import { useAccount, useBalance, useDisconnect } from "wagmi";
-// import { useAccountModal } from "@rainbow-me/rainbowkit";
 import { IoExitOutline as Exit } from "react-icons/io5";
 import { BsCopy as Copy } from "react-icons/bs";
+import toast, { Toaster } from "react-hot-toast";
 
 const ProfileMenu: React.FC = () => {
   const router = useRouter();
@@ -21,7 +20,6 @@ const ProfileMenu: React.FC = () => {
   const shortenedAddress = address ? `${address?.slice(0, 6)}...${address?.slice(-4)}` : "";
   const balance = data?.formatted.slice(0, 5);
   const symbol = data?.symbol;
-  // const { openAccountModal } = useAccountModal();
   const { disconnect } = useDisconnect();
 
   useEffect(() => {
@@ -38,6 +36,7 @@ const ProfileMenu: React.FC = () => {
     }
     navigator.clipboard.writeText(text).then(
       () => {
+        toast.success("Address Copied");
         console.log("Copied to clipboard!");
       },
       (err) => {
@@ -110,6 +109,7 @@ const ProfileMenu: React.FC = () => {
               <Copy className="w-5 h-5" />
               <p className="text-[14px] font-500">Copy Address</p>
             </Flex>
+
             <Flex
               align="items-center"
               className="p-5 bg-black/40 rounded-xl space-x-3 cursor-pointer hover:text-primary"
@@ -121,6 +121,7 @@ const ProfileMenu: React.FC = () => {
           </Flex>
         </Flex>
       </div>
+      <Toaster />
     </div>
   );
 };
