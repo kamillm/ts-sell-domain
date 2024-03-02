@@ -11,7 +11,7 @@ import "swiper/css/pagination";
 import "swiper/css/effect-cards";
 
 import "@rainbow-me/rainbowkit/styles.css";
-import { getDefaultConfig, RainbowKitProvider } from "@rainbow-me/rainbowkit";
+import { darkTheme, getDefaultConfig, RainbowKitProvider } from "@rainbow-me/rainbowkit";
 import { WagmiProvider } from "wagmi";
 import { polygonMumbai } from "wagmi/chains";
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
@@ -52,7 +52,7 @@ export default function App({ Component, pageProps }: AppProps) {
       <div className="absolute -z-10 inset-0 bg-decoration bg-cover bg-no-repeat mix-blend-multiply" />
       <WagmiProvider config={config}>
         <QueryClientProvider client={queryClient}>
-          <RainbowKitProvider>
+          <RainbowKitProvider theme={darkTheme()}>
             <Layout>
               <Component {...pageProps} />
             </Layout>
