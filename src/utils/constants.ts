@@ -252,7 +252,7 @@ export const HAMBUGER_MENU = [
   { icon: Profile, label: "My Profile", link: "/profile", type: false },
   { icon: Domain, label: "My Domains", link: "", type: false },
   // { icon: Copy, label: "Copy Address", link: "", type: false },
-  { icon: Share, label: "Change Network", link: "", type: false },
+  // { icon: Share, label: "Change Network", link: "", type: false },
   // { icon: Exit, label: "Disconnect Wallet", link: "", type: true }
 ];
 
