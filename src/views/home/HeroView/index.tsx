@@ -18,7 +18,8 @@ function HeroView() {
   const queryClient = useQueryClient();
   const [searchedDomain, setSearchedDomain] = useState<string>("");
   const [domainStatus, setDomainStatus] = useState<boolean>(false);
-  const { domainData, domainQuery } = useDomainDetails(searchedDomain);
+  const inputTextRef = useRef<string>("");
+  const { domainData, domainQuery } = useDomainDetails(inputTextRef.current);
   const timeoutId = useRef<undefined | ReturnType<typeof setTimeout>>(undefined);
 
   const options = [
@@ -34,17 +35,17 @@ function HeroView() {
     } else {
       setDomainStatus(false);
     }
-  }, [searchedDomain, domainData]);
+  }, [domainData]);
 
-  const handleInputChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const inputText = e.target.value;
     clearTimeout(timeoutId.current);
+    inputTextRef.current = inputText;
     setSearchedDomain(inputText);
 
     timeoutId.current = setTimeout(async () => {
       // const domainData = await fetchDomainDetails(inputText, chain?.id as number);
       queryClient.invalidateQueries({ queryKey: domainQuery });
-      console.log(domainData);
     }, 500);
   };
 

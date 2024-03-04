@@ -4,7 +4,7 @@ export const NetworkBtn = () => {
   return (
     <ConnectButton.Custom>
       {({ chain, openChainModal }) => {
-        // console.log(chain);
+        console.log(chain);
         return (
           <div>
             {(() => {

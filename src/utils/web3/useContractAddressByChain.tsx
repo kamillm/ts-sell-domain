@@ -7,7 +7,7 @@ export const useContractAddressByChain = () => {
     case 80001:
       registryAddress = process.env.NEXT_PUBLIC_REGISTRY_ADDRESS_POLYGON_MUMBAI;
       break;
-    case 5611:
+    case 204:
       registryAddress = process.env.NEXT_PUBLIC_REGISTRY_ADDRESS_OPBNB_TESTNET;
       break;
     case 195:
