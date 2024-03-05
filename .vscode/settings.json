@@ -11,5 +11,8 @@
     "titleBar.inactiveBackground": "#CAFC0190",
     "titleBar.activeForeground": "#FFFFFF",
     "titleBar.inactiveForeground": "#FFFFFF"
+  },
+  "[prisma]": {
+    "editor.defaultFormatter": "Prisma.prisma"
   }
 }
