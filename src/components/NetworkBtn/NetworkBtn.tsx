@@ -1,5 +1,6 @@
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import Image from "next/image";
+import { Flex } from "..";
 export const NetworkBtn = () => {
   return (
     <ConnectButton.Custom>
@@ -16,25 +17,29 @@ export const NetworkBtn = () => {
               }
               return (
                 <div style={{ display: "flex", gap: 12 }}>
-                  <button onClick={openChainModal} style={{ display: "flex", alignItems: "center" }} type="button">
+                  <Flex
+                    action={openChainModal}
+                    align="items-center"
+                    justifyContent="justify-between"
+                    className="flex-1 space-x-3 cursor-pointer hover:text-primary"
+                  >
+                    <span>{chain?.name}</span>
                     {chain?.hasIcon && (
                       <div
                         style={{
                           background: chain?.iconBackground,
-                          width: 12,
-                          height: 12,
+                          width: 20,
+                          height: 20,
                           borderRadius: 999,
-                          overflow: "hidden",
-                          marginRight: 4
+                          overflow: "hidden"
                         }}
                       >
                         {chain.iconUrl && (
-                          <Image width={12} height={12} alt={chain.name ?? "Chain icon"} src={chain.iconUrl} />
+                          <Image width={20} height={20} alt={chain.name ?? "Chain icon"} src={chain.iconUrl} />
                         )}
                       </div>
                     )}
-                    {chain?.name}
-                  </button>
+                  </Flex>
                 </div>
               );
             })()}

@@ -7,11 +7,12 @@ import { USER_SOCIAL_LINKS } from "@/utils/constants";
 import { BsCopy } from "react-icons/bs";
 import { LuLink } from "react-icons/lu";
 import { GoThumbsup } from "react-icons/go";
-import { MdOutlineAccessTime, MdOutlineLocationOn, MdOutlineWidgets, MdOutlineEdit } from "react-icons/md";
 import { FaPlus } from "react-icons/fa";
+import { FaXTwitter } from "react-icons/fa6";
 import { IoMdCloseCircle } from "react-icons/io";
+import { MdOutlineAccessTime, MdOutlineLocationOn, MdOutlineWidgets, MdOutlineEdit } from "react-icons/md";
 
-const HeroView: React.FC = () => {
+const HeroView: React.FC<{ domainName?: string; mode?: boolean }> = ({ domainName = "", mode = false }) => {
   const [showModal, setShowModal] = useState(false);
 
   return (
@@ -22,11 +23,11 @@ const HeroView: React.FC = () => {
         align="items-center"
         className="space-y-[30px] pb-[60px]"
       >
-        <div className="relative max-w-[1440px] h-[288px] tablet:h-[200px] mt-[99px]">
+        <div className="relative w-full max-w-[1440px] h-[250px] tablet:h-[200px] mt-[99px]">
           <Image
             src={"/img/profile/banner.png"}
             width={1440}
-            height={288}
+            height={250}
             className="w-full h-full object-cover"
             alt="profile banner"
           />
@@ -42,12 +43,6 @@ const HeroView: React.FC = () => {
                 />
 
                 <Image
-                  src={"/img/home/badges/con2.png"}
-                  alt={"profile avatar"}
-                  fill
-                  className="tablet:w-[130px] tablet:h-[130px] shrink-0 rounded-full"
-                />
-                <Image
                   src={"/img/verify.png"}
                   width={34}
                   height={34}
@@ -55,20 +50,27 @@ const HeroView: React.FC = () => {
                   alt="profile_verify_avatar"
                 />
               </div>
-              <label
-                onClick={() => setShowModal(true)}
-                className="absolute cursor-pointer bg-black/40 w-full h-full rounded-full  justify-center items-center inline-flex opacity-0 group-hover:opacity-100 duration-200 "
-              >
-                <MdOutlineEdit className="text-main-400 w-7 h-7" />
-              </label>
+              {mode && (
+                <label
+                  onClick={() => setShowModal(true)}
+                  className="absolute cursor-pointer bg-black/40 w-full h-full rounded-full  justify-center items-center inline-flex opacity-0 group-hover:opacity-100 duration-200 "
+                >
+                  <MdOutlineEdit className="text-main-400 w-7 h-7" />
+                </label>
+              )}
             </div>
           </Flex>
           <Flex className="absolute space-x-[10px] right-4 top-4">
-            <label className="p-2 bg-black/40 rounded-xl text-main-400 cursor-pointer" htmlFor="banner-file">
-              <MdOutlineEdit className="w-5 h-5" />
-            </label>
+            {mode && (
+              <label className="p-2 bg-black/40 rounded-xl text-main-400 cursor-pointer" htmlFor="banner-file">
+                <MdOutlineEdit className="w-5 h-5" />
+              </label>
+            )}
             <label className="p-2 bg-black/40 rounded-xl text-main-400 cursor-pointer">
               <LuLink className="w-5 h-5" />
+            </label>
+            <label className="p-2 bg-black/40 rounded-xl text-main-400 cursor-pointer">
+              <FaXTwitter className="w-5 h-5" />
             </label>
             <input id="banner-file" type="file" className="hidden" />
           </Flex>
@@ -117,11 +119,11 @@ const HeroView: React.FC = () => {
                 </Flex>
               </Flex>
             </Flex>
-            <Flex direction="flex-col" align="items-center" className="space-y-4 max-w-[400px] pt-10">
+            <Flex direction="flex-col" align="items-center" className="space-y-3 max-w-[400px] pt-5">
               <div className="text-[40px] font-500 tablet:text-[34px]">
-                <GradientText>Super Man</GradientText>
+                <GradientText>{domainName}</GradientText>
               </div>
-              <p className="text-[22px] font-400 tablet:text-[20px]">zupergirl.zeta</p>
+              <p className="text-[22px] font-400 tablet:text-[20px]">{domainName}.zeta</p>
               <p className="font-space_grotesk text-[12px] tablet:text-[10px] font-400 text-center">
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
                 dolore magna aliqua. Ut enim ad minim veniam.
@@ -208,7 +210,7 @@ const HeroView: React.FC = () => {
                   <div className="w-[132px] h-[132px] rounded-full border border-main-300 small:w-[110px] small:h-[110px]"></div>
                   <FaPlus className="absolute w-[24px] h-[24px] text-verified/45" />
                 </label>
-                <p className="text-[12px] font-700 font-space_grotesk">upload from your pc</p>
+                <p className="text-[12px] font-700 font-space_grotesk">Upload from your pc</p>
                 <input className="hidden" id="avatar-file" type="file" />
               </Flex>
               <Flex direction="flex-col" align="items-center" className="space-y-4">

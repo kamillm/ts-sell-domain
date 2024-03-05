@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Flex } from "@/components";
-import { FollowerView, BadgeView, GalleryView } from "@/views/profile";
+import { FollowerView, BadgeView, GalleryView, FollowingView } from "@/views/profile";
 import { TAB_ITEMS } from "@/utils/constants";
 
 import clsx from "clsx";
@@ -24,13 +24,17 @@ const TabItem = ({
       justifyContent="justify-center"
       action={() => onClick(mapIndex)}
       className={clsx(
-        "space-x-4 p-[15px] w-1/3 cursor-pointer tablet:space-x-1",
+        "space-x-4 p-[15px] small:px-1  w-1/3 cursor-pointer tablet:space-x-1",
         tabIndex === mapIndex ? "border-b-2 border-primary" : "border-b-2 border-main-400/30"
       )}
     >
-      <p className="font-600 text-[20px] tablet:text-[16px] mobile:text-[12px]">{label}</p>
-      <p className="px-2 rounded-3xl bg-gray-400 text-[16px] tablet:text-[14px] mobile:text-[12px] mobile:px-1">
-        {count}
+      <p className="font-600 text-[18px] tablet:text-[14px] mobile:text-[12px] relative">
+        {mapIndex === 1 || mapIndex === 2 ? <span className="small:hidden">{"My "}</span> : ""}
+        {label}
+
+        <span className="absolute -top-3 px-2 rounded-3xl bg-gray-400 text-[16px] tablet:text-[12px] mobile:text-[12px] mobile:px-1">
+          {count}
+        </span>
       </p>
     </Flex>
   );
@@ -60,6 +64,7 @@ const TabView: React.FC = () => {
         {tabIndex === 1 && <GalleryView />}
         {tabIndex === 2 && <BadgeView />}
         {tabIndex === 3 && <FollowerView />}
+        {tabIndex === 4 && <FollowingView />}
       </Flex>
     </div>
   );

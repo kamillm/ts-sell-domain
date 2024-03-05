@@ -3,11 +3,13 @@ import React from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { EffectCoverflow, Autoplay } from "swiper/modules";
 
-import { Container, Flex, GradientText } from "@/components";
+import { useRouter } from "next/router";
 import { GeneralCard } from "@/components/Card";
 import { GENERAL_CARD_LIST_2 } from "@/utils/constants";
+import { Container, Flex, GradientText } from "@/components";
 
 function BadgesView() {
+  const router = useRouter();
   return (
     <Container>
       <Flex align="items-center" className="space-x-12 laptop:flex-col-reverse laptop:space-x-0">
@@ -37,7 +39,10 @@ function BadgesView() {
               </ul>
             </Flex>
 
-            <button className="max-w-[528px] h-[80px] flex-shrink-0 rounded-[53px] border border-solid border-main-300 bg-primary_gradient_button  desktop:h-[60px] mobile:h-[60px] laptop:px-20 tablet:px-4">
+            <button
+              onClick={() => router.push("/badges")}
+              className="max-w-[528px] h-[80px] flex-shrink-0 rounded-[53px] border border-solid border-main-300 bg-primary_gradient_button  desktop:h-[60px] mobile:h-[60px] laptop:px-20 tablet:px-4"
+            >
               <span className="uppercase text-primary text-[26px] font-space_grotesk font-700 desktop:text-[24px] mobile:text-[20px]">
                 Mint Badges
               </span>

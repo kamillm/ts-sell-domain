@@ -1,28 +1,30 @@
 import React from "react";
 import { useState, useRef } from "react";
-import { Swiper, SwiperSlide } from "swiper/react";
+import { useRouter } from "next/router";
 import { EffectCards } from "swiper/modules";
+import { Swiper, SwiperSlide } from "swiper/react";
 import Autocomplete from "@mui/material/Autocomplete";
+import { Container, Flex, GradientText } from "@/components";
+import { DomainCard } from "@/components/Card";
 
 // assets
 import { MdOutlineSearch as Search } from "react-icons/md";
 import { HiOutlineRocketLaunch as Rocket } from "react-icons/hi2";
 
-import { Container, Flex, GradientText } from "@/components";
-import { DomainCard } from "@/components/Card";
 import { DOMAIN_CARD_LIST } from "@/utils/constants";
 import { fetchDomainDetails } from "@/utils/web3/lookup";
 
 function HeroView() {
+  const router = useRouter();
+
   const [searchedDomain, setSearchedDomain] = useState<string>("");
   const [domainStatus, setDomainStatus] = useState<boolean>(false);
-  // const { domainData, domainQuery } = useDomainDetails(searchedDomain);
 
   const timeoutId = useRef<undefined | ReturnType<typeof setTimeout>>(undefined);
 
   const options = [
     {
-      title: searchedDomain,
+      label: searchedDomain,
       status: searchedDomain === "" ? "" : domainStatus
     }
   ];
@@ -49,14 +51,11 @@ function HeroView() {
     }, 300);
   };
 
-  const handleButtonClick = async () => {
-    // if (domainDetails?.owner == "0x0000000000000000000000000000000000000000") {
-    //   // setDomainStatus(true);
-    //   console.log("Available");
-    // } else {
-    //   // setDomainStatus(false);
-    //   console.log("Not Available");
-    // }
+  const handleButtonClick = () => {
+    router.push({
+      pathname: "search",
+      query: { domain: searchedDomain }
+    });
   };
   return (
     <Container>
@@ -83,11 +82,12 @@ function HeroView() {
                 renderOption={(props, option) => {
                   return (
                     <Flex
+                      key={option.label}
                       justifyContent="justify-between"
                       className="p-2 px-6 font-space_grotesk cursor-pointer hover:bg-gray-200/40"
                     >
-                      <p className="text-5- font-600 text-main-300">{option.title}</p>
-                      <p className={`text-4 font-500 ${option.status ? "text-red-500" : "text-blue-500"}`}>
+                      <p className="text-5- font-600 text-main-300">{option.label}</p>
+                      <p className={`text-4 font-500 ${!option.status ? "text-red-500" : "text-blue-500"}`}>
                         {option.status === "" ? "" : option.status ? "Available" : "Not Available"}
                         {/* {option.status ? "Available" : "Not Available"} */}
                       </p>
@@ -100,6 +100,9 @@ function HeroView() {
                       {...params.inputProps}
                       value={searchedDomain}
                       onChange={handleInputChange}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") handleButtonClick();
+                      }}
                       placeholder="Search domain names"
                       className="w-full h-[56px] px-6 py-4 text-[18px] font-400 rounded-2xl border-none outline-none text-black mobile:h-[50px]"
                     />

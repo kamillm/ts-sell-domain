@@ -9,7 +9,7 @@ export default function Footer() {
     <Container>
       <Flex justifyContent="justify-between" className="laptop:flex-col laptop:space-y-[103px]  mt-[150px]">
         {/* ZNC Connect */}
-        <Flex direction="flex-col" className="space-y-9">
+        <Flex direction="flex-col" className="space-y-8">
           <Flex align="items-center" className="space-x-4">
             <Image src="/img/zns-logo.png" alt="ZNS logo" width={44} height={44} />
             <p className="text-[24px] font-700 desktop:text-[20px]">ZNS Connect</p>
@@ -32,7 +32,7 @@ export default function Footer() {
           {/* Explore */}
           <Flex align="items-start" direction="flex-col" className="space-y-8">
             <p className="font-space_mono text-[24px] font-700 desktop:text-[20px]">Explore</p>
-            <Flex direction="flex-col" className="space-y-4 text-[18px] font-400 desktop:text-[14px]">
+            <Flex direction="flex-col" className="space-y-5 text-[14px] font-400">
               {MENU_LIST.map((menu, index) => (
                 <Link
                   key={`navbar_menu_${index}`}
@@ -47,7 +47,7 @@ export default function Footer() {
           {/* Media  */}
           <Flex align="items-start" direction="flex-col" className="space-y-8">
             <p className="font-space_mono text-[24px] font-700 desktop:text-[20px]">Media</p>
-            <Flex direction="flex-col" className="space-y-4 text-[18px] font-400 desktop:text-[14px]">
+            <Flex direction="flex-col" className="space-y-5 text-[14px] font-400">
               {MEDIA_LIST.map((menu, index) => (
                 <Link
                   key={`navbar_menu_${index}`}

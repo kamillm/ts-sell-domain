@@ -35,14 +35,12 @@ const FollowerItem = ({
       </Flex>
       <button
         className={clsx(
-          isfollow ? "bg-primary text-black" : "bg-main-200 text-main-900",
+          "bg-primary text-black",
           "rounded-3xl inline-flex items-center justify-center p-3",
-          "w-[113px] small:w-[52px]",
-
-          "small:hidden"
+          "w-[113px] small:w-[52px]"
         )}
       >
-        <span className="text-[12px]">{isfollow ? "Follow" : "Followed"}</span>
+        <span className="text-[12px]">{"Follow"}</span>
       </button>
       <div className="bg-primary p-2 rounded-full text-black hidden small:block">
         <GoThumbsup className="hidden small:block w-5 h-5 small:rounded-full" />

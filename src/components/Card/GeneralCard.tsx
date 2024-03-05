@@ -33,7 +33,7 @@ const GeneralCard: React.FC<GeneralCardProps> = ({ name, avatar, type, src, bord
             alt={`avatar-${name}`}
             width={104}
             height={104}
-            className="rounded-full object-cover w-full h-full  tablet:w-[80px] tablet:h-[80px]"
+            className="rounded-full object-cover w-full h-full tablet:w-[80px] tablet:h-[80px]"
           />
         </div>
       </div>
@@ -41,13 +41,12 @@ const GeneralCard: React.FC<GeneralCardProps> = ({ name, avatar, type, src, bord
       <Flex className="font-space_grotesk" direction="flex-col" align="items-center">
         <p
           className={clsx(
-            "font-500 bg-primary_gradient_text text-transparent bg-clip-text  tablet:text-[38px]",
-            type === "card_1" ? " text-[40px]" : "text-[34px]"
+            "font-500 bg-primary_gradient_text text-transparent bg-clip-text text-[34px] tablet:text-[26px]"
           )}
         >
           {name}
         </p>
-        <p className="font-700 text-[16px]">
+        <p className="font-700 text-[16px] tablet:text-[14px] text-center">
           {type === "card_1" ? (
             <>
               Followers <span className="text-primary">{tld}</span>

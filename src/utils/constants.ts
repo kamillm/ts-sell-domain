@@ -2,12 +2,13 @@ import {
   MdOutlineFavoriteBorder as FavoriteBorder,
   MdOutlineSettings as Settings,
   MdOutlineShoppingCart as Cart,
+  MdOutlineEmail as Email,
   MdLockOutline as Lock
 } from "react-icons/md";
 // import { BsCopy as Copy } from "react-icons/bs";
 import { TbShare as Share } from "react-icons/tb";
 // import { IoExitOutline as Exit } from "react-icons/io5";
-import { FaInstagram as Instagram } from "react-icons/fa";
+import { FaInstagram as Instagram, FaGift as Gift } from "react-icons/fa";
 import { RiGlobalLine as Global } from "react-icons/ri";
 import { TfiTwitter as Twitter } from "react-icons/tfi";
 import { LiaDiscord as Discord, LiaTelegram as Telegram } from "react-icons/lia";
@@ -20,9 +21,9 @@ import { CardProps, DomainCardProps, GeneralCardProps } from "@/types/card";
 
 export const MENU_LIST = [
   { name: "Home", link: "/" },
-  { name: "Register domain", link: "/register-domain" },
-  // { name: "My domains", link: "/my-domains" },
-  // { name: "My profile", link: "/my-profile" },
+  { name: "Register domain", link: "/search" },
+  // { name: "My profile", link: "/profile/main",  },
+  // { name: "My domains", link: "/mydomain", },
   { name: "Affiliate", link: "/affiliate" },
   { name: "Badges", link: "/badges" },
   { name: "Documentation", link: "https://docs.znsconnect.io/" }
@@ -249,8 +250,8 @@ export const GENERAL_CARD_LIST_2: GeneralCardProps[] = [
 ];
 
 export const HAMBUGER_MENU = [
-  { icon: Profile, label: "My Profile", link: "/profile", type: false },
-  { icon: Domain, label: "My Domains", link: "", type: false },
+  { icon: Profile, label: "My Profile", link: "/profile/main", type: false },
+  { icon: Domain, label: "My Domains", link: "/mydomain", type: false }
   // { icon: Copy, label: "Copy Address", link: "", type: false },
   // { icon: Share, label: "Change Network", link: "", type: false },
   // { icon: Exit, label: "Disconnect Wallet", link: "", type: true }
@@ -259,7 +260,8 @@ export const HAMBUGER_MENU = [
 export const TAB_ITEMS = [
   { index: 1, label: "Gallery", count: 302 },
   { index: 2, label: "Badges", count: 67 },
-  { index: 3, label: "Followers", count: 4 }
+  { index: 3, label: "Followers", count: 4 },
+  { index: 3, label: "Following", count: 8 }
 ];
 
 export const GALLERY_ITEMS: CardProps[] = [
@@ -307,24 +309,34 @@ export const FOLLOWER_ITEMS = [
 ];
 
 export const USER_SOCIAL_LINKS = [
-  { icon: Instagram, link: "", isVerify: false },
-  { icon: Twitter, link: "", isVerify: true },
-  { icon: Discord, link: "", isVerify: false },
-  { icon: Linkedin, link: "", isVerify: false },
-  { icon: Telegram, link: "", isVerify: false }
+  { id: 1, icon: Instagram, link: "", isVerify: false, label: "Instagram" },
+  { id: 2, icon: Twitter, link: "", isVerify: true, label: "Twitter" },
+  { id: 3, icon: Discord, link: "", isVerify: false, label: "Discord" },
+  { id: 4, icon: Linkedin, link: "", isVerify: false, label: "Linkedin" },
+  { id: 5, icon: Telegram, link: "", isVerify: false, label: "Telegram" }
+];
+
+export const USER_SOCIAL_LINKS_TEMP = [
+  { id: 1, icon: Instagram, link: "", isVerify: false, label: "Instagram" },
+  { id: 2, icon: Twitter, link: "", isVerify: true, label: "Twitter" },
+  { id: 3, icon: Discord, link: "", isVerify: false, label: "Discord" },
+  { id: 4, icon: Linkedin, link: "", isVerify: false, label: "Linkedin" },
+  { id: 5, icon: Telegram, link: "", isVerify: false, label: "Telegram" },
+  { id: 6, icon: Email, link: "", isVerify: false, label: "Email" }
 ];
 
 // profile settings
 export const PROFILE_SETTINGS = [
   { icon: Profile, label: "profile" },
-  { icon: Settings, label: "account" },
-  { icon: Lock, label: "security" },
+  { icon: Settings, label: "socials" },
   { icon: Global, label: "domains" }
 ];
 
 export const CREDIT_SETTINGS = [
-  { icon: GoCreditCard, label: "credit" },
-  { icon: FavoriteBorder, label: "favorite" }
+  { icon: GoCreditCard, label: "credits" },
+  { icon: FavoriteBorder, label: "favorite" },
+  { icon: Lock, label: "security" },
+  { icon: Gift, label: "git cards" }
 ];
 
 // categroy list
@@ -340,21 +352,127 @@ export const CATEGORY_LIST = [
 export const FAVORITE_ITEMS = [
   {
     src: "/img/profile/1.png",
-    name: "znsconnect.zeta",
+    name: "zns",
     isfollow: true,
     count: 2,
     minted: true,
     price: "10 USDT"
   },
-  { src: "/img/profile/2.png", name: "dyor.zeta", isfollow: false, count: 456, minted: false, price: "10 USDT" },
+  { src: "/img/profile/2.png", name: "dyor.zeta", isfollow: false, count: 456, minted: false, price: "10 USDT" }
+];
+
+export const DOMAIN_TAB_LIST = [
+  { id: 1, label: "Sort By Name" },
+  { id: 2, label: "Sort By Length" },
+  { id: 3, label: "Date of Resistration" },
+  { id: 4, label: "Ending" }
+];
+
+export const AFFILIATE_YOUR_INFO = [
+  { id: 1, label: "My Position" },
+  { id: 2, label: "My Refferals" },
+  { id: 3, label: "Total Earn" }
+];
+
+export const AFFILIATE_TAB_LIST = [
+  { id: 1, label: "Today" },
+  { id: 2, label: "This Week" },
+  { id: 3, label: "This Month" },
+  { id: 4, label: "All Time" }
+];
+
+export const BADGES_TAB_LIST = [
+  { id: 1, label: "ALL" },
+  { id: 2, label: "Minted" },
+  { id: 3, label: "Available" },
+  { id: 4, label: "Not Available" }
+];
+
+export const AFFILIATE_ITEM_YOU = [
+  {
+    src: "/img/profile/1.png",
+    domain: "zns",
+    ranking: 233,
+    refferals: 12,
+    earning: 566,
+    isYou: true,
+    isPrimary: true
+  }
+];
+
+export const AFFILIATE_ITEMS = [
+  {
+    src: "/img/profile/1.png",
+    domain: "zns",
+    refferals: 312312,
+    earning: 566,
+    isYou: false
+  },
+  {
+    src: "/img/profile/2.png",
+    domain: "dyor",
+    refferals: 254,
+    earning: 566,
+    isYou: false
+  },
   {
     src: "/img/profile/3.png",
-    name: "LiviaRosser.zeta",
-    isfollow: false,
-    count: 2344,
-    minted: false,
-    price: "10 USDT"
+    domain: "zns",
+    refferals: 312312,
+    earning: 566,
+    isYou: false
   },
-  { src: "/img/profile/4.png", name: "@supergirl", isfollow: true, count: 23432, minted: true, price: "10 USDT" },
-  { src: "/img/profile/5.png", name: "Kianna.zeta", isfollow: true, count: 80, minted: true, price: "10 USDT" }
+  {
+    src: "/img/profile/4.png",
+    domain: "dyor",
+    refferals: 254,
+    earning: 566,
+    isYou: false
+  },
+  {
+    src: "/img/profile/5.png",
+    domain: "zns",
+    refferals: 312312,
+    earning: 566,
+    isYou: false
+  },
+  {
+    src: "/img/profile/6.png",
+    domain: "dyor",
+    refferals: 254,
+    earning: 566,
+    isYou: false
+  }
+];
+
+export const DOMAIN_ITEMS = [
+  {
+    src: "/img/profile/1.png",
+    name: "zns",
+    isprimary: true,
+    tokenId: 2,
+    registrant: "....C47Ed08",
+    price: "366 USDT",
+    expiration: "2025-08-21"
+  },
+  {
+    src: "/img/profile/2.png",
+    name: "12345",
+    isprimary: false,
+    tokenId: 2,
+    registrant: "....C47Ed08",
+    price: "366 USDT",
+    expiration: "2025-08-21"
+  }
+];
+
+export const CART_DATA_LIST = [
+  {
+    domain: "nero.zeta",
+    status: true,
+    price: "5 USDT"
+  },
+  { domain: "123.zeta", status: true, price: "5 USDT" },
+  { domain: "hero.zeta", status: true, price: "5 USDT" },
+  { domain: "nero.zeta", status: true, price: "5 USDT" }
 ];

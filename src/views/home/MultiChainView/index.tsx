@@ -2,6 +2,7 @@ import React from "react";
 import { Flex, Image } from "@/components";
 import { NETWORK_LIST } from "@/utils/constants";
 import { Container } from "@/components";
+import Marquee from "react-fast-marquee";
 
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Pagination } from "swiper/modules";
@@ -23,8 +24,20 @@ const MultiChainView: React.FC = () => {
         </p>
       </div>
       <Container>
-        <Flex className="w-full desktop:cursor-grab">
-          <Swiper
+        <Marquee>
+          {NETWORK_LIST.map((item, index: number) => (
+            <div key={`network_$${index}`} className="px-12 tablet:px-8">
+              <Image
+                src={item.src}
+                width={100}
+                height={100}
+                alt={`chain-${index}`}
+                className="desktop:w-[90px] desktop:h-[100px] laptop:w-[70px] laptop:h-[70px]"
+              />
+            </div>
+          ))}
+        </Marquee>
+        {/* <Swiper
             loop={true}
             slidesPerView={4}
             spaceBetween={20}
@@ -58,8 +71,7 @@ const MultiChainView: React.FC = () => {
                 />
               </SwiperSlide>
             ))}
-          </Swiper>
-        </Flex>
+          </Swiper> */}
       </Container>
     </Flex>
   );

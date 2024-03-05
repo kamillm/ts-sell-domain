@@ -1,24 +1,17 @@
-import { Flex, GradientText } from "@/components";
 import React from "react";
+import { Flex, GradientText } from "@/components";
 
-const SecurityView: React.FC = () => {
+const securitView: React.FC = () => {
   return (
     <div className="w-full">
-      <div className="uppercase text-[36px] font-500 font-space_grotesk border-b-2 border-primary/30 pb-3">
-        <GradientText>Security</GradientText>
+      <div className="uppercase text-[36px] font-500 font-space_grotesk border-b-2 border-primary/30 pb-3 small:text-center">
+        <GradientText>my profile</GradientText>
       </div>
-      <Flex direction="flex-col" className="pt-5 space-y-4">
+      <Flex direction="flex-col" className="pt-5 space-y-4 w-[578px] laptop:w-full">
         <Flex direction="flex-col" className="w-full space-y-[10px]">
           <p className="text-[16px] font-500 text-main-900 ">Email</p>
           <input
             placeholder="Enter your email"
-            className="placeholder:text-[14px] w-full h-[54px] rounded-xl px-4 placeholder:text-white-500 border border-main-300 outline-none bg-black/40"
-          />
-        </Flex>
-        <Flex direction="flex-col" className="w-full space-y-[10px]">
-          <p className="text-[16px] font-500 text-main-900 ">Verification code</p>
-          <input
-            placeholder="Enter your verfication code"
             className="placeholder:text-[14px] w-full h-[54px] rounded-xl px-4 placeholder:text-white-500 border border-main-300 outline-none bg-black/40"
           />
         </Flex>
@@ -27,7 +20,7 @@ const SecurityView: React.FC = () => {
           <p className="text-[16px] font-500 text-main-900 ">Password</p>
           <input
             type="password"
-            placeholder="Enter your password"
+            placeholder="Password"
             className="placeholder:text-[14px] w-full h-[54px] rounded-xl px-4 placeholder:text-white-500 border border-main-300 outline-none bg-black/40"
           />
         </Flex>
@@ -39,7 +32,6 @@ const SecurityView: React.FC = () => {
             className="placeholder:text-[14px] w-full h-[54px] rounded-xl px-4 placeholder:text-white-500 border border-main-300 outline-none bg-black/40"
           />
         </Flex>
-
         <div className="pt-10  w-[141px] tablet:w-full">
           <button className="w-full bg-primary text-[16px] font-500 px-[38px] py-[11px] rounded-3xl text-black ">
             Update
@@ -50,4 +42,4 @@ const SecurityView: React.FC = () => {
   );
 };
 
-export default SecurityView;
+export default securitView;

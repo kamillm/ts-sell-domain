@@ -24,8 +24,8 @@ const MintCard: React.FC<CardProps> = ({ count, name, src, type }) => {
         <button
           className={clsx(
             type === 1 && "bg-primary text-black",
-            type === 2 && "bg-error",
-            type === 3 && "bg-verified",
+            type === 2 && "bg-error cursor-not-allowed",
+            type === 3 && "bg-verified cursor-not-allowed",
             "w-full rounded-3xl p-2"
           )}
         >

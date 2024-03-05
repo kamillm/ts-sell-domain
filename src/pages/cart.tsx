@@ -1,13 +1,14 @@
 import type { NextPage } from "next";
-import { TabView } from "@/views/dynamic-setting";
-import { Container } from "@/components";
 
-const Setting: NextPage = () => {
+import { Container } from "@/components";
+import CartView from "@/views/cart";
+
+const CartPage: NextPage = () => {
   return (
     <Container>
-      <TabView />
+      <CartView />
     </Container>
   );
 };
 
-export default Setting;
+export default CartPage;

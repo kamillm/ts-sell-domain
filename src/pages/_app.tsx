@@ -15,6 +15,7 @@ import { darkTheme, getDefaultConfig, RainbowKitProvider } from "@rainbow-me/rai
 import { WagmiProvider } from "wagmi";
 import { polygonMumbai } from "wagmi/chains";
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
+import { StorageProvider } from "@/contexts";
 
 const config = getDefaultConfig({
   appName: "ZNS Connect",
@@ -53,9 +54,11 @@ export default function App({ Component, pageProps }: AppProps) {
       <WagmiProvider config={config}>
         <QueryClientProvider client={queryClient}>
           <RainbowKitProvider theme={darkTheme()}>
-            <Layout>
-              <Component {...pageProps} />
-            </Layout>
+            <StorageProvider>
+              <Layout>
+                <Component {...pageProps} />
+              </Layout>
+            </StorageProvider>
           </RainbowKitProvider>
         </QueryClientProvider>
       </WagmiProvider>

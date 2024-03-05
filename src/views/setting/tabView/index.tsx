@@ -2,7 +2,7 @@ import React, { useState } from "react";
 
 import clsx from "clsx";
 import { Flex, GradientText } from "@/components";
-import { CreditView, FavoriteView } from "@/views/setting";
+import { CreditView, FavoriteView, SecuritView, GiftCardView } from "@/views/setting";
 // assets
 import { CREDIT_SETTINGS } from "@/utils/constants";
 
@@ -40,6 +40,8 @@ const TabView: React.FC = () => {
         <div className="w-full flex-1">
           {tabIndex === 1 && <CreditView />}
           {tabIndex === 2 && <FavoriteView />}
+          {tabIndex === 3 && <SecuritView />}
+          {tabIndex === 4 && <GiftCardView />}
         </div>
       </Flex>
     </Flex>

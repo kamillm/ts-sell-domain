@@ -1,10 +1,7 @@
 import { Flex, GradientText } from "@/components";
+import { ascii, gtEq, ltEq } from "@/utils/func";
 import React, { useState } from "react";
 import { LuMinusCircle, LuPlusCircle } from "react-icons/lu";
-
-const ascii = (a: any) => a.charCodeAt(0);
-const gtEq = (a: any, b: any) => a >= b;
-const ltEq = (a: any, b: any) => a <= b;
 
 const DomainView: React.FC = () => {
   const [count, setCount] = useState<number>(1);
@@ -29,10 +26,10 @@ const DomainView: React.FC = () => {
 
   return (
     <div className="w-full">
-      <div className="uppercase text-[36px] font-500 font-space_grotesk border-b-2 border-primary/30 pb-3">
+      <div className="uppercase text-[36px] font-500 font-space_grotesk border-b-2 border-primary/30 pb-3 small:text-center">
         <GradientText>domain</GradientText>
       </div>
-      <Flex direction="flex-col" className="pt-5 space-y-4">
+      <Flex direction="flex-col" className="pt-5 space-y-4  w-[578px] laptop:w-full">
         <Flex direction="flex-col" className="w-full space-y-[10px] pt-3">
           <p className="text-[16px] font-500 text-main-900 ">Renew your domain with 90% discount</p>
           <Flex className="space-x-5 small:flex-col small:space-x-0 small:space-y-5">
