@@ -17,12 +17,15 @@ dependencies:
   '@rainbow-me/rainbowkit':
     specifier: ^2.0.1
     version: 2.0.1(@types/react@18.2.61)(react-dom@18.2.0)(react@18.2.0)(viem@2.7.16)(wagmi@2.5.7)
+  '@tanstack/query-core':
+    specifier: ^5.25.0
+    version: 5.25.0
   '@tanstack/react-query':
     specifier: ^5.22.2
     version: 5.24.2(react@18.2.0)
   '@wagmi/core':
     specifier: ^2.6.5
-    version: 2.6.5(@types/react@18.2.61)(react@18.2.0)(typescript@5.3.3)(viem@2.7.16)
+    version: 2.6.5(@tanstack/query-core@5.25.0)(@types/react@18.2.61)(react@18.2.0)(typescript@5.3.3)(viem@2.7.16)
   '@wojtekmaj/react-qr-svg':
     specifier: ^1.0.0
     version: 1.0.0(@types/react@18.2.61)(react-dom@18.2.0)(react@18.2.0)
@@ -70,7 +73,7 @@ dependencies:
     version: 2.7.16(typescript@5.3.3)
   wagmi:
     specifier: ^2.5.7
-    version: 2.5.7(@tanstack/react-query@5.24.2)(@types/react@18.2.61)(react-dom@18.2.0)(react-native@0.73.5)(react@18.2.0)(typescript@5.3.3)(viem@2.7.16)
+    version: 2.5.7(@tanstack/query-core@5.25.0)(@tanstack/react-query@5.24.2)(@types/react@18.2.61)(react-dom@18.2.0)(react-native@0.73.5)(react@18.2.0)(typescript@5.3.3)(viem@2.7.16)
 
 devDependencies:
   '@types/node':
@@ -2886,7 +2889,7 @@ packages:
       react-remove-scroll: 2.5.7(@types/react@18.2.61)(react@18.2.0)
       ua-parser-js: 1.0.37
       viem: 2.7.16(typescript@5.3.3)
-      wagmi: 2.5.7(@tanstack/react-query@5.24.2)(@types/react@18.2.61)(react-dom@18.2.0)(react-native@0.73.5)(react@18.2.0)(typescript@5.3.3)(viem@2.7.16)
+      wagmi: 2.5.7(@tanstack/query-core@5.25.0)(@tanstack/react-query@5.24.2)(@types/react@18.2.61)(react-dom@18.2.0)(react-native@0.73.5)(react@18.2.0)(typescript@5.3.3)(viem@2.7.16)
     transitivePeerDependencies:
       - '@types/react'
     dev: false
@@ -3471,6 +3474,10 @@ packages:
     resolution: {integrity: sha512-GD1z7Ehl5bBLBZkt+imENuGvfk/hf+I2FihsQvtC4rOTF1rW+FDYCO8Ds5vwnO5Bcshr73/mS3BhWPSwc1bogA==}
     dev: false
 
+  /@tanstack/query-core@5.25.0:
+    resolution: {integrity: sha512-vlobHP64HTuSE68lWF1mEhwSRC5Q7gaT+a/m9S+ItuN+ruSOxe1rFnR9j0ACWQ314BPhBEVKfBQ6mHL0OWfdbQ==}
+    dev: false
+
   /@tanstack/react-query@5.24.2(react@18.2.0):
     resolution: {integrity: sha512-3DgDWb36gQdcPjmDbSfk7HcWhMRhaPezE8cmLlCudFYBkWRNjb3oFivL4S7YhDkncoGJuBC3oIVEbOrAkLXWLA==}
     peerDependencies:
@@ -3715,7 +3722,7 @@ packages:
       '@metamask/sdk': 0.14.3(@types/react@18.2.61)(react-dom@18.2.0)(react-native@0.73.5)(react@18.2.0)
       '@safe-global/safe-apps-provider': 0.18.1(typescript@5.3.3)
       '@safe-global/safe-apps-sdk': 8.1.0(typescript@5.3.3)
-      '@wagmi/core': 2.6.5(@types/react@18.2.61)(react@18.2.0)(typescript@5.3.3)(viem@2.7.16)
+      '@wagmi/core': 2.6.5(@tanstack/query-core@5.25.0)(@types/react@18.2.61)(react@18.2.0)(typescript@5.3.3)(viem@2.7.16)
       '@walletconnect/ethereum-provider': 2.11.1(@types/react@18.2.61)(react@18.2.0)
       '@walletconnect/modal': 2.6.2(@types/react@18.2.61)(react@18.2.0)
       typescript: 5.3.3
@@ -3746,7 +3753,7 @@ packages:
       - zod
     dev: false
 
-  /@wagmi/core@2.6.5(@types/react@18.2.61)(react@18.2.0)(typescript@5.3.3)(viem@2.7.16):
+  /@wagmi/core@2.6.5(@tanstack/query-core@5.25.0)(@types/react@18.2.61)(react@18.2.0)(typescript@5.3.3)(viem@2.7.16):
     resolution: {integrity: sha512-DLyrc0o+dx05oIhBJuxnS7ekS5e6rB5mytlqPme+Km7aLdeBdcfYB4yJyYCyWoi93OLa7M5sbflTttz3o56bKw==}
     peerDependencies:
       '@tanstack/query-core': '>=5.0.0'
@@ -3758,6 +3765,7 @@ packages:
       typescript:
         optional: true
     dependencies:
+      '@tanstack/query-core': 5.25.0
       eventemitter3: 5.0.1
       mipd: 0.0.5(typescript@5.3.3)
       typescript: 5.3.3
@@ -10176,7 +10184,7 @@ packages:
     engines: {node: '>=0.10.0'}
     dev: false
 
-  /wagmi@2.5.7(@tanstack/react-query@5.24.2)(@types/react@18.2.61)(react-dom@18.2.0)(react-native@0.73.5)(react@18.2.0)(typescript@5.3.3)(viem@2.7.16):
+  /wagmi@2.5.7(@tanstack/query-core@5.25.0)(@tanstack/react-query@5.24.2)(@types/react@18.2.61)(react-dom@18.2.0)(react-native@0.73.5)(react@18.2.0)(typescript@5.3.3)(viem@2.7.16):
     resolution: {integrity: sha512-xSuteMXFKvra4xDddqZbZv/gQlcg3X+To5AoZW7WoAm0iVlF8/vEGpQzCWy6KZs2z1szxPrr0YnH3Zr1Qj4E/A==}
     peerDependencies:
       '@tanstack/react-query': '>=5.0.0'
@@ -10189,7 +10197,7 @@ packages:
     dependencies:
       '@tanstack/react-query': 5.24.2(react@18.2.0)
       '@wagmi/connectors': 4.1.14(@types/react@18.2.61)(@wagmi/core@2.6.5)(react-dom@18.2.0)(react-native@0.73.5)(react@18.2.0)(typescript@5.3.3)(viem@2.7.16)
-      '@wagmi/core': 2.6.5(@types/react@18.2.61)(react@18.2.0)(typescript@5.3.3)(viem@2.7.16)
+      '@wagmi/core': 2.6.5(@tanstack/query-core@5.25.0)(@types/react@18.2.61)(react@18.2.0)(typescript@5.3.3)(viem@2.7.16)
       react: 18.2.0
       typescript: 5.3.3
       use-sync-external-store: 1.2.0(react@18.2.0)
