@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useState, useRef } from "react";
 import { useRouter } from "next/router";
 import { EffectCards } from "swiper/modules";
@@ -11,15 +11,22 @@ import { DomainCard } from "@/components/Card";
 import { MdOutlineSearch as Search } from "react-icons/md";
 import { HiOutlineRocketLaunch as Rocket } from "react-icons/hi2";
 
+import { Container, Flex, GradientText } from "@/components";
+import { DomainCard } from "@/components/Card";
+
 import { DOMAIN_CARD_LIST } from "@/utils/constants";
-import { fetchDomainDetails } from "@/utils/web3/lookup";
+// import { fetchDomainDetails } from "@/utils/web3/lookup";
+import { useDomainDetails } from "@/utils/web3/useDomainDetails";
+import { useQueryClient } from "@tanstack/react-query";
 
 function HeroView() {
-  const router = useRouter();
 
+  const router = useRouter();
+  const queryClient = useQueryClient();
   const [searchedDomain, setSearchedDomain] = useState<string>("");
   const [domainStatus, setDomainStatus] = useState<boolean>(false);
-
+  const inputTextRef = useRef<string>("");
+  const { domainData, domainQuery } = useDomainDetails(inputTextRef.current);
   const timeoutId = useRef<undefined | ReturnType<typeof setTimeout>>(undefined);
 
   const options = [
@@ -29,26 +36,24 @@ function HeroView() {
     }
   ];
 
-  console.log(options);
+  useEffect(() => {
+    if ((domainData as { domainName: string })?.domainName === "") {
+      setDomainStatus(true);
+    } else {
+      setDomainStatus(false);
+    }
+  }, [domainData]);
 
-  const handleInputChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const inputText = e.target.value;
-
     clearTimeout(timeoutId.current);
+    inputTextRef.current = inputText;
     setSearchedDomain(inputText);
 
     timeoutId.current = setTimeout(async () => {
-      const domainData = await fetchDomainDetails(inputText);
-      // queryClient.invalidateQueries({ queryKey: domainQuery });
-
-      if (domainData?.domainName === "") {
-        setDomainStatus(true);
-        console.log("Available");
-      } else {
-        setDomainStatus(false);
-        console.log("Not Available");
-      }
-    }, 300);
+      // const domainData = await fetchDomainDetails(inputText, chain?.id as number);
+      queryClient.invalidateQueries({ queryKey: domainQuery });
+    }, 500);
   };
 
   const handleButtonClick = () => {

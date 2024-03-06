@@ -13,14 +13,14 @@ import "swiper/css/effect-cards";
 import "@rainbow-me/rainbowkit/styles.css";
 import { darkTheme, getDefaultConfig, RainbowKitProvider } from "@rainbow-me/rainbowkit";
 import { WagmiProvider } from "wagmi";
-import { polygonMumbai } from "wagmi/chains";
+import { polygonMumbai, x1Testnet, berachainTestnet, opBNB } from "wagmi/chains";
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 import { StorageProvider } from "@/contexts";
 
 const config = getDefaultConfig({
   appName: "ZNS Connect",
   projectId: "YOUR_PROJECT_ID",
-  chains: [polygonMumbai],
+  chains: [polygonMumbai, opBNB, x1Testnet, berachainTestnet],
   ssr: true // If your dApp uses server side rendering (SSR)
 });
 
