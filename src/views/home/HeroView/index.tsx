@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useState, useRef } from "react";
 import { useRouter } from "next/router";
 import { EffectCards } from "swiper/modules";
@@ -17,7 +17,7 @@ import { useQueryClient } from "@tanstack/react-query";
 
 function HeroView() {
   const router = useRouter();
-
+  const queryClient = useQueryClient();
   const [searchedDomain, setSearchedDomain] = useState<string>("");
   const [domainStatus, setDomainStatus] = useState<boolean>(false);
   const { domainData, domainQuery } = useDomainDetails(searchedDomain);
@@ -30,26 +30,23 @@ function HeroView() {
     }
   ];
 
-  console.log(options);
+  useEffect(() => {
+    if ((domainData as { domainName: string })?.domainName === "") {
+      setDomainStatus(true);
+    } else {
+      setDomainStatus(false);
+    }
+  }, [domainData]);
 
-  const handleInputChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const inputText = e.target.value;
-
     clearTimeout(timeoutId.current);
     setSearchedDomain(inputText);
 
     timeoutId.current = setTimeout(async () => {
-      const domainData = await fetchDomainDetails(inputText);
-      // queryClient.invalidateQueries({ queryKey: domainQuery });
-
-      if (domainData?.domainName === "") {
-        setDomainStatus(true);
-        console.log("Available");
-      } else {
-        setDomainStatus(false);
-        console.log("Not Available");
-      }
-    }, 300);
+      // const domainData = await fetchDomainDetails(inputText, chain?.id as number);
+      queryClient.invalidateQueries({ queryKey: domainQuery });
+    }, 500);
   };
 
   const handleButtonClick = () => {
