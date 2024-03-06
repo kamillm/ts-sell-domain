@@ -3,23 +3,22 @@ import { TabView } from "@/views/dynamic-setting";
 import { Container } from "@/components";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { fetchDomainDetails } from "@/utils/web3/lookup";
+// import { fetchDomainDetails } from "@/utils/web3/lookup";
+import { useDomainDetails } from "@/utils/web3/useDomainDetails";
 
 const Setting: NextPage = () => {
   const searchParams = useSearchParams();
   const domainName = searchParams.get("domain");
   const [domainStatus, setDomainStatus] = useState<boolean>(false);
+  const { domainData } = useDomainDetails(domainName || "");
 
   useEffect(() => {
-    const fetchData = async () => {
-      const domainData = await fetchDomainDetails(domainName || "");
-      if (domainData?.domainName === "") {
-        setDomainStatus(true);
-      } else {
-        setDomainStatus(false);
-      }
-    };
-    fetchData();
+    // const domainData = await fetchDomainDetails(name || "");
+    if ((domainData as { domainName: string })?.domainName === "") {
+      setDomainStatus(true);
+    } else {
+      setDomainStatus(false);
+    }
   }, [domainName]);
   return (
     <Container>

@@ -6,12 +6,14 @@ import { MENU_ICON_LIST, MENU_LIST } from "@/utils/constants";
 import { useConnect, useContextLocalStorage, useMenu } from "@/contexts";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
 import { useAccount } from "wagmi";
-import { fetchDomainDetails } from "@/utils/web3/lookup";
 import { Autocomplete } from "@mui/material";
 import { MdOutlineSearch as Search } from "react-icons/md";
+import { useDomainDetails } from "@/utils/web3/useDomainDetails";
+import { useQueryClient } from "@tanstack/react-query";
 
 const Menu: React.FC = () => {
   const router = useRouter();
+  const queryClient = useQueryClient();
   const { showMenu, setShowMenu } = useMenu();
   const { isConnect, setConnect } = useConnect();
   const { localstorage } = useContextLocalStorage();
@@ -22,6 +24,7 @@ const Menu: React.FC = () => {
   const [searchedDomain, setSearchedDomain] = useState<string>("");
   const [domainStatus, setDomainStatus] = useState<boolean>(false);
   const timeoutId = useRef<undefined | ReturnType<typeof setTimeout>>(undefined);
+  const { domainData, domainQuery } = useDomainDetails(searchedDomain);
 
   const options = [
     {
@@ -30,6 +33,14 @@ const Menu: React.FC = () => {
     }
   ];
 
+  useEffect(() => {
+    if ((domainData as { domainName: string })?.domainName === "") {
+      setDomainStatus(true);
+    } else {
+      setDomainStatus(false);
+    }
+  }, [domainData]);
+
   const handleInputChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const inputText = e.target.value;
 
@@ -37,17 +48,9 @@ const Menu: React.FC = () => {
     setSearchedDomain(inputText);
 
     timeoutId.current = setTimeout(async () => {
-      const domainData = await fetchDomainDetails(inputText);
-      // queryClient.invalidateQueries({ queryKey: domainQuery });
-
-      if (domainData?.domainName === "") {
-        setDomainStatus(true);
-        console.log("Available");
-      } else {
-        setDomainStatus(false);
-        console.log("Not Available");
-      }
-    }, 300);
+      // const domainData = await fetchDomainDetails(inputText);
+      queryClient.invalidateQueries({ queryKey: domainQuery });
+    }, 500);
   };
 
   const handleButtonClick = () => {

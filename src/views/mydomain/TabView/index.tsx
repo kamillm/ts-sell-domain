@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { Flex, GradientText } from "@/components";
 import { DOMAIN_TAB_LIST } from "@/utils/constants";
 import { SortbyName } from "..";
@@ -6,14 +6,17 @@ import { SortbyName } from "..";
 import clsx from "clsx";
 import { MdOutlineSearch } from "react-icons/md";
 import { Autocomplete } from "@mui/material";
-import { fetchDomainDetails } from "@/utils/web3/lookup";
+import { useDomainDetails } from "@/utils/web3/useDomainDetails";
 import { useRouter } from "next/router";
+import { useQueryClient } from "@tanstack/react-query";
 
 const TabView: React.FC = () => {
   const router = useRouter();
+  const queryClient = useQueryClient();
   const [tabIndex, setTabIndex] = useState<number>(1);
   const [domainStatus, setDomainStatus] = useState<boolean>(false);
   const [searchedDomain, setSearchedDomain] = useState<string>("");
+  const { domainData, domainQuery } = useDomainDetails(searchedDomain);
   const timeoutId = useRef<undefined | ReturnType<typeof setTimeout>>(undefined);
   const options = [
     {
@@ -29,6 +32,14 @@ const TabView: React.FC = () => {
     });
   };
 
+  useEffect(() => {
+    if ((domainData as { domainName: string })?.domainName === "") {
+      setDomainStatus(true);
+    } else {
+      setDomainStatus(false);
+    }
+  }, [domainData]);
+
   const handleInputChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const inputText = e.target.value;
 
@@ -36,15 +47,8 @@ const TabView: React.FC = () => {
     setSearchedDomain(inputText);
 
     timeoutId.current = setTimeout(async () => {
-      const domainData = await fetchDomainDetails(inputText);
-
-      if (domainData?.domainName === "") {
-        setDomainStatus(true);
-        console.log("Available");
-      } else {
-        setDomainStatus(false);
-        console.log("Not Available");
-      }
+      // const domainData = await fetchDomainDetails(inputText);
+      queryClient.invalidateQueries({ queryKey: domainQuery });
     }, 300);
   };
 

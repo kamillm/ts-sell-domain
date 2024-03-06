@@ -8,17 +8,20 @@ import { FAVORITE_ITEMS } from "@/utils/constants";
 import { MdOutlineSearch } from "react-icons/md";
 import { useRouter } from "next/router";
 import { Autocomplete } from "@mui/material";
-import { fetchDomainDetails } from "@/utils/web3/lookup";
+// import { fetchDomainDetails } from "@/utils/web3/lookup";
 import { useSearchParams } from "next/navigation";
+import { useDomainDetails } from "@/utils/web3/useDomainDetails";
+import { useQueryClient } from "@tanstack/react-query";
 
 const DomainRegisterView: React.FC = () => {
   const router = useRouter();
+  const queryClient = useQueryClient();
   const searchParams = useSearchParams();
   const search = searchParams.get("domain");
-
   const [domainStatus, setDomainStatus] = useState<boolean>(false);
   const timeoutId = useRef<undefined | ReturnType<typeof setTimeout>>(undefined);
   const [searchedDomain, setSearchedDomain] = useState<string>("");
+  const { domainData, domainQuery } = useDomainDetails(searchedDomain);
 
   const options = [
     {
@@ -31,23 +34,24 @@ const DomainRegisterView: React.FC = () => {
     setSearchedDomain(search || "");
   }, [search]);
 
+  useEffect(() => {
+    if ((domainData as { domainName: string })?.domainName === "") {
+      setDomainStatus(true);
+    } else {
+      setDomainStatus(false);
+    }
+  }, [domainData]);
+
   const handleInputChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const inputText = e.target.value;
 
     clearTimeout(timeoutId.current);
+
     setSearchedDomain(inputText);
 
     timeoutId.current = setTimeout(async () => {
-      const domainData = await fetchDomainDetails(inputText);
-      // queryClient.invalidateQueries({ queryKey: domainQuery });
-
-      if (domainData?.domainName === "") {
-        setDomainStatus(true);
-        console.log("Available");
-      } else {
-        setDomainStatus(false);
-        console.log("Not Available");
-      }
+      // const domainData = await fetchDomainDetails(inputText);
+      queryClient.invalidateQueries({ queryKey: domainQuery });
     }, 300);
   };
 

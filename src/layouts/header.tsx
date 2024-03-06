@@ -11,10 +11,12 @@ import clsx from "clsx";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
 import { MdOutlineSearch as Search, MdOutlineMenu as Menu } from "react-icons/md";
 import { Autocomplete } from "@mui/material";
-import { fetchDomainDetails } from "@/utils/web3/lookup";
+import { useQueryClient } from "@tanstack/react-query";
+import { useDomainDetails } from "@/utils/web3/useDomainDetails";
 
 export default function Header() {
   const router = useRouter();
+  const queryClient = useQueryClient();
   const { isConnect } = useConnect();
   const { setHambuger } = useHambuger();
   const { showMenu, setShowMenu } = useMenu();
@@ -24,6 +26,7 @@ export default function Header() {
 
   const [searchedDomain, setSearchedDomain] = useState<string>("");
   const [domainStatus, setDomainStatus] = useState<boolean>(false);
+  const { domainData, domainQuery } = useDomainDetails(searchedDomain);
   const timeoutId = useRef<undefined | ReturnType<typeof setTimeout>>(undefined);
 
   const options = [
@@ -33,6 +36,14 @@ export default function Header() {
     }
   ];
 
+  useEffect(() => {
+    if ((domainData as { domainName: string })?.domainName === "") {
+      setDomainStatus(true);
+    } else {
+      setDomainStatus(false);
+    }
+  }, [domainData]);
+
   const handleInputChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const inputText = e.target.value;
 
@@ -40,16 +51,8 @@ export default function Header() {
     setSearchedDomain(inputText);
 
     timeoutId.current = setTimeout(async () => {
-      const domainData = await fetchDomainDetails(inputText);
-      // queryClient.invalidateQueries({ queryKey: domainQuery });
-
-      if (domainData?.domainName === "") {
-        setDomainStatus(true);
-        console.log("Available");
-      } else {
-        setDomainStatus(false);
-        console.log("Not Available");
-      }
+      // const domainData = await fetchDomainDetails(inputText);
+      queryClient.invalidateQueries({ queryKey: domainQuery });
     }, 300);
   };
 

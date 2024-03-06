@@ -11,22 +11,16 @@ import { DomainCard } from "@/components/Card";
 import { MdOutlineSearch as Search } from "react-icons/md";
 import { HiOutlineRocketLaunch as Rocket } from "react-icons/hi2";
 
-import { Container, Flex, GradientText } from "@/components";
-import { DomainCard } from "@/components/Card";
-
 import { DOMAIN_CARD_LIST } from "@/utils/constants";
-// import { fetchDomainDetails } from "@/utils/web3/lookup";
 import { useDomainDetails } from "@/utils/web3/useDomainDetails";
 import { useQueryClient } from "@tanstack/react-query";
 
 function HeroView() {
-
   const router = useRouter();
   const queryClient = useQueryClient();
   const [searchedDomain, setSearchedDomain] = useState<string>("");
   const [domainStatus, setDomainStatus] = useState<boolean>(false);
-  const inputTextRef = useRef<string>("");
-  const { domainData, domainQuery } = useDomainDetails(inputTextRef.current);
+  const { domainData, domainQuery } = useDomainDetails(searchedDomain);
   const timeoutId = useRef<undefined | ReturnType<typeof setTimeout>>(undefined);
 
   const options = [
@@ -47,7 +41,6 @@ function HeroView() {
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const inputText = e.target.value;
     clearTimeout(timeoutId.current);
-    inputTextRef.current = inputText;
     setSearchedDomain(inputText);
 
     timeoutId.current = setTimeout(async () => {
