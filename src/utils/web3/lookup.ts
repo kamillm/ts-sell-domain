@@ -1,15 +1,12 @@
 import { abi } from "./abi";
 import { config } from "./config";
 import { readContract } from "@wagmi/core";
-// import { getContractAddressByChain } from "./utils";
+const contractAddress = "0x896704641275a31C9D55430F0f636ED2E383Cc9a";
 
-export async function fetchDomainDetails(domainName: string, chainId: number): Promise<any> {
-  // const contractAddress = getContractAddressByChain(chainId);
-  console.log(chainId);
-  // console.log(contractAddress);
+export async function fetchDomainDetails(domainName: string): Promise<any> {
   const result = await readContract(config, {
     abi: abi,
-    address: process.env.NEXT_PUBLIC_REGISTRY_ADDRESS_POLYGON_MUMBAI as `0x${string}`,
+    address: contractAddress,
     functionName: "registryLookupByName",
     args: [domainName]
   });
