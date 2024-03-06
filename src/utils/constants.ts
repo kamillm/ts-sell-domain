@@ -26,7 +26,8 @@ export const MENU_LIST = [
   // { name: "My domains", link: "/mydomain", },
   { name: "Affiliate", link: "/affiliate" },
   { name: "Badges", link: "/badges" },
-  { name: "Documentation", link: "https://docs.znsconnect.io/" }
+  { name: "Documentation", link: "https://docs.znsconnect.io/" },
+  { name: "Dev - Testing", link: "/dev" }
 ];
 
 export const MENU_ICON_LIST = [
