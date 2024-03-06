@@ -4,7 +4,8 @@ import { Flex } from "@/components";
 import { FollowerItem } from "@/components/Item/FollowerItem";
 // import { FAVORITE_ITEMS } from "@/utils/constants";
 import { AddCartModal } from "@/components/Modal";
-import { fetchDomainDetails } from "@/utils/web3/lookup";
+// import { fetchDomainDetails } from "@/utils/web3/lookup";
+import { useDomainDetails } from "@/utils/web3/useDomainDetails";
 
 const SearchSection: React.FC<{ search: string }> = ({ search }) => {
   const router = useRouter();
@@ -12,18 +13,16 @@ const SearchSection: React.FC<{ search: string }> = ({ search }) => {
   const [domainStatus, setDomainStatus] = useState<boolean>(false);
   const [showModal, setShowModal] = useState<boolean>(false);
   const [selected, setSelected] = useState<string>("");
+  const { domainData } = useDomainDetails(search || "");
 
   useEffect(() => {
-    const fetchData = async () => {
-      const domainData = await fetchDomainDetails(search || "");
-      if (domainData?.domainName === "") {
-        setDomainStatus(true);
-      } else {
-        setDomainStatus(false);
-      }
-    };
-    fetchData();
-  }, [search]);
+    // const domainData = await fetchDomainDetails(search || "");
+    if ((domainData as { domainName: string })?.domainName === "") {
+      setDomainStatus(true);
+    } else {
+      setDomainStatus(false);
+    }
+  }, [search, domainData]);
 
   return (
     <div className="w-full">

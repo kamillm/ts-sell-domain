@@ -4,7 +4,7 @@ import clsx from "clsx";
 import { Flex, Image } from "..";
 
 import { MdFavoriteBorder, MdOutlineFavorite } from "react-icons/md";
-import { fetchDomainDetails } from "@/utils/web3/lookup";
+import { useDomainDetails } from "@/utils/web3/useDomainDetails";
 import { useContextLocalStorage } from "@/contexts";
 
 export const FollowerItem = ({
@@ -30,17 +30,15 @@ export const FollowerItem = ({
   const router = useRouter();
   const { setLocalStorage, localstorage } = useContextLocalStorage();
   const [domainStatus, setDomainStatus] = useState<boolean>(false);
+  const { domainData } = useDomainDetails(name || "");
 
   useEffect(() => {
-    const fetchData = async () => {
-      const domainData = await fetchDomainDetails(name || "");
-      if (domainData?.domainName === "") {
-        setDomainStatus(true);
-      } else {
-        setDomainStatus(false);
-      }
-    };
-    fetchData();
+    // const domainData = await fetchDomainDetails(name || "");
+    if ((domainData as { domainName: string })?.domainName === "") {
+      setDomainStatus(true);
+    } else {
+      setDomainStatus(false);
+    }
   }, [name]);
 
   const onHandleClick = () => {

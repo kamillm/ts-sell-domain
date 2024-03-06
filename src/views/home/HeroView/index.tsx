@@ -12,14 +12,15 @@ import { MdOutlineSearch as Search } from "react-icons/md";
 import { HiOutlineRocketLaunch as Rocket } from "react-icons/hi2";
 
 import { DOMAIN_CARD_LIST } from "@/utils/constants";
-import { fetchDomainDetails } from "@/utils/web3/lookup";
+import { useDomainDetails } from "@/utils/web3/useDomainDetails";
+import { useQueryClient } from "@tanstack/react-query";
 
 function HeroView() {
   const router = useRouter();
 
   const [searchedDomain, setSearchedDomain] = useState<string>("");
   const [domainStatus, setDomainStatus] = useState<boolean>(false);
-
+  const { domainData, domainQuery } = useDomainDetails(searchedDomain);
   const timeoutId = useRef<undefined | ReturnType<typeof setTimeout>>(undefined);
 
   const options = [
