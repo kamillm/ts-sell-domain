@@ -4,8 +4,8 @@ import { Flex } from "@/components";
 import { FollowerItem } from "@/components/Item/FollowerItem";
 // import { FAVORITE_ITEMS } from "@/utils/constants";
 import { AddCartModal } from "@/components/Modal";
-// import { fetchDomainDetails } from "@/utils/web3/lookup";
 import { useDomainDetails } from "@/utils/web3/useDomainDetails";
+import { usePriceToRegister } from "@/utils/web3/usePriceToRegister";
 
 const SearchSection: React.FC<{ search: string }> = ({ search }) => {
   const router = useRouter();
@@ -14,6 +14,7 @@ const SearchSection: React.FC<{ search: string }> = ({ search }) => {
   const [showModal, setShowModal] = useState<boolean>(false);
   const [selected, setSelected] = useState<string>("");
   const { domainData } = useDomainDetails(search || "");
+  const { priceInEther, symbol } = usePriceToRegister(search.length);
 
   useEffect(() => {
     // const domainData = await fetchDomainDetails(search || "");
@@ -44,7 +45,7 @@ const SearchSection: React.FC<{ search: string }> = ({ search }) => {
               isfollow={false}
               count={23}
               minted={!domainStatus}
-              price={"10 MATIC"}
+              price={priceInEther + " " + symbol}
               index={1}
               setShowModal={setShowModal}
               setSelected={setSelected}

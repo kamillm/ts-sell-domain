@@ -12,6 +12,7 @@ import { Autocomplete } from "@mui/material";
 import { useSearchParams } from "next/navigation";
 import { useDomainDetails } from "@/utils/web3/useDomainDetails";
 import { useQueryClient } from "@tanstack/react-query";
+// import { useRegisterDomain } from "@/utils/web3/useRegisterDomain";
 
 const DomainRegisterView: React.FC = () => {
   const router = useRouter();
@@ -22,6 +23,7 @@ const DomainRegisterView: React.FC = () => {
   const timeoutId = useRef<undefined | ReturnType<typeof setTimeout>>(undefined);
   const [searchedDomain, setSearchedDomain] = useState<string>("");
   const { domainData, domainQuery } = useDomainDetails(searchedDomain);
+
 
   const options = [
     {

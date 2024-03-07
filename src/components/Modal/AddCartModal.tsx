@@ -7,6 +7,7 @@ import { IoMdCloseCircle } from "react-icons/io";
 import { useRouter } from "next/router";
 import { useContextLocalStorage } from "@/contexts";
 import { useDomainDetails } from "@/utils/web3/useDomainDetails";
+import { usePriceToRegister } from "@/utils/web3/usePriceToRegister";
 
 const AddCartModal = ({
   domain,
@@ -21,6 +22,7 @@ const AddCartModal = ({
   const { setLocalStorage, localstorage } = useContextLocalStorage();
   const [domainStatus, setDomainStatus] = useState<boolean>(false);
   const { domainData } = useDomainDetails(domain || "");
+  const { priceInEther } = usePriceToRegister(domain.length);
 
   useEffect(() => {
     if ((domainData as { domainName: string })?.domainName === "") {
@@ -44,10 +46,12 @@ const AddCartModal = ({
     }
   };
 
+  console.log("domain : ", domain);
+
   const onClickButton = () => {
     if (domainStatus) {
       let saveItems = JSON.parse(localstorage);
-      let newItem = { name: domain, year: 1 };
+      let newItem = { name: domain, year: 1, price: priceInEther };
       saveItems.push(newItem);
       setLocalStorage(JSON.stringify(saveItems));
       localStorage.setItem("domains", JSON.stringify(saveItems));

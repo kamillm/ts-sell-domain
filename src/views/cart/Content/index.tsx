@@ -3,9 +3,13 @@ import { Flex } from "@/components";
 import { LuMinus, LuPlus } from "react-icons/lu";
 import { RiDeleteBin5Line } from "react-icons/ri";
 import { useContextLocalStorage } from "@/contexts";
+import { usePriceToRegister } from "@/utils/web3/usePriceToRegister";
+import { usePriceToRenew } from "@/utils/web3/usePriceToRenew";
 
 const PeriodCounter = ({ index, item }: { index: number; item: any }) => {
   const { localstorage, setLocalStorage } = useContextLocalStorage();
+  const { priceInEther, symbol } = usePriceToRegister(item.name.length);
+  const { renewPriceInEther } = usePriceToRenew(item.name.length);
 
   const handlePeriod = (name: string, type: boolean) => {
     let savedItems = JSON.parse(localstorage);
@@ -16,7 +20,7 @@ const PeriodCounter = ({ index, item }: { index: number; item: any }) => {
     if (type) {
       savedItems = savedItems.map((item: any) => {
         if (item.name === name) {
-          return { ...item, year: item.year + 1 };
+          return { ...item, year: item.year + 1, renewPrice: renewPriceInEther };
         }
         return item;
       });
@@ -31,6 +35,7 @@ const PeriodCounter = ({ index, item }: { index: number; item: any }) => {
         });
       }
     }
+
     setLocalStorage(JSON.stringify(savedItems));
     localStorage.setItem("domains", JSON.stringify(savedItems));
   };
@@ -54,7 +59,7 @@ const PeriodCounter = ({ index, item }: { index: number; item: any }) => {
         {/* {item.status ? "Available" : "Not Available"} */}
         Available
       </span>
-      <p className="text-[16px] text-primary font-500 small:hidden">{"10 MATIC"}</p>
+      <p className="text-[16px] text-primary font-500 small:hidden">{priceInEther + " " + symbol}</p>
       <Flex className="space-x-[10px]">
         <Flex className="space-x-5">
           <Flex className="space-x-3" align="items-center">

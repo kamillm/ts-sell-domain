@@ -5,6 +5,7 @@ import { Flex, Image } from "..";
 
 import { MdFavoriteBorder, MdOutlineFavorite } from "react-icons/md";
 import { useDomainDetails } from "@/utils/web3/useDomainDetails";
+import { usePriceToRegister } from "@/utils/web3/usePriceToRegister";
 import { useContextLocalStorage } from "@/contexts";
 
 export const FollowerItem = ({
@@ -30,6 +31,7 @@ export const FollowerItem = ({
   const router = useRouter();
   const { setLocalStorage, localstorage } = useContextLocalStorage();
   const [domainStatus, setDomainStatus] = useState<boolean>(false);
+  const { priceInEther } = usePriceToRegister(name.length);
   const { domainData } = useDomainDetails(name || "");
 
   useEffect(() => {
@@ -59,7 +61,7 @@ export const FollowerItem = ({
   const onAddToCart = () => {
     if (domainStatus) {
       let saveItems = JSON.parse(localstorage);
-      let newItem = { name: name, year: 1 };
+      let newItem = { name: name, year: 1, price: priceInEther };
       saveItems.push(newItem);
       setLocalStorage(JSON.stringify(saveItems));
       localStorage.setItem("domains", JSON.stringify(saveItems));
