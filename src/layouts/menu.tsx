@@ -10,12 +10,14 @@ import { Autocomplete } from "@mui/material";
 import { MdOutlineSearch as Search } from "react-icons/md";
 import { useDomainDetails } from "@/utils/web3/useDomainDetails";
 import { useQueryClient } from "@tanstack/react-query";
+import { useContextFavorite } from "@/contexts/FavoriteProvider";
 
 const Menu: React.FC = () => {
   const router = useRouter();
   const queryClient = useQueryClient();
   const { showMenu, setShowMenu } = useMenu();
   const { isConnect, setConnect } = useConnect();
+  const { favorite } = useContextFavorite();
   const { localstorage } = useContextLocalStorage();
   const { isConnected, isDisconnected } = useAccount();
   const handleClose = () => setShowMenu(!showMenu);
@@ -55,7 +57,7 @@ const Menu: React.FC = () => {
 
   const handleButtonClick = () => {
     router.push({
-      pathname: "search",
+      pathname: `register`,
       query: { domain: searchedDomain }
     });
   };
@@ -146,15 +148,23 @@ const Menu: React.FC = () => {
           </Flex>
           <Flex className="relative space-x-5 w-fit">
             {MENU_ICON_LIST.map((menu, index) => (
-              <Link key={`navbar_menu_icon_${index}`} href={menu.link} className="cursor-pointer">
-                {<menu.icon className="w-10 h-10 mobile:w-8 mobile:h-8" />}
-              </Link>
+              <div key={`navbar_menu_icon_${index}`}>
+                <Link href={menu.link} className="cursor-pointer">
+                  {<menu.icon className="w-10 h-10 mobile:w-8 mobile:h-8" />}
+                </Link>
+
+                {menu.link === "/settings?tab=favorite" && JSON.parse(favorite).length != 0 && (
+                  <span className="absolute right-0 top-0 bg-verified rounded-full h-[15px] w-[15px] inline-flex items-center justify-center text-[10px]">
+                    {JSON.parse(favorite).length}
+                  </span>
+                )}
+                {menu.link === "/cart" && JSON.parse(localstorage).length != 0 && (
+                  <span className="absolute right-0 top-0 bg-verified rounded-full h-[15px] w-[15px] inline-flex items-center justify-center text-[10px]">
+                    {JSON.parse(localstorage).length}
+                  </span>
+                )}
+              </div>
             ))}
-            {JSON.parse(localstorage).length != 0 && (
-              <span className="absolute right-0 bg-verified rounded-full h-[15px] w-[15px] inline-flex items-center justify-center text-[10px]">
-                {JSON.parse(localstorage).length}
-              </span>
-            )}
           </Flex>
         </Flex>
       </Container>

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Flex, GradientText } from "@/components";
-import { BADGES_TAB_LIST } from "@/utils/constants";
+import { BADGES_TAB_LIST, MINT_ITEMS } from "@/utils/constants";
 import { AllViewTab } from "..";
 
 import clsx from "clsx";
@@ -38,10 +38,10 @@ const TabView: React.FC = () => {
         ))}
       </Flex>
 
-      {tabIndex === 1 && <AllViewTab />}
-      {tabIndex === 2 && <AllViewTab />}
-      {tabIndex === 3 && <AllViewTab />}
-      {tabIndex === 4 && <AllViewTab />}
+      {tabIndex === 1 && <AllViewTab items={MINT_ITEMS} />}
+      {tabIndex === 2 && <AllViewTab items={MINT_ITEMS.filter((item) => item.type === 3)} />}
+      {tabIndex === 3 && <AllViewTab items={MINT_ITEMS.filter((item) => item.type === 1)} />}
+      {tabIndex === 4 && <AllViewTab items={MINT_ITEMS.filter((item) => item.type === 2)} />}
     </Flex>
   );
 };

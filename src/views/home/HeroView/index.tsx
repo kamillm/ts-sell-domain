@@ -51,10 +51,11 @@ function HeroView() {
 
   const handleButtonClick = () => {
     router.push({
-      pathname: "search",
+      pathname: `register`,
       query: { domain: searchedDomain }
     });
   };
+
   return (
     <Container>
       <Flex
@@ -174,6 +175,8 @@ function HeroView() {
                 width: 300
               }
             }}
+            rewind
+            slideToClickedSlide
             className="badge_effect_swiper"
           >
             {DOMAIN_CARD_LIST.map((item, index) => (

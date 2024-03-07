@@ -29,7 +29,7 @@ const CreditView: React.FC = () => {
       <div className="uppercase text-[36px] font-500 font-space_grotesk border-b-2 border-primary/30 pb-3">
         <GradientText>credits</GradientText>
       </div>
-      <Flex direction="flex-col" className="pt-5 space-y-4 w-[578px] laptop:w-full">
+      <Flex direction="flex-col" className="pt-5 space-y-4 w-[578px]  laptop:w-full">
         <Flex direction="flex-col" className="w-full space-y-[10px]">
           <p className="text-[16px] font-500 text-main-900 ">Redeem your Gift Card</p>
           <Flex className="space-x-5 small:space-x-3">
@@ -77,7 +77,7 @@ const CreditView: React.FC = () => {
         <Flex direction="flex-col" className="w-full space-y-[10px] pt-3">
           <p className="text-[16px] font-500 text-main-900 ">Send credits </p>
           <Flex className="space-x-5 small:flex-col small:space-x-0 small:space-y-5">
-            <Flex className="flex-1 w-full space-x-5">
+            <Flex className="flex-1 w-full space-x-5 small:flex-col small:space-x-0 small:space-y-2">
               <div className="relative">
                 <input
                   placeholder="Enter amount to send"
@@ -88,7 +88,7 @@ const CreditView: React.FC = () => {
 
               <input
                 placeholder="Enter address to send credits "
-                className="flex-1  placeholder:text-[14px] w-full h-[54px] rounded-xl px-4 placeholder:text-white-500 border border-main-300 outline-none bg-black/40"
+                className="flex-1  placeholder:text-[14px] w-full h-[54px] small:py-3 rounded-xl px-4 placeholder:text-white-500 border border-main-300 outline-none bg-black/40"
               />
             </Flex>
 

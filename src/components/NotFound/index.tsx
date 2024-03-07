@@ -50,7 +50,7 @@ const NotFound: React.FC<{ label: string }> = ({ label }) => {
 
   const handleButtonClick = () => {
     router.push({
-      pathname: "search",
+      pathname: `register`,
       query: { domain: searchedDomain }
     });
   };
@@ -84,7 +84,6 @@ const NotFound: React.FC<{ label: string }> = ({ label }) => {
                 <p className="text-5- font-600 text-main-300">{option.label}</p>
                 <p className={`text-4 font-500 ${!option.status ? "text-red-500" : "text-blue-500"}`}>
                   {option.status === "" ? "" : option.status ? "Available" : "Not Available"}
-                  {/* {option.status ? "Available" : "Not Available"} */}
                 </p>
               </Flex>
             );

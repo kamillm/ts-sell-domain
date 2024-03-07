@@ -33,6 +33,7 @@ function IdentifyView() {
             //   delay: 3000,
             //   disableOnInteraction: false
             // }}
+            slideToClickedSlide
             modules={[EffectCards]}
             width={250}
             breakpoints={{
@@ -75,7 +76,7 @@ function IdentifyView() {
             </Flex>
 
             <button
-              onClick={() => router.push("/search")}
+              onClick={() => router.push("/register")}
               className="max-w-[528px] h-[80px] flex-shrink-0 rounded-[53px] border border-solid border-main-300 bg-primary_gradient_button  desktop:h-[60px]  mobile:h-[60px] laptop:px-20 tablet:px-4"
             >
               <span className="uppercase text-primary text-[28px] font-space_grotesk font-700 desktop:text-[24px] mobile:text-[20px]">

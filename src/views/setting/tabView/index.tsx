@@ -1,13 +1,14 @@
-import React, { useState } from "react";
+import React from "react";
 
 import clsx from "clsx";
 import { Flex, GradientText } from "@/components";
-import { CreditView, FavoriteView, SecuritView, GiftCardView } from "@/views/setting";
+import { CreditView, FavoriteView, SecurityView, GiftCardView } from "@/views/setting";
 // assets
 import { CREDIT_SETTINGS } from "@/utils/constants";
+import { useQueryParam } from "@/hooks";
 
 const TabView: React.FC = () => {
-  const [tabIndex, setTabIndex] = useState<number>(1);
+  const { tab, setTab } = useQueryParam();
 
   return (
     <Flex direction="flex-col" className="pt-[200px] mobile:pt-[150px] space-y-[97px]">
@@ -17,31 +18,33 @@ const TabView: React.FC = () => {
         </div>
       </Flex>
       <Flex justifyContent="justify-between" className="space-x-10 tablet:flex-col tablet:space-x-0 tablet:space-y-10">
-        <Flex
-          direction="flex-col"
-          className="w-[233px] laptop:w-[180px] tablet:flex-row tablet:w-full tablet:justify-between"
-        >
-          {CREDIT_SETTINGS.map((item, mapIndex) => (
-            <Flex
-              key={`profile-settings-${mapIndex}`}
-              align="items-center"
-              justifyContent="justify-start"
-              action={() => setTabIndex(mapIndex + 1)}
-              className={clsx(
-                "w-full space-x-[15px] px-[25px] py-[17px] rounded-2xl cursor-pointer tablet:justify-center tablet:px-0",
-                tabIndex === mapIndex + 1 ? "text-black bg-primary_gradient_text" : "text-main-400 hover:text-white"
-              )}
-            >
-              <item.icon className="w-[20px] h-[20px]" />
-              <p className="text-[16px] font-500 uppercase">{item.label}</p>
-            </Flex>
-          ))}
-        </Flex>
-        <div className="w-full flex-1">
-          {tabIndex === 1 && <CreditView />}
-          {tabIndex === 2 && <FavoriteView />}
-          {tabIndex === 3 && <SecuritView />}
-          {tabIndex === 4 && <GiftCardView />}
+        <div className="w-[233px] tablet:w-full">
+          <Flex direction="flex-col" className="tablet:flex-row tablet:justify-between">
+            {CREDIT_SETTINGS.map((item, mapIndex) => (
+              <Flex
+                key={`profile-settings-${mapIndex}`}
+                align="items-center"
+                justifyContent="justify-start"
+                action={() => setTab(item.tabName)}
+                className={clsx(
+                  "w-full space-x-[15px] px-[25px] py-[17px] rounded-2xl cursor-pointer",
+                  tab === item.tabName ? "text-black bg-primary_gradient_text" : "text-main-400 hover:text-white",
+                  "tablet:justify-center tablet:px-0",
+                  "small:space-x-2",
+                  "mobile:flex-col mobile:justify-center mobile:items-center mobile:space-y-1 mobile:space-x-0"
+                )}
+              >
+                <item.icon className="w-[20px] h-[20px]" />
+                <p className="text-[16px] small:text-[10px] font-500 uppercase">{item.label}</p>
+              </Flex>
+            ))}
+          </Flex>
+        </div>
+        <div className="flex-1">
+          {tab === "credits" && <CreditView />}
+          {tab === "favorite" && <FavoriteView />}
+          {tab === "security" && <SecurityView />}
+          {tab === "gift-cards" && <GiftCardView />}
         </div>
       </Flex>
     </Flex>

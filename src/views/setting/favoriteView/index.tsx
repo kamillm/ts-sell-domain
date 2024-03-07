@@ -1,13 +1,17 @@
-import React, { useState } from "react";
-import { Flex, GradientText } from "@/components";
-import { FAVORITE_ITEMS } from "@/utils/constants";
-import { AddCartModal } from "@/components/Modal";
+import React, { useEffect, useState } from "react";
+import { GradientText } from "@/components";
 import { FollowerItem } from "@/components/Item/FollowerItem";
 import clsx from "clsx";
+import { useContextFavorite } from "@/contexts/FavoriteProvider";
 
-const FavoriteView: React.FC<{ type?: boolean }> = ({ type = false }) => {
-  const [showModal, setShowModal] = useState<boolean>(false);
-  const [selected, setSelected] = useState<string>("");
+const FavoriteView = () => {
+  const { favorite } = useContextFavorite();
+  const [favoriteItems, setFavoriteItems] = useState<string[]>([]);
+
+  useEffect(() => {
+    let items = JSON.parse(favorite);
+    setFavoriteItems(items);
+  }, [favorite]);
 
   return (
     <div className="w-full">
@@ -15,18 +19,18 @@ const FavoriteView: React.FC<{ type?: boolean }> = ({ type = false }) => {
         <GradientText>favorites</GradientText>
       </div>
 
-      <Flex direction="flex-col" className={clsx("pt-5 space-y-4 laptop:w-full", type ? "w-full" : "w-[800px]")}>
-        {FAVORITE_ITEMS.map((item, index) => (
-          <FollowerItem
-            {...item}
-            index={index + 1}
-            key={`follower-item-${index}`}
-            setShowModal={setShowModal}
-            setSelected={setSelected}
-          />
-        ))}
-      </Flex>
-      <AddCartModal showModal={showModal} setShowModal={setShowModal} domain={selected} />
+      <div
+        className={clsx(
+          "flex-col pt-5 space-y-4",
+          "desktop:space-y-0 desktop:grid desktop:grid-cols-3 desktop:gap-4",
+          "laptop:grid-cols-1"
+        )}
+      >
+        {favoriteItems.length !== 0 &&
+          favoriteItems.map((item: string, index: number) => (
+            <FollowerItem name={item} index={index + 1} key={`follower-item-${index}`} />
+          ))}
+      </div>
     </div>
   );
 };

@@ -15,9 +15,9 @@ const ListItem = ({
   isprimary,
   tokenId,
   registrant,
-  expiration
-  // setShowModal,
-  // setSelected
+  expiration,
+  setShowModal,
+  setSelected
 }: {
   src: string;
   name: string;
@@ -26,28 +26,22 @@ const ListItem = ({
   tokenId: number;
   registrant: string;
   expiration: string;
-  setSelected: any;
-  setShowModal: any;
+  setSelected: React.Dispatch<React.SetStateAction<number>>;
+  setShowModal: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
   const router = useRouter();
   const modalRef = useRef<HTMLDivElement>(null);
   const [isDrop, setIsDrop] = useState<boolean>(false);
   const onClickView = () => {
-    // setShowModal(true);
-    // setIsDrop(false);
-    // setSelected(index - 1);
     router.push({
-      pathname: "profile",
-      query: { domain: name, mode: false }
+      pathname: `profile/[domain]`,
+      query: { domain: name, editmode: false, owner: isprimary }
     });
   };
 
   const onClickManage = () => {
-    // setShowModal(true);
-    // setIsDrop(false);
-    // setSelected(index - 1);
     router.push({
-      pathname: "profile/manage",
+      pathname: `profile/manage/[domain]`,
       query: { domain: name }
     });
   };
@@ -56,9 +50,13 @@ const ListItem = ({
     setIsDrop(false);
   }, [setIsDrop]);
 
+  const onClickItem = () => {
+    setShowModal(true);
+    setSelected(index - 1);
+  };
+
   useEffect(() => {
     const handleClick = (event: MouseEvent) => {
-      console.log(modalRef.current, event.target);
       if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
         handleClickOutside();
       }
@@ -74,25 +72,30 @@ const ListItem = ({
       <Flex
         align="items-center"
         justifyContent="justify-between"
-        className="px-5 py-2 space-x-2 bg-black/40 rounded-2xl cursor-pointer hover:bg-main-100 small:px-4 small:py-1 final:px-1"
+        className="relative px-5 py-2 space-x-2 bg-black/40 rounded-2xl cursor-pointer hover:bg-main-100 small:px-4 small:py-1 final:px-1"
       >
-        <Flex align="items-center" justifyContent="justify-between" className="w-full space-x-5 small:space-x-3">
+        <Flex
+          action={onClickItem}
+          align="items-center"
+          justifyContent="justify-between"
+          className="w-full space-x-3 pr-[50px]"
+        >
           <Flex
-            className="space-x-5 w-[430px] tablet:w-[60%] small:w-[80%]"
+            className="space-x-5 w-[60%] tablet:w-[80%] small:w-full"
             align="items-center"
             justifyContent="justify-start"
           >
             <div className="w-5 h-5 shrink-0 rounded-full bg-main-200 text-main-900 text-[16px] inline-flex items-center justify-center">
               {index}
             </div>
-            <Flex align="items-center" className="space-x-4 mobile:space-x-2 truncate">
+            <Flex align="items-center" className="space-x-4 mobile:space-x-2">
               <Image
                 src={src}
                 alt={name}
                 fill
                 className="w-[62px] h-[62px] small:w-14 small:h-14 shrink-0 rounded-full"
               />
-              <p className="text-[22px] small:text-[16px] mobile:text-[12px] font-500 truncate">{name}.zeta</p>
+              <p className="text-[22px] small:text-[16px] mobile:text-[12px] font-500 break-all">{name}.zeta</p>
 
               {isprimary && (
                 <div className="tablet:hidden inline-flex text-center items-center border-[0.5px] border-verified/60 rounded-xl text-[12px] font-500 px-2 py-[2px]">
@@ -102,15 +105,14 @@ const ListItem = ({
             </Flex>
           </Flex>
 
-          <p className="text-[16px] font-700 text-success tablet:hidden">{tokenId}</p>
-          <p className="text-[16px] font-500 desktop:hidden">{registrant}</p>
-
-          <Flex align="items-center" justifyContent="justify-between" className="space-x-5">
-            <p className="text-[16px] font-500 small:hidden">{expiration}</p>
-            <button onClick={() => setIsDrop(true)}>
-              <HiDotsVertical className="w-6 h-6" />
-            </button>
-          </Flex>
+          <p className="w-[90px] text-[16px] font-700 text-success tablet:hidden text-center">{tokenId}</p>
+          <p className="w-[90px] text-[16px] font-500 desktop:hidden text-center">{registrant}</p>
+          <p className="w-[130px] text-[16px] font-500 small:hidden text-center">{expiration}</p>
+        </Flex>
+        <Flex align="items-center" justifyContent="justify-between" className="absolute space-x-5 right-3">
+          <button onClick={() => setIsDrop(true)}>
+            <HiDotsVertical className="w-6 h-6" />
+          </button>
         </Flex>
       </Flex>
 
@@ -126,7 +128,7 @@ const ListItem = ({
         >
           <Flex action={onClickView} className="space-x-2 bg-black p-2 flex-1 rounded-lg cursor-pointer">
             <MdRemoveRedEye className="w-[14px] h-[14px]" />
-            <p className="text-[10px] font-500">View</p>
+            <p className="text-[10px] font-500">Profile</p>
           </Flex>
           <Flex action={onClickManage} className="space-x-2 bg-black p-2 flex-1 rounded-lg cursor-pointer">
             <MdOutlineSettings className="w-[14px] h-[14px]" />

@@ -21,12 +21,8 @@ const CartView: React.FC = () => {
       {JSON.parse(localstorage).length === 0 ? (
         <NotFound label="Your cart is empty" />
       ) : (
-        <Flex
-          direction="flex-row"
-          justifyContent="justify-between"
-          className="space-x-[30px] pt-[100px] desktop:w-full"
-        >
-          <Flex direction="flex-col" className="space-y-[30px] desktop:w-full">
+        <Flex direction="flex-row" justifyContent="justify-between" className="space-x-[30px] pt-[100px] w-full">
+          <Flex direction="flex-col" className="flex-1 space-y-[30px] desktop:w-full">
             <CountSection />
             <ContentSection />
             <Flex justifyContent="justify-end" className="hidden desktop:flex">

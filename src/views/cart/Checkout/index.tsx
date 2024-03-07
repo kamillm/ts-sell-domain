@@ -3,7 +3,7 @@ import { LuMinusCircle, LuPlusCircle } from "react-icons/lu";
 import clsx from "clsx";
 
 import { useCredit } from "@/contexts";
-import { Flex } from "@/components";
+import { Flex, Link } from "@/components";
 import { ascii, gtEq, ltEq } from "@/utils/func";
 import { useContextLocalStorage } from "@/contexts";
 
@@ -54,39 +54,9 @@ const CheckoutSection: React.FC = () => {
     <div>
       <Flex
         direction="flex-col"
-        className="px-[50px] py-[30px] rounded-2xl bg-black/40 border border-main-200 space-y-[30px] small:p-5"
+        className="p-10 rounded-2xl bg-black/40 border border-main-200 space-y-[30px] small:p-5"
       >
         <p className="text-[24px] font-600">Order Summary</p>
-        {/* <Flex direction="flex-col" className="space-y-[10px]">
-          <Flex
-            align="items-stretch"
-            justifyContent="justify-between"
-            className="space-x-[15px] small:flex-col small:space-x-0 small:space-y-[10px]"
-          >
-            <button className={clsx("flex-1 p-2 font-500   rounded-lg", "bg-primary text-black")}>Pay in MATIC</button>
-          </Flex>
-          <Flex align="items-center" justifyContent="justify-between" className="space-x-1">
-            <p className="text-[14px] font-400 small:text-[10px]">{"Registration price for 4 domains"}</p>
-            <p className="text-[20px] font-500 text-primary shrink-0">{"55 MATIC"}</p>
-          </Flex>
-        </Flex> */}
-
-        {/* <Flex direction="flex-col" className="space-y-1">
-          <div className="relative w-[328px] small:w-full text-[12px] border border-white-400 rounded-xl">
-            <input
-              placeholder="Enter Refferal ( optional)"
-              className="w-full p-4 font-400 placeholder:text-white-500 border-none outline-none bg-transparent"
-            />
-            <button
-              type="submit"
-              className="absolute right-0 bg-verified rounded-xl text-center w-[112px] small:w-[80px] h-full inline-flex items-center justify-center"
-            >
-              Apply
-            </button>
-          </div>
-          <p className="text-[12px] px-4 font-500 text-main-300">{"*Do not enter if don’t have"}</p>
-        </Flex> */}
-
         <Flex direction="flex-col" className="space-y-1">
           <Flex align="items-center" justifyContent="justify-between">
             <p className="text-[14px] font-400 capitalize">{"Total price"}</p>
@@ -141,7 +111,10 @@ const CheckoutSection: React.FC = () => {
         <button className="bg-primary text-black text-[16px] font-500 p-3 rounded-xl">{"Checkout"}</button>
       </Flex>
       <p className="text-[14px] font-400 text-center pt-[20px]">
-        Need more credits ? Get them <span className="text-verified cursor-pointer hover:text-verified/90">here</span>
+        Need more credits ? Get them{" "}
+        <Link href="/settings?tab=credits" className="text-verified cursor-pointer hover:text-verified/90">
+          here
+        </Link>
       </p>
     </div>
   );
