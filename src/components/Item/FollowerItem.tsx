@@ -4,49 +4,42 @@ import clsx from "clsx";
 import { Flex, Image } from "..";
 
 import { MdFavoriteBorder, MdOutlineFavorite } from "react-icons/md";
-import { fetchDomainDetails } from "@/utils/web3/lookup";
 import { useContextLocalStorage } from "@/contexts";
+import { useContextFavorite } from "@/contexts/FavoriteProvider";
+import { useDomainDetails } from "@/utils/web3/useDomainDetails";
 
 export const FollowerItem = ({
-  src,
+  src = "/img/profile/1.png",
   name,
-  count,
-  price,
-  minted,
-  isfollow,
-  setSelected,
-  setShowModal
+  count = 214,
+  price = 10
 }: {
-  src: string;
+  src?: string;
   name: string;
   index: number;
-  price: string;
-  count: number;
-  minted: boolean;
-  isfollow: boolean;
-  setSelected: any;
-  setShowModal: any;
+  price?: number;
+  count?: number;
 }) => {
   const router = useRouter();
-  const { setLocalStorage, localstorage } = useContextLocalStorage();
+  const { favorite, setFavorite } = useContextFavorite();
+  const [isfollow, setIsFollow] = useState<boolean>(false);
+  const { localstorage, setLocalStorage } = useContextLocalStorage();
+  const { domainData } = useDomainDetails(name || "");
   const [domainStatus, setDomainStatus] = useState<boolean>(false);
 
   useEffect(() => {
-    const fetchData = async () => {
-      const domainData = await fetchDomainDetails(name || "");
-      if (domainData?.domainName === "") {
-        setDomainStatus(true);
-      } else {
-        setDomainStatus(false);
-      }
-    };
-    fetchData();
-  }, [name]);
+    let favoriteItems = JSON.parse(favorite);
+    const isInclude = favoriteItems.includes(name);
+    setIsFollow(isInclude);
+  }, [favorite]);
 
-  const onHandleClick = () => {
-    setSelected(name);
-    setShowModal(true);
-  };
+  useEffect(() => {
+    if ((domainData as { domainName: string })?.domainName === "") {
+      setDomainStatus(true);
+    } else {
+      setDomainStatus(false);
+    }
+  }, [name]);
 
   const onCheckFromStroage = () => {
     let saveItems = JSON.parse(localstorage);
@@ -67,8 +60,8 @@ export const FollowerItem = ({
       localStorage.setItem("domains", JSON.stringify(saveItems));
     } else {
       router.push({
-        pathname: "profile",
-        query: { domain: name, mode: false } // mode(false) : manage
+        pathname: `profile/[domain]`,
+        query: { domain: name, editmode: false, owner: false }
       });
     }
   };
@@ -80,22 +73,49 @@ export const FollowerItem = ({
     localStorage.setItem("domains", JSON.stringify(filterItem));
   };
 
+  const onHandleFavorite = () => {
+    let favoriteItems = JSON.parse(favorite);
+    let newArray;
+    if (isfollow) {
+      newArray = favoriteItems.filter((item: string) => item !== name);
+    } else {
+      newArray = [...favoriteItems, name];
+    }
+    localStorage.setItem("favorite", JSON.stringify(newArray));
+    setFavorite(JSON.stringify(newArray));
+  };
+
   return (
-    <>
+    <div className="relative px-5 py-3 rounded-2xl bg-black/40 hover:bg-main-100 border border-main-300">
       <Flex
         align="items-center"
         justifyContent="justify-between"
-        className="space-x-4 px-5 py-2 h-[84px] bg-black/40 rounded-2xl small:py-4 hover:bg-main-100 small:px-4 border border-main-300"
+        className={clsx(
+          "h-full space-x-4 pr-[30px]",
+          "desktop:flex-col desktop:space-y-2 desktop:space-x-0 desktop:pr-0 desktop:py-2"
+        )}
       >
-        <Flex align="items-center" className="space-x-4 w-full truncate">
-          <Image src={src} alt={name} fill className="w-[62px] h-[62px] small:w-14 small:h-14 shrink-0 rounded-full" />
-          <div className="[contain:inline-size]">
-            <p className="text-[20px] small:text-[16px] mobile:text-[14px] font-500">{name}.zeta</p>
-            <p className="text-success text-[16px] mobile:text-[14px] font-700">{count}</p>
+        <Flex
+          align="items-center"
+          className="h-full space-x-4 w-full desktop:flex-col desktop:space-y-2 desktop:space-x-0 desktop:justify-start"
+        >
+          <Image
+            src={src}
+            alt={name}
+            fill
+            className={clsx("w-[62px] h-[62px] shrink-0 rounded-full", "desktop:w-[100px] desktop:h-[100px]")}
+          />
+          <div className="desktop:text-center desktop:h-full">
+            <p className="text-[20px] font-500 break-all">{name}.zeta</p>
+            <p className={clsx("text-success text-[16px] font-700", "mobile:text-[14px]")}>{count}</p>
           </div>
         </Flex>
-        <Flex align="items-center" justifyContent="justify-end" className="space-x-5 tablet:justify-end">
-          <p className="w-[100px] text-primary text-[16px] font-500 mobile:hidden">{price}</p>
+        <Flex
+          align="items-center"
+          justifyContent="justify-end"
+          className={clsx("space-x-5", "desktop:flex-col desktop:space-x-0 desktop:space-y-2")}
+        >
+          <p className="w-[100px] text-primary text-[16px] font-500 desktop:text-center">{price} MATIC</p>
           {onCheckFromStroage() ? (
             <>
               <button
@@ -118,23 +138,14 @@ export const FollowerItem = ({
                 onClick={onAddToCart}
                 className={clsx(
                   "inline-flex justify-center items-center w-[132px] h-[35px] rounded-md p-1",
-                  "small:hidden",
-                  minted ? "bg-error" : "bg-verified"
+                  !domainStatus ? "bg-error" : "bg-verified"
                 )}
               >
-                <span className="small:hidden">{minted ? "Profile" : "Add to cart"}</span>
+                <span>{!domainStatus ? "Profile" : "Add to cart"}</span>
               </button>
-              <button
-                onClick={onHandleClick}
-                className={clsx(
-                  "hidden small:block small:w-4 small:h-4 small:rounded-full",
-                  minted ? "bg-error" : "bg-verified"
-                )}
-              />
             </>
           )}
-
-          <button>
+          <button onClick={onHandleFavorite} className="absolute right-3 desktop:top-3">
             {isfollow ? (
               <MdOutlineFavorite className="w-5 h-5 text-favorite" />
             ) : (
@@ -143,6 +154,6 @@ export const FollowerItem = ({
           </button>
         </Flex>
       </Flex>
-    </>
+    </div>
   );
 };

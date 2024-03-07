@@ -1,29 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { useRouter } from "next/router";
 import { Flex } from "@/components";
 import { FollowerItem } from "@/components/Item/FollowerItem";
 // import { FAVORITE_ITEMS } from "@/utils/constants";
-import { AddCartModal } from "@/components/Modal";
-import { fetchDomainDetails } from "@/utils/web3/lookup";
+// import { fetchDomainDetails } from "@/utils/web3/lookup";
+import { useContextLocalStorage } from "@/contexts";
 
 const SearchSection: React.FC<{ search: string }> = ({ search }) => {
   const router = useRouter();
-
-  const [domainStatus, setDomainStatus] = useState<boolean>(false);
-  const [showModal, setShowModal] = useState<boolean>(false);
-  const [selected, setSelected] = useState<string>("");
-
-  useEffect(() => {
-    const fetchData = async () => {
-      const domainData = await fetchDomainDetails(search || "");
-      if (domainData?.domainName === "") {
-        setDomainStatus(true);
-      } else {
-        setDomainStatus(false);
-      }
-    };
-    fetchData();
-  }, [search]);
+  const { localstorage } = useContextLocalStorage();
 
   return (
     <div className="w-full">
@@ -36,30 +21,20 @@ const SearchSection: React.FC<{ search: string }> = ({ search }) => {
         ""
       )}
 
-      <Flex className="space-x-[30px] pt-[30px] laptop:flex-col laptop:space-x-0 laptop:space-y-[30px]">
+      <Flex className="space-x-[30px] pt-[30px] tablet_md:flex-col tablet_md:space-x-0 tablet_md:space-y-[30px]">
         <Flex direction="flex-col" className="flex-1 space-y-[24px]">
           {search != "" && search != null ? (
-            <FollowerItem
-              src="/img/profile/1.png"
-              name={search}
-              isfollow={false}
-              count={23}
-              minted={!domainStatus}
-              price={"10 MATIC"}
-              index={1}
-              setShowModal={setShowModal}
-              setSelected={setSelected}
-            />
+            <FollowerItem src="/img/profile/1.png" name={search} count={23} price={10} index={1} />
           ) : (
             <p className="inline-flex items-center justify-center uppercase rounded-xl text-main-300 text-[45px] small:text-[30px] border border-main-300 h-full p-5">
               No Input
             </p>
           )}
         </Flex>
-        <div className="w-[333px] laptop:w-full">
+        <div className="w-[333px] tablet_md:w-full">
           <Flex direction="flex-col" className="space-y-3 border border-main-300  rounded-xl px-[28px] py-[30px]">
             <p className="text-[24px] font-600">
-              Your <span className="text-primary">Cart : 1</span>
+              Your <span className="text-primary">Cart : {JSON.parse(localstorage).length || 0}</span>
             </p>
             <p className="text-[16px] font-400">
               {"The ultimate price will be computed at checkout, factoring in potential discounts and credits."}
@@ -75,7 +50,6 @@ const SearchSection: React.FC<{ search: string }> = ({ search }) => {
           </Flex>
         </div>
       </Flex>
-      <AddCartModal showModal={showModal} setShowModal={setShowModal} domain={selected} />
     </div>
   );
 };

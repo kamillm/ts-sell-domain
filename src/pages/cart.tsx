@@ -2,12 +2,15 @@ import type { NextPage } from "next";
 
 import { Container } from "@/components";
 import CartView from "@/views/cart";
+import { Page } from "@/components/Page";
 
 const CartPage: NextPage = () => {
   return (
-    <Container>
-      <CartView />
-    </Container>
+    <Page name="cart">
+      <Container>
+        <CartView />
+      </Container>
+    </Page>
   );
 };
 

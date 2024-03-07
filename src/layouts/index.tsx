@@ -3,28 +3,30 @@ import Menu from "./menu";
 import Header from "./header";
 import Footer from "./footer";
 
-import { MenuProvider, ConnectProvider, HambugerProvider, CreditProvider, useContextLocalStorage } from "@/contexts";
+import { MenuProvider, ConnectProvider, CreditProvider, useContextLocalStorage } from "@/contexts";
 import type { ComponentProps } from "@/types";
+import { useContextFavorite } from "@/contexts/FavoriteProvider";
 
 export default function Layout({ children }: ComponentProps) {
   const { setLocalStorage } = useContextLocalStorage();
+  const { setFavorite } = useContextFavorite();
 
   useEffect(() => {
     const saveItems = localStorage.getItem("domains") || "[]";
+    const favoriteItems = localStorage.getItem("favorite") || "[]";
 
     setLocalStorage(saveItems);
+    setFavorite(favoriteItems);
   }, []);
 
   return (
     <ConnectProvider>
       <CreditProvider>
         <MenuProvider>
-          <HambugerProvider>
-            <Header />
-            {children}
-            <Footer />
-            <Menu />
-          </HambugerProvider>
+          <Header />
+          {children}
+          <Footer />
+          <Menu />
         </MenuProvider>
       </CreditProvider>
     </ConnectProvider>

@@ -2,11 +2,11 @@ import React, { useEffect, useState } from "react";
 import { Flex, Image } from "..";
 import { FAVORITE_ITEMS } from "@/utils/constants";
 import clsx from "clsx";
-import { fetchDomainDetails } from "@/utils/web3/lookup";
 
 import { IoMdCloseCircle } from "react-icons/io";
 import { useRouter } from "next/router";
 import { useContextLocalStorage } from "@/contexts";
+import { useDomainDetails } from "@/utils/web3/useDomainDetails";
 
 const AddCartModal = ({
   domain,
@@ -20,18 +20,15 @@ const AddCartModal = ({
   const router = useRouter();
   const { setLocalStorage, localstorage } = useContextLocalStorage();
   const [domainStatus, setDomainStatus] = useState<boolean>(false);
+  const { domainData } = useDomainDetails(domain || "");
 
   useEffect(() => {
-    const fetchData = async () => {
-      const domainData = await fetchDomainDetails(domain || "");
-      if (domainData?.domainName === "") {
-        setDomainStatus(true);
-      } else {
-        setDomainStatus(false);
-      }
-    };
-    fetchData();
-  }, [domain]);
+    if ((domainData as { domainName: string })?.domainName === "") {
+      setDomainStatus(true);
+    } else {
+      setDomainStatus(false);
+    }
+  }, [domain, domainData]);
 
   const onHandleClose = () => {
     setShowModal(false);
@@ -56,8 +53,8 @@ const AddCartModal = ({
       localStorage.setItem("domains", JSON.stringify(saveItems));
     } else {
       router.push({
-        pathname: "profile",
-        query: { domain: domain, mode: false } // mode(false) : manage
+        pathname: `profile/[domain]`,
+        query: { domain: domain, editmode: false, owner: false }
       });
     }
   };

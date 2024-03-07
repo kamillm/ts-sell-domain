@@ -1,5 +1,5 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
-import { useConnect, useCredit, useHambuger } from "@/contexts";
+import React, { useEffect, useRef, useState } from "react";
+import { useConnect, useCredit } from "@/contexts";
 import { Flex, GradientText } from "@/components";
 import { HAMBUGER_MENU } from "@/utils/constants";
 import { useRouter } from "next/router";
@@ -7,17 +7,16 @@ import { useAccount, useBalance, useDisconnect } from "wagmi";
 import { IoExitOutline as Exit } from "react-icons/io5";
 import { BsCopy as Copy } from "react-icons/bs";
 import toast, { Toaster } from "react-hot-toast";
-
 // TODO: Add CSS for wallet operations
 import NetworkBtn from "@/components/NetworkBtn/NetworkBtn";
 import clsx from "clsx";
+import { DOMAIN_ITEMS } from "@/utils/constants";
 
-const ProfileMenu: React.FC = () => {
+const ProfileMenu = ({ showDropdown, closeDropdown }: { showDropdown: boolean; closeDropdown: () => void }) => {
   const router = useRouter();
   const { setConnect } = useConnect();
   const { creditValue } = useCredit();
   const modalRef = useRef<HTMLDivElement>(null);
-  const { isHambuger, setHambuger } = useHambuger();
   const [copyHover, setCopyHover] = useState<boolean>(false);
   const [exitHover, setExitHover] = useState<boolean>(false);
 
@@ -42,7 +41,7 @@ const ProfileMenu: React.FC = () => {
       setConnect(true);
     }
     if (isDisconnected) {
-      setHambuger(false);
+      closeDropdown();
       setConnect(false);
     }
   }, [isConnected, isDisconnected]);
@@ -55,7 +54,6 @@ const ProfileMenu: React.FC = () => {
     navigator.clipboard.writeText(text).then(
       () => {
         toast.success("Address Copied");
-        console.log("Copied to clipboard!");
       },
       (err) => {
         console.error("Failed to copy:", err);
@@ -63,41 +61,28 @@ const ProfileMenu: React.FC = () => {
     );
   };
 
-  const handleClickOutside = useCallback(() => {
-    setHambuger(false);
-  }, [setHambuger]);
-
-  const onMenuItem = (item: any) => {
-    setHambuger(false);
-    if (item.type) {
-      setConnect(false);
+  const onMenuItem = (menuitem: any) => {
+    closeDropdown();
+    if (menuitem.isDynamic) {
+      const itemWithIsPrimaryTrue = DOMAIN_ITEMS.find((item) => item.isprimary === true);
+      router.push({
+        pathname: `/profile/[domain]`,
+        query: { domain: itemWithIsPrimaryTrue?.name, editmode: false, owner: true }
+      });
     } else {
-      router.push(item.link);
+      router.push(menuitem.link);
     }
   };
 
   const onAddClick = () => {
-    setHambuger(false);
-    router.push("/settings");
+    closeDropdown();
+    router.push(`/settings?tab=credits`);
   };
-
-  useEffect(() => {
-    const handleClick = (event: MouseEvent) => {
-      console.log(modalRef.current, event.target);
-      if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
-        handleClickOutside();
-      }
-    };
-    document.addEventListener("click", handleClick, true);
-    return () => {
-      document.removeEventListener("click", handleClick, true);
-    };
-  }, [modalRef, handleClickOutside]);
 
   return (
     <div
       ref={modalRef}
-      className={`relative transition-all duration-300 ${isHambuger ? "visible opacity-100 backdrop-blur-2xl" : "invisible opacity-0"}`}
+      className={`relative transition-all duration-300 ${showDropdown ? "visible opacity-100 backdrop-blur-2xl" : "invisible opacity-0"}`}
     >
       <div className="absolute right-0 w-[365px] z-[500] mobile:w-[290px]">
         <Flex direction="flex-col" className="bg-main-100 rounded-[30px] px-5 py-7 space-y-5">
@@ -169,21 +154,6 @@ const ProfileMenu: React.FC = () => {
                 <p className="text-[14px] font-500">{item.label}</p>
               </Flex>
             ))}
-            {/* <Flex
-              align="items-center"
-              className="p-5 bg-black/40 rounded-xl space-x-3 cursor-pointer hover:text-primary"
-            >
-              <Copy className="w-5 h-5" />
-              <p className="text-[14px] font-500">Copy Address</p>
-            </Flex>
-
-            <Flex
-              align="items-center"
-              className="p-5 bg-black/40 rounded-xl space-x-3 cursor-pointer hover:text-primary"
-            >
-              <Exit className="w-5 h-5" />
-              <p className="text-[14px] font-500">Disconnect Wallet</p>
-            </Flex> */}
           </Flex>
         </Flex>
       </div>

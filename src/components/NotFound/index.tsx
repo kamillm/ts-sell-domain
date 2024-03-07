@@ -2,17 +2,20 @@ import React, { useEffect, useRef, useState } from "react";
 import { Flex } from "..";
 import { MdOutlineSearch, MdOutlineShoppingCart } from "react-icons/md";
 import { useSearchParams } from "next/navigation";
-import { fetchDomainDetails } from "@/utils/web3/lookup";
 import { useRouter } from "next/router";
 import { Autocomplete } from "@mui/material";
+import { useDomainDetails } from "@/utils/web3/useDomainDetails";
+import { useQueryClient } from "@tanstack/react-query";
 
 const NotFound: React.FC<{ label: string }> = ({ label }) => {
   const router = useRouter();
+  const queryClient = useQueryClient();
   const searchParams = useSearchParams();
   const search = searchParams.get("domain");
   const timeoutId = useRef<undefined | ReturnType<typeof setTimeout>>(undefined);
   const [domainStatus, setDomainStatus] = useState<boolean>(false);
   const [searchedDomain, setSearchedDomain] = useState<string>("");
+  const { domainData, domainQuery } = useDomainDetails(searchedDomain);
 
   const options = [
     {
@@ -25,28 +28,29 @@ const NotFound: React.FC<{ label: string }> = ({ label }) => {
     setSearchedDomain(search || "");
   }, [search]);
 
+  useEffect(() => {
+    if ((domainData as { domainName: string })?.domainName === "") {
+      setDomainStatus(true);
+    } else {
+      setDomainStatus(false);
+    }
+  }, [domainData]);
+
   const handleInputChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const inputText = e.target.value;
-
     clearTimeout(timeoutId.current);
     setSearchedDomain(inputText);
 
     timeoutId.current = setTimeout(async () => {
-      const domainData = await fetchDomainDetails(inputText);
+      // const domainData = await fetchDomainDetails(inputText);
 
-      if (domainData?.domainName === "") {
-        setDomainStatus(true);
-        console.log("Available");
-      } else {
-        setDomainStatus(false);
-        console.log("Not Available");
-      }
-    }, 300);
+      queryClient.invalidateQueries({ queryKey: domainQuery });
+    }, 500);
   };
 
   const handleButtonClick = () => {
     router.push({
-      pathname: "search",
+      pathname: `register`,
       query: { domain: searchedDomain }
     });
   };
@@ -80,7 +84,6 @@ const NotFound: React.FC<{ label: string }> = ({ label }) => {
                 <p className="text-5- font-600 text-main-300">{option.label}</p>
                 <p className={`text-4 font-500 ${!option.status ? "text-red-500" : "text-blue-500"}`}>
                   {option.status === "" ? "" : option.status ? "Available" : "Not Available"}
-                  {/* {option.status ? "Available" : "Not Available"} */}
                 </p>
               </Flex>
             );

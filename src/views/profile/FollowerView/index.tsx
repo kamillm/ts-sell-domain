@@ -3,48 +3,45 @@ import clsx from "clsx";
 import { Flex, GradientText, Image } from "@/components";
 // assets
 import { FOLLOWER_ITEMS } from "@/utils/constants";
-import { GoThumbsup } from "react-icons/go";
 
-const FollowerItem = ({
-  index,
-  src,
-  name,
-  isfollow
-}: {
-  index: number;
-  src: string;
-  name: string;
-  isfollow: boolean;
-}) => {
+const FollowerItem = ({ index, src, name }: { index: number; src: string; name: string }) => {
   return (
     <Flex
       align="items-center"
       justifyContent="justify-between"
-      className="px-5 py-2 space-x-2 bg-black/40 rounded-2xl cursor-pointer hover:bg-main-100 small:px-4 small:py-1 final:px-1"
+      className={clsx(
+        "px-5 py-2 space-x-2 bg-black/40 rounded-2xl cursor-pointer hover:bg-main-100",
+        "tablet:flex-col tablet:space-y-3 tablet:space-x-0 tablet:p-0 tablet:pb-5 tablet:overflow-clip",
+        "mobile:w-[80%]"
+      )}
     >
-      <Flex align="items-center" className="w-[80%] space-x-5 small:space-x-3">
-        <Flex justifyContent="justify-center" align="items-center" className="">
+      <Flex align="items-center" className={clsx("w-[80%] space-x-5 tablet:space-x-0 tablet:w-full")}>
+        <Flex justifyContent="justify-center" align="items-center" className="tablet:hidden">
           <div className="w-5 h-5 rounded-full bg-main-200 text-main-900 text-[16px] inline-flex items-center justify-center">
             {index}
           </div>
         </Flex>
-        <Flex align="items-center" className="space-x-4 mobile:space-x-2 truncate">
-          <Image src={src} alt={name} fill className="w-[62px] h-[62px] small:w-14 small:h-14 shrink-0 rounded-full" />
-          <p className="w-[80%] text-[22px] small:text-[16px] mobile:text-[12px] font-500 truncate">{name}</p>
+        <Flex
+          align="items-center"
+          className={clsx("space-x-4", "tablet:flex-col tablet:space-x-0 tablet:w-full tablet:space-y-3")}
+        >
+          <Image
+            src={src}
+            alt={name}
+            fill
+            className={clsx(
+              "w-[62px] h-[62px] shrink-0 rounded-full",
+              "tablet:rounded-none tablet:w-full tablet:h-[200px] object-cover"
+            )}
+          />
+          <p className={clsx("text-[22px] small:text-[16px] font-500 break-all", "tablet:text-center tablet:px-10")}>
+            {name}.zeta
+          </p>
         </Flex>
       </Flex>
-      <button
-        className={clsx(
-          "bg-primary text-black",
-          "rounded-3xl inline-flex items-center justify-center p-3",
-          "w-[113px] small:w-[52px]"
-        )}
-      >
-        <span className="text-[12px]">{"Follow"}</span>
+      <button className={clsx("rounded-3xl inline-flex items-center justify-center p-3", "w-[113px] bg-primary")}>
+        <span className="text-[12px] text-black">{"Follow"}</span>
       </button>
-      <div className="bg-primary p-2 rounded-full text-black hidden small:block">
-        <GoThumbsup className="hidden small:block w-5 h-5 small:rounded-full" />
-      </div>
     </Flex>
   );
 };
@@ -52,15 +49,21 @@ const FollowerItem = ({
 const FollowerView: React.FC = () => {
   return (
     <div className="w-full">
-      <div className="text-[32px] font-500 font-space_grotesk mobile:text-[28px]">
+      <div className="text-[32px] font-500 font-space_grotesk mobile:text-[28px] mobile:text-center pb-2">
         <GradientText>Followers</GradientText>
       </div>
 
-      <Flex direction="flex-col" className="space-y-3">
+      <div
+        className={clsx(
+          "flex-col space-y-3",
+          "tablet:grid tablet:grid-cols-2 tablet:space-y-0 tablet:gap-4",
+          "mobile:grid-cols-1 mobile:place-items-center"
+        )}
+      >
         {FOLLOWER_ITEMS.map((item, index) => (
           <FollowerItem key={`follower-item-${index}`} index={index + 1} {...item} />
         ))}
-      </Flex>
+      </div>
     </div>
   );
 };

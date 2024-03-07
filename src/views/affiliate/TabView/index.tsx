@@ -35,18 +35,6 @@ const TabView: React.FC = () => {
       </Flex>
       <br />
 
-      <Flex
-        align="items-center"
-        justifyContent="justify-between"
-        className="py-3 px-5 space-x-2 cursor-pointer small:p-3 border-b border-main-200"
-      >
-        <Flex align="items-center" justifyContent="justify-between" className="w-full space-x-5">
-          <p className="text-main-900 text-[16px] w-[5%]  mobile:w-[10%] text-center">{"#"}</p>
-          <p className="text-main-900 text-[16px] w-[40%] mobile:w-[90%]">{"My Domain"}</p>
-          <p className="text-main-900 text-[16px] w-[20%]  small:hidden">{"My Refferals"}</p>
-          <p className="text-main-900 text-[16px] w-[35%] mobile:hidden text-end">{"Total Earn"}</p>
-        </Flex>
-      </Flex>
       <TabItem affilate_items={AFFILIATE_ITEM_YOU} />
       <br />
       <Flex
@@ -72,21 +60,6 @@ const TabView: React.FC = () => {
         ))}
       </Flex>
 
-      <Flex
-        align="items-center"
-        justifyContent="justify-between"
-        className="py-3 px-5 space-x-2 rounded-2xl cursor-pointer small:p-3 border border-main-200"
-      >
-        <Flex align="items-center" justifyContent="justify-between" className="w-full space-x-5">
-          <p className="text-main-900 text-[16px] w-[5%]  mobile:w-[10%] text-center">{"#"}</p>
-          <p className="text-main-900 text-[16px] w-[40%] mobile:w-[90%]">{"Domain Name"}</p>
-          <p className="text-main-900 text-[16px] w-[20%]  small:hidden">{"Refferals"}</p>
-          <p className="text-main-900 text-[16px] w-[35%] mobile:hidden text-end">
-            <span className="tablet:hidden">{"Total Earn"}</span>
-            <span className="hidden tablet:block">{"Earn"}</span>
-          </p>
-        </Flex>
-      </Flex>
       {tabIndex === 1 && <TabItem affilate_items={AFFILIATE_ITEMS} />}
       {tabIndex === 2 && <TabItem affilate_items={AFFILIATE_ITEMS} />}
       {tabIndex === 3 && <TabItem affilate_items={AFFILIATE_ITEMS} />}
