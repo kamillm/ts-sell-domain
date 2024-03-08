@@ -19,15 +19,20 @@ model User {
     walletAddress String
     dateJoined    DateTime @default(now())
     chainId       Int
-    emailId       Int
+    // emailId       Int
     domains       Domain[]
     chain         Chains   @relation(fields: [chainId], references: [id])
-    email         Email    @relation(fields: [emailId], references: [id])
+
+    email    String? @default("")
+    verified Boolean @default(false)
+
+    @@unique([walletAddress, chainId])
 }
 
 model Domain {
-    id         Int      @id @default(autoincrement())
-    domainName String   @unique
+    id         Int    @id @default(autoincrement())
+    domainName String
+
     mainImgUrl String?
     bannerURL  String?
     location   String?
@@ -56,6 +61,8 @@ model Domain {
     telegramVerified  Boolean @default(false)
     instagramVerified Boolean @default(false)
     linkedinVerified  Boolean @default(false)
+
+    @@unique([domainName, userId])
 }
 
 model Follows {
@@ -65,14 +72,6 @@ model Follows {
     followingId Int
 
     @@id([followerId, followingId])
-}
-
-model Email {
-    id       Int     @id @default(autoincrement())
-    email    String
-    verified Boolean @default(false)
-    userId   Int
-    User     User[]
 }
 
 enum Category {

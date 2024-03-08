@@ -19,6 +19,8 @@ import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 import { StorageProvider } from "@/contexts";
 import FavoriteProvider from "@/contexts/FavoriteProvider";
 
+import { SessionProvider } from "next-auth/react";
+
 const config = getDefaultConfig({
   appName: "ZNS Connect",
   projectId: "YOUR_PROJECT_ID",
@@ -51,7 +53,7 @@ const spaceGrotesk = Space_Grotesk({
 
 NProgress.configure({ showSpinner: false });
 
-export default function App({ Component, pageProps }: AppProps) {
+export default function App({ Component, pageProps: { session, ...pageProps } }: AppProps) {
   Router.events.on("routeChangeStart", () => {
     NProgress.start();
   });
@@ -69,7 +71,9 @@ export default function App({ Component, pageProps }: AppProps) {
             <StorageProvider>
               <FavoriteProvider>
                 <Layout>
-                  <Component {...pageProps} />
+                  <SessionProvider session={session}>
+                    <Component {...pageProps} />
+                  </SessionProvider>
                 </Layout>
               </FavoriteProvider>
             </StorageProvider>
