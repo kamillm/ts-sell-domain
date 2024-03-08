@@ -7,11 +7,7 @@ import { MdRemoveRedEye, MdOutlineSettings } from "react-icons/md";
 import clsx from "clsx";
 import { useRouter } from "next/router";
 import TransactionLoading from "@/components/Loaders/TransactionLoading";
-import { useUserLookup } from "@/utils/web3/useUserLookup";
 import { useDomainLookup } from "@/utils/web3/useDomainLookup";
-import { useReadContracts } from "wagmi";
-import { useContractAddressByChain } from "@/utils/web3/useContractAddressByChain";
-import { baseAbi } from "@/utils/web3/baseAbi";
 
 const ListItem = ({
   index,
@@ -189,8 +185,7 @@ const ListItem = ({
 const EndTab: React.FC = () => {
   const [showModal, setShowModal] = useState<boolean>(false);
   const [selected, setSelected] = useState<number>(1);
-  const { userDomains } = useUserLookup();
-  const contractAddress = useContractAddressByChain();
+  const { userDomains, allOwnedDomains, domainList, domainUrisList } = useDomainLookup();
 
   const formatExpirationDate = (timestamp: bigint) => {
     const date = new Date(Number(timestamp) * 1000);
@@ -216,39 +211,6 @@ const EndTab: React.FC = () => {
     const svgString = atob(base64svg);
     return svgString;
   };
-
-  // if (allOwnedDomains) {
-  //   const domainLookups = allOwnedDomains.map((tokenId) => useDomainLookup(Number(tokenId)));
-  //   domainList.push(...domainLookups); // Spread operator to push all elements
-  // }
-  // console.log(domainList);
-
-  const allOwnedDomains = (userDomains as { allOwnedDomains: Array<bigint> })?.allOwnedDomains;
-  const contractCallConfigs: any = allOwnedDomains?.map(
-    (domainId) =>
-      ({
-        abi: baseAbi,
-        address: contractAddress as `0x${string}`,
-        functionName: "registryLookupById",
-        args: [domainId]
-      }) as const
-  );
-
-  const { data: domainInfo }: any = useReadContracts({ contracts: contractCallConfigs });
-  const domainList = domainInfo?.map((item: any) => item.result) ?? [];
-
-  const contractCallUris: any = allOwnedDomains?.map(
-    (domainId) =>
-      ({
-        abi: baseAbi,
-        address: contractAddress as `0x${string}`,
-        functionName: "tokenURI",
-        args: [domainId]
-      }) as const
-  );
-
-  const { data: domainUris }: any = useReadContracts({ contracts: contractCallUris });
-  const domainUrisList = domainUris?.map((item: any) => item.result) ?? [];
 
   // const svg = decodeImageData(domainUrisList[0]);
   // console.log(typeof domainUrisList[0]);
