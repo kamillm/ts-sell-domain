@@ -225,7 +225,7 @@ export const baseAbi = [
   {
     inputs: [{ internalType: "uint256", name: "tokenId", type: "uint256" }],
     name: "checkDomainStatus",
-    outputs: [{ internalType: "enum ZNSRegistry.domainStatus", name: "status", type: "uint8" }],
+    outputs: [{ internalType: "enum ZNSRegistrySepolia.domainStatus", name: "status", type: "uint8" }],
     stateMutability: "view",
     type: "function"
   },
@@ -356,6 +356,25 @@ export const baseAbi = [
     type: "function"
   },
   {
+    inputs: [{ internalType: "uint256", name: "tokenId", type: "uint256" }],
+    name: "registryLookupById",
+    outputs: [
+      {
+        components: [
+          { internalType: "address", name: "owner", type: "address" },
+          { internalType: "string", name: "domainName", type: "string" },
+          { internalType: "uint16", name: "lengthOfDomain", type: "uint16" },
+          { internalType: "uint256", name: "expirationDate", type: "uint256" }
+        ],
+        internalType: "struct ZNSRegistrySepolia.RegistryData",
+        name: "",
+        type: "tuple"
+      }
+    ],
+    stateMutability: "view",
+    type: "function"
+  },
+  {
     inputs: [{ internalType: "string", name: "domainName", type: "string" }],
     name: "registryLookupByName",
     outputs: [
@@ -366,7 +385,7 @@ export const baseAbi = [
           { internalType: "uint16", name: "lengthOfDomain", type: "uint16" },
           { internalType: "uint256", name: "expirationDate", type: "uint256" }
         ],
-        internalType: "struct ZNSRegistry.RegistryData",
+        internalType: "struct ZNSRegistrySepolia.RegistryData",
         name: "",
         type: "tuple"
       }
@@ -518,7 +537,7 @@ export const baseAbi = [
           { internalType: "uint256", name: "numberOfReferrals", type: "uint256" },
           { internalType: "uint256", name: "totalEarnings", type: "uint256" }
         ],
-        internalType: "struct ZNSRegistry.UserConfig",
+        internalType: "struct ZNSRegistrySepolia.UserConfig",
         name: "",
         type: "tuple"
       }

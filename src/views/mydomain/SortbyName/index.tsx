@@ -7,7 +7,12 @@ import { HiDotsVertical } from "react-icons/hi";
 import { MdRemoveRedEye, MdOutlineSettings } from "react-icons/md";
 import clsx from "clsx";
 import { useRouter } from "next/router";
+import TransactionLoading from "@/components/Loaders/TransactionLoading";
+import { useUserLookup } from "@/utils/web3/useUserLookup";
 import { useDomainLookup } from "@/utils/web3/useDomainLookup";
+import { useReadContract, useReadContracts } from "wagmi";
+import { useContractAddressByChain } from "@/utils/web3/useContractAddressByChain";
+import { baseAbi } from "@/utils/web3/baseAbi";
 
 const ListItem = ({
   index,
@@ -34,8 +39,8 @@ const ListItem = ({
   const modalRef = useRef<HTMLDivElement>(null);
   const [isDrop, setIsDrop] = useState<boolean>(false);
 
-  const { userDomains } = useDomainLookup();
-  console.log(userDomains);
+  // const { domainInfo } = useDomainLookup(Number(tokenId));
+
   // console.log(Number(userDomains?.primaryDomain));
 
   const onClickView = () => {
@@ -98,6 +103,44 @@ const ListItem = ({
                 fill
                 className="w-[62px] h-[62px] small:w-14 small:h-14 shrink-0 rounded-full"
               />
+
+              {/* {
+                <svg
+                  width="160"
+                  height="160"
+                  viewBox="0 0 1000 1000"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="w-[62px] h-[62px] small:w-14 small:h-14 shrink-0 rounded-full"
+                >
+                  <g clip-path="url(#a)">
+                    <path fill="#000" d="M0 0h1000v1000H0z" />
+                    <path d="M1000 885c-178.771 139.55-551.222 50.439-1000 0v115h1000z" fill="#CAFC01" />
+                    <text x="60" y="800" font-size="50" fill="#FFF" font-family="arial">
+                      Future of decentralised
+                    </text>
+                    <text x="580" y="800" font-size="50" fill="#CAFC01" font-family="arial">
+                      naming
+                    </text>
+                    <text x="200" y="135" font-size="50" fill="#FFF" font-family="arial">
+                      Connect
+                    </text>
+                    <circle cx="120" cy="120" r="70" fill="#CAFC01" />
+                    <text x="60" y="140" font-size="60" fill="#000" font-weight="bold" font-family="arial">
+                      ZNS
+                    </text>
+                    <text x="65" y="655" font-size="100" fill="#CAFC01" font-weight="bold" font-family="arial">
+                      .zeta
+                    </text>
+                    <path d="m61 739.319 683.316-1.259" stroke="#CAFC01" stroke-width="4" />
+                  </g>
+                  <text x="5%" y="50%" font-size="250" fill="#CAFC01" font-weight="bold" font-family="arial">
+                    goku
+                  </text>
+                </svg>
+              } */}
+              {src}
+
               <p className="text-[22px] small:text-[16px] mobile:text-[12px] font-500 truncate">{name}.zeta</p>
 
               {isprimary && (
@@ -147,18 +190,87 @@ const ListItem = ({
 const EndTab: React.FC = () => {
   const [showModal, setShowModal] = useState<boolean>(false);
   const [selected, setSelected] = useState<number>(1);
+  const { userDomains } = useUserLookup();
+  const contractAddress = useContractAddressByChain();
+
+  const formatExpirationDate = (timestamp: bigint) => {
+    const date = new Date(Number(timestamp) * 1000);
+    const formattedDate = new Intl.DateTimeFormat("en-US", {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit"
+    }).format(date);
+    return formattedDate.replace(/\//g, "-");
+  };
+
+  const checkPrimary = (tokenId: number) => {
+    if (tokenId === Number((userDomains as { primaryDomain: bigint })?.primaryDomain)) {
+      return true;
+    }
+  };
+  const decodeImageData = (dataUri: string) => {
+    const base64Json = dataUri?.split(",")[1];
+    const jsonString = atob(base64Json);
+    const jsonData = JSON.parse(jsonString);
+    const image = jsonData?.image;
+    const base64svg = image.split(",")[1];
+    const svgString = atob(base64svg);
+    return svgString;
+  };
+
+  // if (allOwnedDomains) {
+  //   const domainLookups = allOwnedDomains.map((tokenId) => useDomainLookup(Number(tokenId)));
+  //   domainList.push(...domainLookups); // Spread operator to push all elements
+  // }
+  // console.log(domainList);
+
+  const allOwnedDomains = (userDomains as { allOwnedDomains: Array<bigint> })?.allOwnedDomains;
+  const contractCallConfigs = allOwnedDomains?.map((domainId) => ({
+    abi: baseAbi,
+    address: contractAddress as `0x${string}`,
+    functionName: "registryLookupById",
+    args: [domainId]
+  }));
+
+  const { data: domainInfo }: any = useReadContracts({ contracts: contractCallConfigs });
+  const domainList = domainInfo?.map((item: any) => item.result) ?? [];
+
+  const contractCallUris = allOwnedDomains?.map((domainId) => ({
+    abi: baseAbi,
+    address: contractAddress as `0x${string}`,
+    functionName: "tokenURI",
+    args: [domainId]
+  }));
+
+  const { data: domainUris }: any = useReadContracts({ contracts: contractCallUris });
+  const domainUrisList = domainUris?.map((item: any) => item.result) ?? [];
+
+  // const svg = decodeImageData(domainUrisList[0]);
+  // console.log(typeof domainUrisList[0]);
+  // console.log("Decoded Image:", typeof svg);
+
   return (
     <div>
       <Flex direction="flex-col" className="space-y-3">
-        {DOMAIN_ITEMS.map((item, index) => (
-          <ListItem
-            {...item}
-            key={`follower-item-${index}`}
-            index={index + 1}
-            setShowModal={setShowModal}
-            setSelected={setSelected}
-          />
-        ))}
+        {domainList ? (
+          domainList.map((item: any, index: number) => (
+            <ListItem
+              {...item}
+              // src={decodeImageData(domainUrisList[0])}
+              name={item.domainName}
+              isprimary={checkPrimary(Number(allOwnedDomains[index]))}
+              tokenId={Number(allOwnedDomains[index])}
+              registrant={item.owner ? `${item.owner.slice(0, 4)}...${item.owner.slice(-5)}` : ""}
+              expiration={formatExpirationDate(item.expirationDate)}
+              key={`follower-item-${index}`}
+              index={index + 1}
+              setShowModal={setShowModal}
+              setSelected={setSelected}
+            />
+          ))
+        ) : (
+          <TransactionLoading />
+        )}
       </Flex>
       <ViewDomainModal showModal={showModal} setShowModal={setShowModal} selected={selected} />
     </div>

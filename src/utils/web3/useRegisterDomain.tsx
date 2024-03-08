@@ -1,6 +1,7 @@
 import { useWriteContract, useAccount } from "wagmi";
 import { abi } from "./abi";
-const contractAddress = "0x70b58465681a10c5578C6414477fbD193594D2eB";
+
+const contractAddress = "0x6079cCb64952F788F58A1EB1df96Cbe447e07d6f";
 
 export const useRegisterDomain = (
   amount: number,
@@ -8,6 +9,7 @@ export const useRegisterDomain = (
   expiry: Array<number>,
   referral?: `0x${string}`
 ) => {
+
   const { address } = useAccount();
   const { writeContract } = useWriteContract();
   writeContract({

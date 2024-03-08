@@ -10,7 +10,7 @@ import TransactionLoading from "@/components/Loaders/TransactionLoading";
 import { useAccount, useBalance, useWriteContract, useWaitForTransactionReceipt } from "wagmi";
 import { baseAbi } from "@/utils/web3/baseAbi";
 import { parseEther } from "viem";
-const contractAddress = "0x4e050504213e307E05e652187D27a5a54222F32f";
+const contractAddress = "0x6079cCb64952F788F58A1EB1df96Cbe447e07d6f";
 
 const CheckoutSection: React.FC = () => {
   const router = useRouter();

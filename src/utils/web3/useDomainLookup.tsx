@@ -1,16 +1,15 @@
-import { useReadContract, useAccount } from "wagmi";
+import { useReadContract } from "wagmi";
 import { baseAbi } from "./baseAbi";
 import { useContractAddressByChain } from "./useContractAddressByChain";
 
-export const useDomainLookup = () => {
+export const useDomainLookup = (tokenId: number) => {
   const contractAddress = useContractAddressByChain();
-  const { address } = useAccount();
-  const { data: userDomains } = useReadContract({
+  const { data: domainInfo } = useReadContract({
     abi: baseAbi,
     address: contractAddress as `0x${string}`,
-    functionName: "userLookupByAddress",
-    args: [address]
+    functionName: "registryLookupById",
+    args: [tokenId]
   });
 
-  return { userDomains };
+  return { domainInfo };
 };

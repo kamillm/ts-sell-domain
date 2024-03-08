@@ -91,7 +91,7 @@ function HeroView() {
                       className="p-2 px-6 font-space_grotesk cursor-pointer hover:bg-gray-200/40"
                       action={() => handleButtonClick()}
                     >
-                      <p className="text-5- font-600 text-main-300">{option.label}</p>
+                      <p className="text-5- font-600 text-main-300">{option.label}.zeta</p>
                       <p className={`text-4 font-500 ${!option.status ? "text-red-500" : "text-blue-500"}`}>
                         {option.label === "" ? "" : option.status ? "Available" : "Not Available"}
                       </p>
