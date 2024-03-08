@@ -2,7 +2,6 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Flex, Image } from "@/components";
 import { ViewDomainModal } from "@/components/Modal";
 // assets
-import { DOMAIN_ITEMS } from "@/utils/constants";
 import { HiDotsVertical } from "react-icons/hi";
 import { MdRemoveRedEye, MdOutlineSettings } from "react-icons/md";
 import clsx from "clsx";
@@ -10,7 +9,7 @@ import { useRouter } from "next/router";
 import TransactionLoading from "@/components/Loaders/TransactionLoading";
 import { useUserLookup } from "@/utils/web3/useUserLookup";
 import { useDomainLookup } from "@/utils/web3/useDomainLookup";
-import { useReadContract, useReadContracts } from "wagmi";
+import { useReadContracts } from "wagmi";
 import { useContractAddressByChain } from "@/utils/web3/useContractAddressByChain";
 import { baseAbi } from "@/utils/web3/baseAbi";
 
@@ -225,22 +224,28 @@ const EndTab: React.FC = () => {
   // console.log(domainList);
 
   const allOwnedDomains = (userDomains as { allOwnedDomains: Array<bigint> })?.allOwnedDomains;
-  const contractCallConfigs = allOwnedDomains?.map((domainId) => ({
-    abi: baseAbi,
-    address: contractAddress as `0x${string}`,
-    functionName: "registryLookupById",
-    args: [domainId]
-  }));
+  const contractCallConfigs: any = allOwnedDomains?.map(
+    (domainId) =>
+      ({
+        abi: baseAbi,
+        address: contractAddress as `0x${string}`,
+        functionName: "registryLookupById",
+        args: [domainId]
+      }) as const
+  );
 
   const { data: domainInfo }: any = useReadContracts({ contracts: contractCallConfigs });
   const domainList = domainInfo?.map((item: any) => item.result) ?? [];
 
-  const contractCallUris = allOwnedDomains?.map((domainId) => ({
-    abi: baseAbi,
-    address: contractAddress as `0x${string}`,
-    functionName: "tokenURI",
-    args: [domainId]
-  }));
+  const contractCallUris: any = allOwnedDomains?.map(
+    (domainId) =>
+      ({
+        abi: baseAbi,
+        address: contractAddress as `0x${string}`,
+        functionName: "tokenURI",
+        args: [domainId]
+      }) as const
+  );
 
   const { data: domainUris }: any = useReadContracts({ contracts: contractCallUris });
   const domainUrisList = domainUris?.map((item: any) => item.result) ?? [];
