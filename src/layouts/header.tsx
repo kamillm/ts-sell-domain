@@ -27,6 +27,7 @@ export default function Header() {
   const [searchedDomain, setSearchedDomain] = useState<string>("");
   const [domainStatus, setDomainStatus] = useState<boolean>(false);
   const { domainData, domainQuery } = useDomainDetails(searchedDomain);
+  const [AutocompleteOpen, setAutocompleteOpen] = useState<boolean>(true);
   const timeoutId = useRef<undefined | ReturnType<typeof setTimeout>>(undefined);
 
   const options = [
@@ -57,6 +58,8 @@ export default function Header() {
   };
 
   const handleButtonClick = () => {
+    setAutocompleteOpen(false);
+    setSearchedDomain("");
     router.push({
       pathname: "search",
       query: { domain: searchedDomain }
@@ -103,6 +106,9 @@ export default function Header() {
           <Flex align="items-center" justifyContent="justify-between" className="space-x-7 desktop:space-x-3">
             <div className="relative border border-white-200 bg-black-400 rounded-full mobile:hidden">
               <Autocomplete
+                open={searchedDomain !== "" && AutocompleteOpen}
+                onBlur={() => setAutocompleteOpen(false)}
+                onFocus={() => setAutocompleteOpen(true)}
                 options={options}
                 renderOption={(props, option) => {
                   return (
@@ -110,6 +116,7 @@ export default function Header() {
                       key={option.label}
                       justifyContent="justify-between"
                       className="px-6 font-space_grotesk cursor-pointer hover:bg-gray-200/40"
+                      action={() => handleButtonClick()}
                     >
                       <p className="text-5- font-600 text-main-300">{option.label}</p>
                       <p className={`text-4 font-500 ${!option.status ? "text-red-500" : "text-blue-500"}`}>

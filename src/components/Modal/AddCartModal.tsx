@@ -46,8 +46,6 @@ const AddCartModal = ({
     }
   };
 
-  console.log("domain : ", domain);
-
   const onClickButton = () => {
     if (domainStatus) {
       let saveItems = JSON.parse(localstorage);

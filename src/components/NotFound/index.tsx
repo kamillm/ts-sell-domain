@@ -15,6 +15,7 @@ const NotFound: React.FC<{ label: string }> = ({ label }) => {
   const timeoutId = useRef<undefined | ReturnType<typeof setTimeout>>(undefined);
   const [domainStatus, setDomainStatus] = useState<boolean>(false);
   const [searchedDomain, setSearchedDomain] = useState<string>("");
+  const [AutocompleteOpen, setAutocompleteOpen] = useState<boolean>(true);
   const { domainData, domainQuery } = useDomainDetails(searchedDomain);
 
   const options = [
@@ -49,6 +50,7 @@ const NotFound: React.FC<{ label: string }> = ({ label }) => {
   };
 
   const handleButtonClick = () => {
+    setAutocompleteOpen(false);
     router.push({
       pathname: "search",
       query: { domain: searchedDomain }
@@ -73,6 +75,9 @@ const NotFound: React.FC<{ label: string }> = ({ label }) => {
       </Flex>
       <div className="relative border border-white-200 bg-white rounded-xl w-full">
         <Autocomplete
+          open={searchedDomain !== "" && AutocompleteOpen}
+          onBlur={() => setAutocompleteOpen(false)}
+          onFocus={() => setAutocompleteOpen(true)}
           options={options}
           renderOption={(props, option) => {
             return (
@@ -80,11 +85,11 @@ const NotFound: React.FC<{ label: string }> = ({ label }) => {
                 key={option.label}
                 justifyContent="justify-between"
                 className="p-2 px-6 font-space_grotesk cursor-pointer hover:bg-gray-200/40"
+                action={() => handleButtonClick()}
               >
                 <p className="text-5- font-600 text-main-300">{option.label}</p>
                 <p className={`text-4 font-500 ${!option.status ? "text-red-500" : "text-blue-500"}`}>
                   {option.status === "" ? "" : option.status ? "Available" : "Not Available"}
-                  {/* {option.status ? "Available" : "Not Available"} */}
                 </p>
               </Flex>
             );

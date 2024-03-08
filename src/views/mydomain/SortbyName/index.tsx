@@ -7,6 +7,7 @@ import { HiDotsVertical } from "react-icons/hi";
 import { MdRemoveRedEye, MdOutlineSettings } from "react-icons/md";
 import clsx from "clsx";
 import { useRouter } from "next/router";
+import { useDomainLookup } from "@/utils/web3/useDomainLookup";
 
 const ListItem = ({
   index,
@@ -32,6 +33,11 @@ const ListItem = ({
   const router = useRouter();
   const modalRef = useRef<HTMLDivElement>(null);
   const [isDrop, setIsDrop] = useState<boolean>(false);
+
+  const { userDomains } = useDomainLookup();
+  console.log(userDomains);
+  // console.log(Number(userDomains?.primaryDomain));
+
   const onClickView = () => {
     // setShowModal(true);
     // setIsDrop(false);

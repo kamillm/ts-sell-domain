@@ -23,7 +23,7 @@ const DomainRegisterView: React.FC = () => {
   const timeoutId = useRef<undefined | ReturnType<typeof setTimeout>>(undefined);
   const [searchedDomain, setSearchedDomain] = useState<string>("");
   const { domainData, domainQuery } = useDomainDetails(searchedDomain);
-
+  const [AutocompleteOpen, setAutocompleteOpen] = useState<boolean>(false);
 
   const options = [
     {
@@ -58,6 +58,7 @@ const DomainRegisterView: React.FC = () => {
   };
 
   const handleButtonClick = () => {
+    setAutocompleteOpen(false);
     router.push({
       pathname: "search",
       query: { domain: searchedDomain }
@@ -74,6 +75,9 @@ const DomainRegisterView: React.FC = () => {
       ) : (
         <div className="relative border border-white-200 bg-black-400 rounded-full w-full mt-[70px]">
           <Autocomplete
+            open={searchedDomain !== "" && AutocompleteOpen}
+            onBlur={() => setAutocompleteOpen(false)}
+            onFocus={() => setAutocompleteOpen(true)}
             options={options}
             renderOption={(props, option) => {
               return (
@@ -81,6 +85,7 @@ const DomainRegisterView: React.FC = () => {
                   key={option.label}
                   justifyContent="justify-between"
                   className="p-2 px-6 font-space_grotesk cursor-pointer hover:bg-gray-200/40"
+                  action={() => handleButtonClick()}
                 >
                   <p className="text-5- font-600 text-main-300">{option.label}</p>
                   <p className={`text-4 font-500 ${!option.status ? "text-red-500" : "text-blue-500"}`}>
