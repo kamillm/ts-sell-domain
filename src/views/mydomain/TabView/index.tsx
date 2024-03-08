@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Flex, GradientText } from "@/components";
 import { DOMAIN_TAB_LIST } from "@/utils/constants";
-import { SortbyName } from "..";
+import { SortbyName } from "../";
 
 import clsx from "clsx";
 import { MdOutlineSearch } from "react-icons/md";
