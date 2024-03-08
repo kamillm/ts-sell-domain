@@ -6,6 +6,7 @@ import { Flex } from "@/components";
 import { ascii, gtEq, ltEq } from "@/utils/func";
 import { useContextLocalStorage } from "@/contexts";
 import { useRouter } from "next/router";
+import TransactionLoading from "@/components/Loaders/TransactionLoading";
 import { useAccount, useBalance, useWriteContract, useWaitForTransactionReceipt } from "wagmi";
 import { baseAbi } from "@/utils/web3/baseAbi";
 import { parseEther } from "viem";
@@ -24,7 +25,7 @@ const CheckoutSection: React.FC = () => {
   const { data } = useBalance({ address: address });
   const symbol = data?.symbol;
   const { data: hash, isPending, error, isError, writeContract } = useWriteContract();
-  const { isSuccess } = useWaitForTransactionReceipt({
+  const { isSuccess, isLoading } = useWaitForTransactionReceipt({
     hash: hash
   });
   const domainNamesRef = useRef<Array<string>>([]);
@@ -39,8 +40,8 @@ const CheckoutSection: React.FC = () => {
 
   useEffect(() => {
     if (isSuccess) {
-      setLocalStorage(JSON.stringify([])); // Clear local storage by setting an empty array
-      localStorage.removeItem("domains"); // Remove the "domains" key from local storage
+      setLocalStorage(JSON.stringify([]));
+      localStorage.removeItem("domains");
       router.push("/mydomain");
     }
   }, [isSuccess]);
@@ -178,20 +179,31 @@ const CheckoutSection: React.FC = () => {
             <p className="text-[14px] font-400">{"Use your credit"}</p>
           </Flex>
         </Flex>
-        <button
-          onClick={() =>
-            writeContract({
-              abi: baseAbi,
-              address: contractAddress,
-              functionName: "registerDomains",
-              value: parseEther(totalPrice.toFixed(8)),
-              args: [address, domainNamesRef.current, expiresRef.current, "0x0000000000000000000000000000000000000000"]
-            })
-          }
-          className="bg-primary text-black text-[16px] font-500 p-3 rounded-xl"
-        >
-          {isPending ? "Loading" : "Checkout"}
-        </button>
+        {isLoading || isPending ? (
+          <div className="flex justify-center">
+            <TransactionLoading />
+          </div>
+        ) : (
+          <button
+            onClick={() =>
+              writeContract({
+                abi: baseAbi,
+                address: contractAddress,
+                functionName: "registerDomains",
+                value: parseEther(totalPrice.toFixed(8)),
+                args: [
+                  address,
+                  domainNamesRef.current,
+                  expiresRef.current,
+                  "0x0000000000000000000000000000000000000000"
+                ]
+              })
+            }
+            className="bg-primary text-black text-[16px] font-500 p-3 rounded-xl flex justify-center"
+          >
+            {"Checkout"}
+          </button>
+        )}
       </Flex>
       <p className="text-[14px] font-400 text-center pt-[20px]">
         Need more credits ? Get them <span className="text-verified cursor-pointer hover:text-verified/90">here</span>
