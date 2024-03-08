@@ -1,4 +1,4 @@
-import { PrismaClient, Chain } from "@prisma/client";
+import { PrismaClient } from "@prisma/client";
 import { NextApiRequest, NextApiResponse } from "next";
 
 // pages/api/createEntry.js
