@@ -2,6 +2,8 @@ import NextAuth from "next-auth";
 
 import DiscordProvider from "next-auth/providers/discord";
 import TwitterProvider from "next-auth/providers/twitter";
+// import { Address } from "@/utils/web3/useContractAddressByChain";
+// import { JWT } from "next-auth/jwt";
 
 // For more information on each option (and a full list of options) go to
 // https://next-auth.js.org/configuration/options
@@ -9,12 +11,12 @@ export default NextAuth({
   // https://next-auth.js.org/configuration/providers
   providers: [
     DiscordProvider({
-      clientId: process.env.DISCORD_CLIENT_ID as string,
-      clientSecret: process.env.DISCORD_CLIENT_SECRET as string
+      clientId: process.env.DISCORD_CLIENT_ID,
+      clientSecret: process.env.DISCORD_CLIENT_SECRET
     }),
     TwitterProvider({
-      clientId: process.env.TWITTER_CLIENT_ID as string,
-      clientSecret: process.env.TWITTER_CLIENT_SECRET as string
+      clientId: process.env.TWITTER_CLIENT_ID,
+      clientSecret: process.env.TWITTER_CLIENT_SECRET
     })
   ],
   // Database optional. MySQL, Maria DB, Postgres and MongoDB are supported.
@@ -76,6 +78,41 @@ export default NextAuth({
   // when an action is performed.
   // https://next-auth.js.org/configuration/callbacks
   callbacks: {
+    async jwt({ token, user, account, profile, isNewUser }) {
+      console.log("JWT CALLBACK", token, account, user, profile, isNewUser);
+      let provider;
+      console.log("CHAIN", account);
+      // const provider = params.account?.provider ?? params.token?.provider;
+      // console.log('PARAMETERS RIGHT NOW', params);
+      if (provider === "google") {
+        try {
+          // const response = await fetch(
+          // 	`https://api.${import.meta.env.VITE_API_URL}/api/v1/auth/social/`,
+          // 	{
+          // 		method: 'POST',
+          // 		headers: {
+          // 			'Content-Type': 'application/json'
+          // 		},
+          // 		body: JSON.stringify({
+          // 			first_name: params.profile?.given_name,
+          // 			last_name: params.profile?.family_name,
+          // 			access_token: access_token,
+          // 			provider: 'google-oauth2'
+          // 		})
+          // 	}
+          // );
+          // if (!response.ok) {
+          // 	const erro = await response.json();
+          // 	console.log(erro);
+          // 	throw new Error('Failed to authenticate user with provider');
+          // }
+          // const data = await response.json();
+        } catch (e) {
+          console.error("Failed to fetch user data:", e);
+          return null;
+        }
+      }
+    }
     // async signIn({ user, account, profile, email, credentials }) { return true },
     // async redirect({ url, baseUrl }) { return baseUrl },
     // async session({ session, token, user }) { return session },
