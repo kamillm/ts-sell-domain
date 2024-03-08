@@ -23,7 +23,7 @@ model User {
     domains       Domain[]
     chain         Chains   @relation(fields: [chainId], references: [id])
 
-    email    String?
+    email    String? @default("")
     verified Boolean @default(false)
 
     @@unique([walletAddress, chainId])
