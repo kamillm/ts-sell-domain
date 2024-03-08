@@ -53,7 +53,7 @@ function HeroView() {
   const handleButtonClick = () => {
     setAutocompleteOpen(false);
     router.push({
-      pathname: "search",
+      pathname: `register`,
       query: { domain: searchedDomain }
     });
   };
@@ -180,6 +180,8 @@ function HeroView() {
                 width: 300
               }
             }}
+            rewind
+            slideToClickedSlide
             className="badge_effect_swiper"
           >
             {DOMAIN_CARD_LIST.map((item, index) => (

@@ -1,6 +1,8 @@
 import React, { useState } from "react";
+import { useRouter } from "next/router";
 import { Container, Flex, GradientText, Image } from "@/components";
 import { QRCode } from "react-qrcode-logo";
+import toast, { Toaster } from "react-hot-toast";
 // assets
 import { USER_SOCIAL_LINKS } from "@/utils/constants";
 // icons
@@ -10,10 +12,45 @@ import { GoThumbsup } from "react-icons/go";
 import { FaPlus } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
 import { IoMdCloseCircle } from "react-icons/io";
+import { RxUpdate } from "react-icons/rx";
 import { MdOutlineAccessTime, MdOutlineLocationOn, MdOutlineWidgets, MdOutlineEdit } from "react-icons/md";
+import clsx from "clsx";
 
-const HeroView: React.FC<{ domainName?: string; mode?: boolean }> = ({ domainName = "", mode = false }) => {
+const HeroView: React.FC<{ domainName?: string; editmode?: boolean; owner?: boolean }> = ({
+  domainName = "",
+  editmode = false,
+  owner = false
+}) => {
+  const router = useRouter();
+  const [bannerImg, setBannerImg] = useState<string>("/img/profile/banner.png");
+  const [avatarImg] = useState<string>("/img/home/badges/con2.png");
   const [showModal, setShowModal] = useState(false);
+
+  const onClickSetting = (mode: string) => {
+    router.query.editmode = mode;
+    router.push(router);
+  };
+
+  const copyToClipboard = (text: string, label: string) => {
+    if (!navigator.clipboard) {
+      console.error("Clipboard API not supported");
+      return;
+    }
+    navigator.clipboard.writeText(text).then(
+      () => {
+        toast.success(label);
+      },
+      (err) => {
+        console.error("Failed to copy:", err);
+      }
+    );
+  };
+
+  const onSelectBannerImg = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      setBannerImg(URL.createObjectURL(e.target.files[0]));
+    }
+  };
 
   return (
     <>
@@ -25,7 +62,7 @@ const HeroView: React.FC<{ domainName?: string; mode?: boolean }> = ({ domainNam
       >
         <div className="relative w-full max-w-[1440px] h-[250px] tablet:h-[200px] mt-[99px]">
           <Image
-            src={"/img/profile/banner.png"}
+            src={bannerImg}
             width={1440}
             height={250}
             className="w-full h-full object-cover"
@@ -35,7 +72,7 @@ const HeroView: React.FC<{ domainName?: string; mode?: boolean }> = ({ domainNam
             <div className="absolute group -bottom-1/3 tablet:-bottom-[70px] w-[200px] h-[200px] tablet:w-[140px] tablet:h-[140px] rounded-full bg-main-200 flex justify-center items-center">
               <div className="relative">
                 <Image
-                  src={"/img/home/badges/con2.png"}
+                  src={avatarImg}
                   width={185}
                   height={185}
                   className="object-cover rounded-full tablet:w-[130px] tablet:h-[130px]"
@@ -50,7 +87,7 @@ const HeroView: React.FC<{ domainName?: string; mode?: boolean }> = ({ domainNam
                   alt="profile_verify_avatar"
                 />
               </div>
-              {mode && (
+              {editmode && (
                 <label
                   onClick={() => setShowModal(true)}
                   className="absolute cursor-pointer bg-black/40 w-full h-full rounded-full  justify-center items-center inline-flex opacity-0 group-hover:opacity-100 duration-200 "
@@ -61,18 +98,23 @@ const HeroView: React.FC<{ domainName?: string; mode?: boolean }> = ({ domainNam
             </div>
           </Flex>
           <Flex className="absolute space-x-[10px] right-4 top-4">
-            {mode && (
-              <label className="p-2 bg-black/40 rounded-xl text-main-400 cursor-pointer" htmlFor="banner-file">
-                <MdOutlineEdit className="w-5 h-5" />
-              </label>
+            {editmode && (
+              <>
+                <label className="p-2 bg-black/40 rounded-xl text-main-400 cursor-pointer" htmlFor="banner-file">
+                  <MdOutlineEdit className="w-5 h-5" />
+                </label>
+                <input onChange={onSelectBannerImg} className="hidden" id="banner-file" type="file" />
+              </>
             )}
-            <label className="p-2 bg-black/40 rounded-xl text-main-400 cursor-pointer">
+            <label
+              onClick={() => copyToClipboard("0xc0E3...B79C", "Share link Copied")}
+              className="p-2 bg-black/40 rounded-xl text-main-400 cursor-pointer"
+            >
               <LuLink className="w-5 h-5" />
             </label>
             <label className="p-2 bg-black/40 rounded-xl text-main-400 cursor-pointer">
               <FaXTwitter className="w-5 h-5" />
             </label>
-            <input id="banner-file" type="file" className="hidden" />
           </Flex>
         </div>
         <Container>
@@ -128,7 +170,7 @@ const HeroView: React.FC<{ domainName?: string; mode?: boolean }> = ({ domainNam
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
                 dolore magna aliqua. Ut enim ad minim veniam.
               </p>
-              <Flex align="items-center" className="space-x-5">
+              <Flex align="items-center" className="space-x-5 mobile:space-x-3">
                 {USER_SOCIAL_LINKS.map((item, index) => (
                   <div className="relative" key={`user-profile-link-${index}`}>
                     <item.icon
@@ -152,18 +194,45 @@ const HeroView: React.FC<{ domainName?: string; mode?: boolean }> = ({ domainNam
                 justifyContent="justify-between"
                 className="p-5 space-x-4 w-full small:flex-col small:space-x-0 small:space-y-4 relative"
               >
-                <button className="bg-primary text-black rounded-3xl w-full inline-flex items-center justify-center p-3">
-                  <Flex align="items-center" className="space-x-[10px]">
-                    <GoThumbsup className="w-5 h-5" />
-                    <span className="text-[12px]">Follow</span>
-                  </Flex>
-                </button>
-                <button className="bg-primary text-black rounded-3xl w-full inline-flex items-center justify-center p-3">
-                  <Flex align="items-center" className="space-x-[10px]">
-                    <BsCopy className="w-5 h-5" />
-                    <span className="text-[12px]">0xc0E3...B79C</span>
-                  </Flex>
-                </button>
+                {!owner ? (
+                  <>
+                    <button className="bg-primary text-black rounded-3xl w-full inline-flex items-center justify-center p-3">
+                      <Flex align="items-center" className="space-x-[10px]">
+                        <GoThumbsup className="w-5 h-5" />
+                        <span className="text-[12px]">Follow</span>
+                      </Flex>
+                    </button>
+                    <button
+                      onClick={() => copyToClipboard("0xc0E3...B79C", "Address Copied")}
+                      className="bg-primary text-black rounded-3xl w-full inline-flex items-center justify-center p-3"
+                    >
+                      <Flex align="items-center" className="space-x-[10px]">
+                        <BsCopy className="w-5 h-5" />
+                        <span className="text-[12px]">0xc0E3...B79C</span>
+                      </Flex>
+                    </button>
+                  </>
+                ) : editmode ? (
+                  <button
+                    onClick={() => onClickSetting("false")}
+                    className="bg-primary text-black rounded-3xl w-full inline-flex items-center justify-center p-3"
+                  >
+                    <Flex align="items-center" className="space-x-[10px]">
+                      <RxUpdate className="w-5 h-5" />
+                      <span className="text-[12px]">Update</span>
+                    </Flex>
+                  </button>
+                ) : (
+                  <button
+                    onClick={() => onClickSetting("true")}
+                    className="bg-primary text-black rounded-3xl w-full inline-flex items-center justify-center p-3"
+                  >
+                    <Flex align="items-center" className="space-x-[10px]">
+                      <MdOutlineEdit className="w-5 h-5" />
+                      <span className="text-[12px]">Manage Profile</span>
+                    </Flex>
+                  </button>
+                )}
                 <div className="absolute -right-[100px]  tablet:right-[155px] tablet:top-[100px] small:hidden">
                   <QRCode
                     size={80}
@@ -175,7 +244,7 @@ const HeroView: React.FC<{ domainName?: string; mode?: boolean }> = ({ domainNam
                     logoHeight={30}
                   />
                 </div>
-                <div className="absolute small:top-[150px] small:block hidden">
+                <div className={clsx("absolute small:block hidden", owner ? "small:top-[70px]" : "small:top-[150px]")}>
                   <QRCode
                     size={80}
                     bgColor="transparent"
@@ -247,6 +316,7 @@ const HeroView: React.FC<{ domainName?: string; mode?: boolean }> = ({ domainNam
           </Flex>
         </div>
       </div>
+      <Toaster />
     </>
   );
 };

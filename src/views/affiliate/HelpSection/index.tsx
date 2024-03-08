@@ -18,10 +18,10 @@ const HelpSection: React.FC = () => {
         }}
         modules={[Pagination, Autoplay]}
         breakpoints={{
-          768: {
+          500: {
             slidesPerView: 2
           },
-          1024: {
+          800: {
             slidesPerView: 3
           }
         }}

@@ -4,6 +4,8 @@ import { LuMinus, LuPlus } from "react-icons/lu";
 import { RiDeleteBin5Line } from "react-icons/ri";
 import { useContextLocalStorage } from "@/contexts";
 import { usePriceToRenew } from "@/utils/web3/usePriceToRenew";
+import clsx from "clsx";
+
 
 const PeriodCounter = ({ index, item }: { index: number; item: any }) => {
   const { localstorage, setLocalStorage } = useContextLocalStorage();
@@ -13,8 +15,6 @@ const PeriodCounter = ({ index, item }: { index: number; item: any }) => {
     let savedItems = JSON.parse(localstorage);
     let filterItem = savedItems.filter((item: any) => item.name === name);
 
-    console.log("filterItem : ", filterItem);
-
     if (type) {
       savedItems = savedItems.map((item: any) => {
         if (item.name === name) {
@@ -23,7 +23,6 @@ const PeriodCounter = ({ index, item }: { index: number; item: any }) => {
         return item;
       });
     } else {
-      console.log("filterItem.year : ", filterItem.year);
       if (filterItem[0].year > 1) {
         savedItems = savedItems.map((item: any) => {
           if (item.name === name) {
@@ -50,8 +49,12 @@ const PeriodCounter = ({ index, item }: { index: number; item: any }) => {
       key={`cart-item-${index}`}
       align="items-center"
       justifyContent="justify-between"
-      className="p-6 bg-black/40 rounded-2xl border border-main-200 space-x-3"
+      className={clsx(
+        "p-[30px] bg-black/40 rounded-2xl border border-main-200 space-x-1",
+        "tablet:flex-col tablet:space-y-2"
+      )}
     >
+
       <p className="text-[20px] small:flex-1 font-500 w-[150px] truncate">{item.name}.zeta</p>
       <span className="small:hidden text-verified text-[16px] font-400">
         {/* {item.status ? "Available" : "Not Available"} */}
@@ -71,6 +74,7 @@ const PeriodCounter = ({ index, item }: { index: number; item: any }) => {
           </Flex>
         </Flex>
       </Flex>
+
       <RiDeleteBin5Line
         onClick={() => removeItem(item.name)}
         className="w-5 h-5 text-danger/60 hover:text-danger cursor-pointer"

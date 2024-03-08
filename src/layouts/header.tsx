@@ -5,22 +5,25 @@ import ProfileMenu from "./profilemenu";
 import { Container } from "@/components";
 import { Flex, Image, Link } from "@/components";
 import { MENU_ICON_LIST, MENU_LIST } from "@/utils/constants";
-import { useConnect, useHambuger, useMenu, useContextLocalStorage } from "@/contexts";
+import { useConnect, useMenu, useContextLocalStorage } from "@/contexts";
 // icons
 import clsx from "clsx";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
 import { MdOutlineSearch as Search, MdOutlineMenu as Menu } from "react-icons/md";
 import { Autocomplete } from "@mui/material";
 import { useQueryClient } from "@tanstack/react-query";
+import { useDetectClickOutside } from "react-detect-click-outside";
 import { useDomainDetails } from "@/utils/web3/useDomainDetails";
+import { useContextFavorite } from "@/contexts/FavoriteProvider";
 
 export default function Header() {
   const router = useRouter();
   const queryClient = useQueryClient();
   const { isConnect } = useConnect();
-  const { setHambuger } = useHambuger();
+  const [showDropdown, setShowDropdown] = useState(false);
   const { showMenu, setShowMenu } = useMenu();
   const { localstorage } = useContextLocalStorage();
+  const { favorite } = useContextFavorite();
   const [unScrolled, setUnScrolled] = useState(true);
   const { openConnectModal } = useConnectModal();
 
@@ -29,6 +32,10 @@ export default function Header() {
   const { domainData, domainQuery } = useDomainDetails(searchedDomain);
   const [AutocompleteOpen, setAutocompleteOpen] = useState<boolean>(true);
   const timeoutId = useRef<undefined | ReturnType<typeof setTimeout>>(undefined);
+
+  const closeDropdown = () => setShowDropdown(false);
+
+  const ref = useDetectClickOutside({ onTriggered: closeDropdown });
 
   const options = [
     {
@@ -61,7 +68,7 @@ export default function Header() {
     setAutocompleteOpen(false);
     setSearchedDomain("");
     router.push({
-      pathname: "search",
+      pathname: `register`,
       query: { domain: searchedDomain }
     });
   };
@@ -103,7 +110,7 @@ export default function Header() {
               );
             })}
           </Flex>
-          <Flex align="items-center" justifyContent="justify-between" className="space-x-7 desktop:space-x-3">
+          <Flex align="items-center" justifyContent="justify-between" className="space-x-7">
             <div className="relative border border-white-200 bg-black-400 rounded-full mobile:hidden">
               <Autocomplete
                 open={searchedDomain !== "" && AutocompleteOpen}
@@ -150,19 +157,24 @@ export default function Header() {
             </div>
             <Flex className="relative space-x-7 desktop:space-x-3 small:hidden">
               {MENU_ICON_LIST.map((menu, index) => (
-                <Link key={`navbar_menu_icon_${index}`} href={menu.link} className="cursor-pointer">
-                  {<menu.icon className="w-6 h-6" />}
-                </Link>
+                <div key={`navbar_menu_icon_${index}`} className="relative">
+                  <Link href={menu.link} className="cursor-pointer">
+                    {<menu.icon className="w-6 h-6" />}
+                  </Link>
+                  {menu.link === "/settings?tab=favorite" && JSON.parse(favorite).length != 0 && (
+                    <span className="absolute -right-2 -top-[10px] bg-verified rounded-full h-[15px] w-[15px] inline-flex items-center justify-center text-[10px]">
+                      {JSON.parse(favorite).length}
+                    </span>
+                  )}
+                  {menu.link === "/cart" && JSON.parse(localstorage).length != 0 && (
+                    <span className="absolute -right-2 -top-[10px] bg-verified rounded-full h-[15px] w-[15px] inline-flex items-center justify-center text-[10px]">
+                      {JSON.parse(localstorage).length}
+                    </span>
+                  )}
+                </div>
               ))}
-              {JSON.parse(localstorage).length != 0 && (
-                <span className="absolute -right-2 -top-[10px] bg-verified rounded-full h-[15px] w-[15px] inline-flex items-center justify-center text-[10px]">
-                  {JSON.parse(localstorage).length}
-                </span>
-              )}
             </Flex>
-            <button className="hidden laptop:block" onClick={() => setShowMenu(true)}>
-              <Menu className="w-6 h-6" />
-            </button>
+
             {!isConnect ? (
               <button
                 onClick={openConnectModal}
@@ -171,7 +183,7 @@ export default function Header() {
                 Connect
               </button>
             ) : (
-              <button onClick={() => setHambuger(true)}>
+              <button ref={ref} onClick={() => setShowDropdown(!showDropdown)}>
                 <Image
                   src={"/img/profile.png"}
                   alt={"profile"}
@@ -180,9 +192,13 @@ export default function Header() {
                 />
               </button>
             )}
+
+            <button className="hidden laptop:block" onClick={() => setShowMenu(true)}>
+              <Menu className="w-6 h-6" />
+            </button>
           </Flex>
         </Flex>
-        <ProfileMenu />
+        <ProfileMenu showDropdown={showDropdown} closeDropdown={closeDropdown} />
       </Container>
     </div>
   );

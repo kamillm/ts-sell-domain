@@ -11,7 +11,7 @@ const ViewDomainModal = ({
 }: {
   selected: number;
   showModal: boolean;
-  setShowModal: any;
+  setShowModal: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
   const onHandleClose = () => {
     setShowModal(false);
@@ -26,15 +26,21 @@ const ViewDomainModal = ({
           className="absolute w-[30px] h-[30px] -right-7 -top-7 cursor-pointer"
         />
 
-        <Flex direction="flex-col" justifyContent="justify-between" align="items-center" className="space-y-10">
+        <Flex direction="flex-col" justifyContent="justify-between" align="items-center" className="space-y-5">
           <Image
             src={DOMAIN_ITEMS[selected].src}
             alt={"logo"}
             fill
-            className="w-[160px] h-[160px] small:w-14 small:h-14 shrink-0 rounded-full"
+            className="w-[150px] h-[150px] shrink-0 rounded-full"
           />
-          <div className="text-[38px] small:text-[26px] font-500 uppercase truncate w-full text-center inline bg-primary_gradient_text bg-clip-text text-transparent">
-            {DOMAIN_ITEMS[selected].name}
+          <div className="text-center">
+            <div className="break-all text-[38px] small:text-[26px] font-500 w-full text-center inline bg-primary_gradient_text bg-clip-text text-transparent">
+              {DOMAIN_ITEMS[selected].name}.zeta
+            </div>
+            <br />
+            <p className="inline-flex text-center items-center border-[0.5px] border-verified/60 rounded-xl text-[12px] font-500 px-2 py-[2px]">
+              {"Primary"}
+            </p>
           </div>
           <Flex direction="flex-col" className="w-full space-y-3">
             <Flex justifyContent="justify-between" align="items-center">
@@ -50,7 +56,10 @@ const ViewDomainModal = ({
               <p className="text-[20px]  small:text-[16px] font-500">{DOMAIN_ITEMS[selected].expiration}</p>
             </Flex>
           </Flex>
-          <button className="w-full bg-primary text-black rounded-3xl p-2 text-[20px] small:text-[16px] font-400">
+          <button
+            onClick={onHandleClose}
+            className="w-full bg-primary text-black rounded-3xl p-2 text-[20px] small:text-[16px] font-400"
+          >
             Close
           </button>
         </Flex>

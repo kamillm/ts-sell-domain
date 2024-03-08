@@ -52,7 +52,7 @@ const NotFound: React.FC<{ label: string }> = ({ label }) => {
   const handleButtonClick = () => {
     setAutocompleteOpen(false);
     router.push({
-      pathname: "search",
+      pathname: `register`,
       query: { domain: searchedDomain }
     });
   };

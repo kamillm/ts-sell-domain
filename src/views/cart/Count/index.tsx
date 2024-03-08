@@ -11,10 +11,7 @@ const CountSection: React.FC = () => {
   }, [localstorage]);
 
   return (
-    <Flex
-      direction="flex-col"
-      className="px-[50px] py-[30px]  small:p-[24px] rounded-2xl bg-black/40 border border-main-200"
-    >
+    <Flex direction="flex-col" className="p-[30px] small:p-[24px] rounded-2xl bg-black/40 border border-main-200">
       <Flex align="items-center" justifyContent="justify-between">
         <p className="text-[24px] font-500">Your Cart</p>
         <p className="text-[24px] font-500 text-primary">{count} Items</p>

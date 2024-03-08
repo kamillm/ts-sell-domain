@@ -6,7 +6,7 @@ import { ProfileView, AccountView, DomainView } from "@/views/dynamic-setting";
 // assets
 import { PROFILE_SETTINGS } from "@/utils/constants";
 
-const TabView: React.FC<{ domainName: string; domainStatus: boolean }> = ({ domainName, domainStatus }) => {
+const TabView: React.FC<{ domainName: string }> = ({ domainName }) => {
   const [tabIndex, setTabIndex] = useState<number>(1);
 
   return (
@@ -37,12 +37,14 @@ const TabView: React.FC<{ domainName: string; domainStatus: boolean }> = ({ doma
               justifyContent="justify-start"
               action={() => setTabIndex(mapIndex + 1)}
               className={clsx(
-                "w-full space-x-[15px] px-[25px] py-[17px] rounded-2xl cursor-pointer tablet:justify-center tablet:px-0",
-                tabIndex === mapIndex + 1 ? "text-black bg-primary_gradient_text" : "text-main-400 hover:text-white"
+                "w-full space-x-[15px] px-[25px] py-[17px] rounded-2xl cursor-pointer",
+                tabIndex === mapIndex + 1 ? "text-black bg-primary_gradient_text" : "text-main-400 hover:text-white",
+                "tablet:justify-center tablet:px-0",
+                "final:flex-col final:justify-center final:space-x-0 final:space-y-1"
               )}
             >
               <item.icon className="w-[20px] h-[20px]" />
-              <p className="text-[16px] font-500 uppercase small:hidden">{item.label}</p>
+              <p className="text-[16px] final:text-[12px] font-500 uppercase">{item.label}</p>
             </Flex>
           ))}
         </Flex>

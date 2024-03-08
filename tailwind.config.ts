@@ -9,6 +9,7 @@ const config: Config = {
       mac: { max: "1440px" },
       desktop: { max: "1280px" },
       laptop: { max: "1024px" },
+      tablet_md: { max: "900px" },
       tablet: { max: "768px" },
       small: { max: "640px" },
       mobile: { max: "430px" },

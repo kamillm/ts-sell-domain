@@ -1,8 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { useRouter } from "next/router";
 import { Flex } from "@/components";
 import { FollowerItem } from "@/components/Item/FollowerItem";
+// import { fetchDomainDetails } from "@/utils/web3/lookup";
+import { useContextLocalStorage } from "@/contexts";
 // import { FAVORITE_ITEMS } from "@/utils/constants";
+
 import { AddCartModal } from "@/components/Modal";
 import { useDomainDetails } from "@/utils/web3/useDomainDetails";
 import { usePriceToRegister } from "@/utils/web3/usePriceToRegister";
@@ -15,6 +18,7 @@ const SearchSection: React.FC<{ search: string }> = ({ search }) => {
   const [selected, setSelected] = useState<string>("");
   const { domainData } = useDomainDetails(search || "");
   const { priceInEther, symbol } = usePriceToRegister(search.length);
+  const { localstorage } = useContextLocalStorage();
 
   useEffect(() => {
     // const domainData = await fetchDomainDetails(search || "");
@@ -24,6 +28,7 @@ const SearchSection: React.FC<{ search: string }> = ({ search }) => {
       setDomainStatus(false);
     }
   }, [search, domainData]);
+
 
   return (
     <div className="w-full">
@@ -36,7 +41,7 @@ const SearchSection: React.FC<{ search: string }> = ({ search }) => {
         ""
       )}
 
-      <Flex className="space-x-[30px] pt-[30px] laptop:flex-col laptop:space-x-0 laptop:space-y-[30px]">
+      <Flex className="space-x-[30px] pt-[30px] tablet_md:flex-col tablet_md:space-x-0 tablet_md:space-y-[30px]">
         <Flex direction="flex-col" className="flex-1 space-y-[24px]">
           {search != "" && search != null ? (
             <FollowerItem
@@ -56,10 +61,10 @@ const SearchSection: React.FC<{ search: string }> = ({ search }) => {
             </p>
           )}
         </Flex>
-        <div className="w-[333px] laptop:w-full">
+        <div className="w-[333px] tablet_md:w-full">
           <Flex direction="flex-col" className="space-y-3 border border-main-300  rounded-xl px-[28px] py-[30px]">
             <p className="text-[24px] font-600">
-              Your <span className="text-primary">Cart : 1</span>
+              Your <span className="text-primary">Cart : {JSON.parse(localstorage).length || 0}</span>
             </p>
             <p className="text-[16px] font-400">
               {"The ultimate price will be computed at checkout, factoring in potential discounts and credits."}
@@ -75,7 +80,6 @@ const SearchSection: React.FC<{ search: string }> = ({ search }) => {
           </Flex>
         </div>
       </Flex>
-      <AddCartModal showModal={showModal} setShowModal={setShowModal} domain={selected} />
     </div>
   );
 };
