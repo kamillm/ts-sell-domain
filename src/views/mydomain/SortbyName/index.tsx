@@ -8,6 +8,7 @@ import clsx from "clsx";
 import { useRouter } from "next/router";
 import TransactionLoading from "@/components/Loaders/TransactionLoading";
 import { useDomainLookup } from "@/utils/web3/useDomainLookup";
+// import {TrustedHTML} from "react-type";
 
 const ListItem = ({
   index,
@@ -87,7 +88,7 @@ const ListItem = ({
       viewBox="0 0 144 144"
       className="w-[62px] h-[62px] small:w-14 small:h-14 shrink-0 rounded-full object-top "
       dangerouslySetInnerHTML={{
-        __html: svgString
+        __html: svgString as unknown as string
       }}
     />
   );
