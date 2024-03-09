@@ -18,13 +18,10 @@ const DomainRegisterView: React.FC = () => {
   const search = searchParams.get("domain");
   const [domainStatus, setDomainStatus] = useState<boolean>(false);
   const [searchedDomain, setSearchedDomain] = useState<string>("");
-<<<<<<< web3-main
+
   const { domainData, domainQuery } = useDomainDetails(searchedDomain);
   const [AutocompleteOpen, setAutocompleteOpen] = useState<boolean>(false);
 
-=======
-  const { domainData } = useDomainDetails(searchedDomain || "");
->>>>>>> main
   const options = [
     {
       label: searchedDomain,

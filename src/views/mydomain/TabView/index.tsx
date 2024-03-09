@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Flex, GradientText } from "@/components";
 import { DOMAIN_TAB_LIST } from "@/utils/constants";
 import { SortbyName } from "..";

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { Flex } from "@/components";
 import { FollowerItem } from "@/components/Item/FollowerItem";
@@ -28,7 +28,6 @@ const SearchSection: React.FC<{ search: string }> = ({ search }) => {
       setDomainStatus(false);
     }
   }, [search, domainData]);
-
 
   return (
     <div className="w-full">
