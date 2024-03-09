@@ -1,10 +1,21 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import clsx from "clsx";
 import { Flex, GradientText, Image } from "@/components";
+import { Follower, useContextFollower } from "@/contexts";
 // assets
-import { FOLLOWER_ITEMS } from "@/utils/constants";
 
-const FollowingItem = ({ index, src, name }: { index: number; src: string; name: string; isfollow: boolean }) => {
+const FollowingItem = ({
+  index,
+  src,
+  name,
+  onUnFollow
+}: {
+  index: number;
+  src: string;
+  name: string;
+  isfollow: boolean;
+  onUnFollow: (name: string) => void;
+}) => {
   return (
     <Flex
       align="items-center"
@@ -40,19 +51,40 @@ const FollowingItem = ({ index, src, name }: { index: number; src: string; name:
         </Flex>
       </Flex>
       <button
+        onClick={() => onUnFollow(name)}
         className={clsx("rounded-3xl inline-flex items-center justify-center p-3", "w-[113px] border border-primary")}
       >
-        <span className="text-[12px] text-primary">{"Following"}</span>
+        <span className="text-[12px] text-primary">{"Unfollow"}</span>
       </button>
     </Flex>
   );
 };
 
 const FollowingView: React.FC = () => {
+  const { follower, setFollower } = useContextFollower();
+  const [items, setItems] = useState<Follower[]>([]);
+
+  useEffect(() => {
+    setItems(follower.filter((item: Follower) => item.isfollow));
+  }, [follower]);
+
+  const onUnFollow = (name: string) => {
+    const updatedFollowers = follower.map((follower) => {
+      if (follower.name === name) {
+        return { ...follower, isfollow: false };
+      }
+      return follower;
+    });
+
+    console.log("updateFollowers", updatedFollowers);
+
+    setFollower(updatedFollowers);
+  };
+
   return (
     <div className="w-full">
       <div className="text-[32px] font-500 font-space_grotesk mobile:text-[28px] mobile:text-center pb-2">
-        <GradientText>Followers</GradientText>
+        <GradientText>Following</GradientText>
       </div>
 
       <div
@@ -62,9 +94,10 @@ const FollowingView: React.FC = () => {
           "mobile:grid-cols-1 mobile:place-items-center"
         )}
       >
-        {FOLLOWER_ITEMS.map((item, index) => (
-          <FollowingItem key={`follower-item-${index}`} index={index + 1} {...item} />
-        ))}
+        {items.length !== 0 &&
+          items.map((item, index) => (
+            <FollowingItem key={`follower-item-${index}`} index={index + 1} {...item} onUnFollow={onUnFollow} />
+          ))}
       </div>
     </div>
   );

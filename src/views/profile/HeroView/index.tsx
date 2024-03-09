@@ -8,7 +8,7 @@ import { USER_SOCIAL_LINKS } from "@/utils/constants";
 // icons
 import { BsCopy } from "react-icons/bs";
 import { LuLink } from "react-icons/lu";
-import { GoThumbsup } from "react-icons/go";
+import { GoThumbsdown, GoThumbsup } from "react-icons/go";
 import { FaPlus } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
 import { IoMdCloseCircle } from "react-icons/io";
@@ -24,14 +24,23 @@ const HeroView: React.FC<{ domainName?: string; editmode?: boolean; owner?: bool
   const router = useRouter();
   const [bannerImg, setBannerImg] = useState<string>("/img/profile/banner.png");
   const [avatarImg] = useState<string>("/img/home/badges/con2.png");
-  const [showModal, setShowModal] = useState(false);
+  const [showModal, setShowModal] = useState<boolean>(false);
+  const [isFollow, setFollow] = useState<boolean>(false);
 
   const onClickSetting = (mode: string) => {
     router.query.editmode = mode;
     router.push(router);
   };
 
-  const copyToClipboard = (text: string, label: string) => {
+  const copyToClipboard = (id: number, label: string) => {
+    let text = "";
+    if (id === 1) {
+      text = "share link";
+    } else if (id === 2) {
+      text = "0xc0E3...B79C";
+    } else if (id == 3) {
+      text = "twitter share link";
+    }
     if (!navigator.clipboard) {
       console.error("Clipboard API not supported");
       return;
@@ -87,7 +96,7 @@ const HeroView: React.FC<{ domainName?: string; editmode?: boolean; owner?: bool
                   alt="profile_verify_avatar"
                 />
               </div>
-              {editmode && (
+              {editmode && owner && (
                 <label
                   onClick={() => setShowModal(true)}
                   className="absolute cursor-pointer bg-black/40 w-full h-full rounded-full  justify-center items-center inline-flex opacity-0 group-hover:opacity-100 duration-200 "
@@ -98,7 +107,7 @@ const HeroView: React.FC<{ domainName?: string; editmode?: boolean; owner?: bool
             </div>
           </Flex>
           <Flex className="absolute space-x-[10px] right-4 top-4">
-            {editmode && (
+            {editmode && owner && (
               <>
                 <label className="p-2 bg-black/40 rounded-xl text-main-400 cursor-pointer" htmlFor="banner-file">
                   <MdOutlineEdit className="w-5 h-5" />
@@ -107,12 +116,15 @@ const HeroView: React.FC<{ domainName?: string; editmode?: boolean; owner?: bool
               </>
             )}
             <label
-              onClick={() => copyToClipboard("0xc0E3...B79C", "Share link Copied")}
+              onClick={() => copyToClipboard(1, "Share link Copied")}
               className="p-2 bg-black/40 rounded-xl text-main-400 cursor-pointer"
             >
               <LuLink className="w-5 h-5" />
             </label>
-            <label className="p-2 bg-black/40 rounded-xl text-main-400 cursor-pointer">
+            <label
+              onClick={() => copyToClipboard(3, "Twitter Share link Copied")}
+              className="p-2 bg-black/40 rounded-xl text-main-400 cursor-pointer"
+            >
               <FaXTwitter className="w-5 h-5" />
             </label>
           </Flex>
@@ -130,15 +142,15 @@ const HeroView: React.FC<{ domainName?: string; editmode?: boolean; owner?: bool
               >
                 <Flex direction="flex-col" className="space-y-1 tablet:w-[120px]" align="items-center">
                   <p className="text-[18px] laptop:text-[16px] font-600">2.5K</p>
-                  <p className="text-[12px] laptop:text-[10px] font-400 text-main-400">FOLLOWERS</p>
+                  <p className="text-[12px] laptop:text-[10px] font-400 text-main-400 text-center">FOLLOWERS</p>
                 </Flex>
                 <Flex direction="flex-col" className="space-y-1 tablet:w-[120px]" align="items-center">
                   <p className="text-[18px] laptop:text-[16px] font-600">1.5K</p>
-                  <p className="text-[12px] laptop:text-[10px] font-400 text-main-400">FOLLOWING</p>
+                  <p className="text-[12px] laptop:text-[10px] font-400 text-main-400 text-center">FOLLOWING</p>
                 </Flex>
                 <Flex direction="flex-col" className="space-y-1 tablet:w-[120px]" align="items-center">
                   <p className="text-[18px] laptop:text-[16px] font-600">2345</p>
-                  <p className="text-[12px] laptop:text-[10px] font-400 text-main-400">ZNS ID</p>
+                  <p className="text-[12px] laptop:text-[10px] font-400 text-main-400 text-center">ZNS ID</p>
                 </Flex>
               </Flex>
               <div className="w-1/3 tablet:w-10/12  mobile:w-full tablet:border-main-300 tablet:border"></div>
@@ -149,15 +161,17 @@ const HeroView: React.FC<{ domainName?: string; editmode?: boolean; owner?: bool
               >
                 <Flex direction="flex-col" className="space-y-1  tablet:w-[120px]" align="items-center">
                   <MdOutlineAccessTime className="w-[18px] h-[18px]" />
-                  <p className="text-[12px] laptop:text-[10px] font-400 text-main-400">April, 2024</p>
+                  <p className="text-[12px] laptop:text-[10px] font-400 text-main-400 text-center">April, 2024</p>
                 </Flex>
                 <Flex direction="flex-col" className="space-y-1  tablet:w-[120px]" align="items-center">
                   <MdOutlineLocationOn className="w-[18px] h-[18px]" />
-                  <p className="text-[12px] laptop:text-[10px] font-400 text-main-400">Paris, France</p>
+                  <p className="text-[12px] laptop:text-[10px] font-400 text-main-400 text-center">Paris, France</p>
                 </Flex>
                 <Flex direction="flex-col" className="space-y-1  tablet:w-[120px]" align="items-center">
                   <MdOutlineWidgets className="w-[18px] h-[18px]" />
-                  <p className="text-[12px] laptop:text-[10px] font-400 text-main-400">Blockchain Enthusist</p>
+                  <p className="text-[12px] laptop:text-[10px] font-400 text-main-400 text-center">
+                    Blockchain Enthusist
+                  </p>
                 </Flex>
               </Flex>
             </Flex>
@@ -196,14 +210,29 @@ const HeroView: React.FC<{ domainName?: string; editmode?: boolean; owner?: bool
               >
                 {!owner ? (
                   <>
-                    <button className="bg-primary text-black rounded-3xl w-full inline-flex items-center justify-center p-3">
-                      <Flex align="items-center" className="space-x-[10px]">
-                        <GoThumbsup className="w-5 h-5" />
-                        <span className="text-[12px]">Follow</span>
-                      </Flex>
-                    </button>
+                    {!isFollow ? (
+                      <button
+                        onClick={() => setFollow(true)}
+                        className="bg-primary text-black rounded-3xl w-full inline-flex items-center justify-center p-3"
+                      >
+                        <Flex align="items-center" className="space-x-[10px]">
+                          <GoThumbsup className="w-5 h-5" />
+                          <span className="text-[12px]">Follow</span>
+                        </Flex>
+                      </button>
+                    ) : (
+                      <button
+                        onClick={() => setFollow(false)}
+                        className="border border-primary text-primary rounded-3xl w-full inline-flex items-center justify-center p-3"
+                      >
+                        <Flex align="items-center" className="space-x-[10px]">
+                          <GoThumbsdown className="w-5 h-5" />
+                          <span className="text-[12px]">UnFollow</span>
+                        </Flex>
+                      </button>
+                    )}
                     <button
-                      onClick={() => copyToClipboard("0xc0E3...B79C", "Address Copied")}
+                      onClick={() => copyToClipboard(2, "Address Copied")}
                       className="bg-primary text-black rounded-3xl w-full inline-flex items-center justify-center p-3"
                     >
                       <Flex align="items-center" className="space-x-[10px]">

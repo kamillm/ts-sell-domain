@@ -57,7 +57,7 @@ const UtilityView: React.FC = () => {
                       ))}
                     </ul>
                   </Flex>
-                  <Link href="/register">
+                  <Link href="/search">
                     <p className="text-primary text-[14px] font-poppins font-400">Start now</p>
                   </Link>
                 </Flex>

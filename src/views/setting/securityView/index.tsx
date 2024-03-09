@@ -39,12 +39,12 @@ const SecurityView: React.FC = () => {
 
   return (
     <div className="w-full">
-      <div className="uppercase text-[36px] font-500 font-space_grotesk border-b-2 border-primary/30 pb-3 small:text-center">
+      <div className="uppercase text-[36px] font-500 font-space_grotesk border-b-2 border-primary/30 pb-3">
         <GradientText>security</GradientText>
       </div>
       <Flex direction="flex-col" className="pt-5 space-y-3 w-[578px] laptop:w-full">
         <Flex direction="flex-col" className="w-full space-y-[10px]">
-          <p className="text-[16px] font-500 text-main-900 ">Verification code</p>
+          <p className="text-[16px] font-500 text-main-900 ">Your Email</p>
           <input
             ref={emailInputRef}
             placeholder="Enter your email"
@@ -65,20 +65,20 @@ const SecurityView: React.FC = () => {
           </Flex>
         )}
 
-        <div className="pt-5  w-[141px] tablet:w-full">
+        <div className="pt-5  w-[200px] tablet:w-full">
           {!showOtpInput ? (
             <button
               onClick={handleUpdate}
               className="w-full bg-primary text-[16px] font-500 px-[38px] py-[11px] rounded-3xl text-black "
             >
-              Update
+              Send Code
             </button>
           ) : (
             <button
               onClick={handleVerifyOtp}
               className="w-full bg-primary text-[16px] font-500 px-[38px] py-[11px] rounded-3xl text-black "
             >
-              Verify OTP
+              Verify Email
             </button>
           )}
         </div>

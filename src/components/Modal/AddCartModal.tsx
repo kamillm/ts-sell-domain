@@ -55,7 +55,7 @@ const AddCartModal = ({
       localStorage.setItem("domains", JSON.stringify(saveItems));
     } else {
       router.push({
-        pathname: `profile/[domain]`,
+        pathname: `/profile/[domain]`,
         query: { domain: domain, editmode: false, owner: false }
       });
     }

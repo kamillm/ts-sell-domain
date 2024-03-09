@@ -18,13 +18,13 @@ import { CardProps, DomainCardProps, GeneralCardProps } from "@/types/card";
 
 export const MENU_LIST = [
   { name: "Home", link: "/" },
-  { name: "Register domain", link: "/register" },
+  { name: "Register domain", link: "/search" },
   // { name: "My profile", link: "/profile/main",  },
   // { name: "My domains", link: "/mydomain", },
   { name: "Affiliate", link: "/affiliate" },
   { name: "Badges", link: "/badges" },
-  { name: "Documentation", link: "https://docs.znsconnect.io/" },
-  { name: "Dev - Testing", link: "/dev" }
+  { name: "Documentation", link: "https://docs.znsconnect.io/" }
+  // { name: "Dev - Testing", link: "/dev" }
 ];
 
 export const MENU_ICON_LIST = [
@@ -345,8 +345,6 @@ export const FAVORITE_ITEMS = [
     minted: true,
     price: 10
   },
-  { src: "/img/profile/2.png", name: "dyor", isfollow: false, count: 456, minted: false, price: 10 },
-  { src: "/img/profile/2.png", name: "dyor", isfollow: false, count: 456, minted: false, price: 10 },
   { src: "/img/profile/2.png", name: "dyor", isfollow: false, count: 456, minted: false, price: 10 }
 ];
 
@@ -442,11 +440,20 @@ export const DOMAIN_ITEMS = [
     tokenId: 2,
     registrant: "....C47Ed08",
     price: "366 USDT",
-    expiration: "2025-08-21"
+    expiration: "2028-05-21"
   },
   {
     src: "/img/profile/2.png",
     name: "12345",
+    isprimary: false,
+    tokenId: 2,
+    registrant: "....C47Ed08",
+    price: "366 USDT",
+    expiration: "2025-08-21"
+  },
+  {
+    src: "/img/profile/2.png",
+    name: "125",
     isprimary: false,
     tokenId: 2,
     registrant: "....C47Ed08",

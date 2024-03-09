@@ -12,7 +12,15 @@ import NetworkBtn from "@/components/NetworkBtn/NetworkBtn";
 import clsx from "clsx";
 import { DOMAIN_ITEMS } from "@/utils/constants";
 
-const ProfileMenu = ({ showDropdown, closeDropdown }: { showDropdown: boolean; closeDropdown: () => void }) => {
+const ProfileMenu = ({
+  showDropdown,
+  wrapperRef,
+  setShowDropdown
+}: {
+  showDropdown: boolean;
+  wrapperRef: any;
+  setShowDropdown: any;
+}) => {
   const router = useRouter();
   const { setConnect } = useConnect();
   const { creditValue } = useCredit();
@@ -41,7 +49,7 @@ const ProfileMenu = ({ showDropdown, closeDropdown }: { showDropdown: boolean; c
       setConnect(true);
     }
     if (isDisconnected) {
-      closeDropdown();
+      setShowDropdown(false);
       setConnect(false);
     }
   }, [isConnected, isDisconnected]);
@@ -62,11 +70,11 @@ const ProfileMenu = ({ showDropdown, closeDropdown }: { showDropdown: boolean; c
   };
 
   const onMenuItem = (menuitem: any) => {
-    closeDropdown();
+    setShowDropdown(false);
     if (menuitem.isDynamic) {
       const itemWithIsPrimaryTrue = DOMAIN_ITEMS.find((item) => item.isprimary === true);
       router.push({
-        pathname: `/profile/[domain]`,
+        pathname: "/profile/[domain]",
         query: { domain: itemWithIsPrimaryTrue?.name, editmode: false, owner: true }
       });
     } else {
@@ -75,13 +83,13 @@ const ProfileMenu = ({ showDropdown, closeDropdown }: { showDropdown: boolean; c
   };
 
   const onAddClick = () => {
-    closeDropdown();
-    router.push(`/settings?tab=credits`);
+    setShowDropdown(false);
+    router.push("/settings?tab=credits");
   };
 
   return (
     <div
-      ref={modalRef}
+      ref={wrapperRef}
       className={`relative transition-all duration-300 ${showDropdown ? "visible opacity-100 backdrop-blur-2xl" : "invisible opacity-0"}`}
     >
       <div className="absolute right-0 w-[365px] z-[500] mobile:w-[290px]">

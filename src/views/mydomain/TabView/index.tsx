@@ -1,16 +1,31 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Flex, GradientText } from "@/components";
-import { DOMAIN_TAB_LIST } from "@/utils/constants";
-import { SortbyName } from "../";
-
+import { DOMAIN_ITEMS, DOMAIN_TAB_LIST } from "@/utils/constants";
+import { SortbyName } from "..";
 import clsx from "clsx";
 import { MdOutlineSearch } from "react-icons/md";
 
 const TabView: React.FC = () => {
   const [tabIndex, setTabIndex] = useState<number>(1);
   const [searchedDomain, setSearchedDomain] = useState<string>("");
+  const [domains, setDomains] = useState<any>([]);
 
-  const handleButtonClick = () => {};
+  useEffect(() => {
+    if (tabIndex === 1) {
+      setDomains([...DOMAIN_ITEMS].sort((a, b) => a.name.localeCompare(b.name)));
+    } else if (tabIndex === 2) {
+      setDomains([...DOMAIN_ITEMS].sort((a, b) => a.name.length - b.name.length));
+    } else if (tabIndex === 4) {
+      setDomains([...DOMAIN_ITEMS].sort((a, b) => new Date(a.expiration).getTime() - new Date(b.expiration).getTime()));
+    }
+  }, [tabIndex, searchedDomain]);
+
+  const handleButtonClick = () => {
+    const filteredData = domains.filter((item: any) => item.name.toLowerCase().includes(searchedDomain.toLowerCase()));
+    if (searchedDomain !== "") {
+      setDomains(filteredData);
+    }
+  };
 
   const handleInputChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchedDomain(e.target.value);
@@ -54,15 +69,15 @@ const TabView: React.FC = () => {
             if (e.key === "Enter") handleButtonClick();
           }}
           placeholder="Search from my domains"
-          className="w-full h-[55px] px-[45px] py-6 text-[16px] font-400 placeholder:text-white-500 border-none outline-none bg-transparent"
+          className="w-full h-[55px] px-[45px] mobile:px-[20px] mobile:text-[14px] py-6 text-[16px] font-400 placeholder:text-white-500 border-none outline-none bg-transparent"
         />
 
         <button
           type="submit"
           onClick={handleButtonClick}
-          className="absolute w-[197px] tablet:w-[180px] small:w-[110px] h-full right-0 bg-primary rounded-full inline-flex items-center justify-center"
+          className="absolute w-[197px] tablet:w-[180px] small:w-[110px] mobile:w-[55px] h-full right-0 bg-primary rounded-full inline-flex items-center justify-center"
         >
-          <MdOutlineSearch className="text-black w-8 h-8" />
+          <MdOutlineSearch className="text-black w-8 h-8 mobile:w-6 mobile:h-6" />
         </button>
       </div>
 
@@ -85,10 +100,7 @@ const TabView: React.FC = () => {
           <p className="text-main-900 text-[16px] w-[130px]  small:hidden text-center">{"Expiration"}</p>
         </Flex>
       </Flex>
-      {tabIndex === 1 && <SortbyName />}
-      {tabIndex === 2 && <SortbyName />}
-      {tabIndex === 3 && <SortbyName />}
-      {tabIndex === 4 && <SortbyName />}
+      <SortbyName items={domains} />
     </Flex>
   );
 };

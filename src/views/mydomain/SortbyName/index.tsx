@@ -1,8 +1,10 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { Flex } from "@/components";
+import { Flex, Image } from "@/components";
 import { ViewDomainModal } from "@/components/Modal";
 // assets
 import { HiDotsVertical } from "react-icons/hi";
+import { SlClose } from "react-icons/sl";
+
 import { MdRemoveRedEye, MdOutlineSettings } from "react-icons/md";
 import clsx from "clsx";
 import { useRouter } from "next/router";
@@ -36,14 +38,14 @@ const ListItem = ({
 
   const onClickView = () => {
     router.push({
-      pathname: `profile/[domain]`,
+      pathname: `/profile/[domain]`,
       query: { domain: name, editmode: false, owner: isprimary }
     });
   };
 
   const onClickManage = () => {
     router.push({
-      pathname: `profile/manage/[domain]`,
+      pathname: `/profile/manage/[domain]`,
       query: { domain: name }
     });
   };
@@ -102,6 +104,52 @@ const ListItem = ({
               {index}
             </div>
             <Flex align="items-center" className="space-x-4 mobile:space-x-2">
+              <Image
+                src={src}
+                alt={name}
+                fill
+                className="w-[62px] h-[62px] small:w-14 small:h-14 shrink-0 rounded-full"
+              />
+
+              {/* {
+                <svg
+                  width="160"
+                  height="160"
+                  viewBox="0 0 1000 1000"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="w-[62px] h-[62px] small:w-14 small:h-14 shrink-0 rounded-full"
+                >
+                  <g clip-path="url(#a)">
+                    <path fill="#000" d="M0 0h1000v1000H0z" />
+                    <path d="M1000 885c-178.771 139.55-551.222 50.439-1000 0v115h1000z" fill="#CAFC01" />
+                    <text x="60" y="800" font-size="50" fill="#FFF" font-family="arial">
+                      Future of decentralised
+                    </text>
+                    <text x="580" y="800" font-size="50" fill="#CAFC01" font-family="arial">
+                      naming
+                    </text>
+                    <text x="200" y="135" font-size="50" fill="#FFF" font-family="arial">
+                      Connect
+                    </text>
+                    <circle cx="120" cy="120" r="70" fill="#CAFC01" />
+                    <text x="60" y="140" font-size="60" fill="#000" font-weight="bold" font-family="arial">
+                      ZNS
+                    </text>
+                    <text x="65" y="655" font-size="100" fill="#CAFC01" font-weight="bold" font-family="arial">
+                      .zeta
+                    </text>
+                    <path d="m61 739.319 683.316-1.259" stroke="#CAFC01" stroke-width="4" />
+                  </g>
+                  <text x="5%" y="50%" font-size="250" fill="#CAFC01" font-weight="bold" font-family="arial">
+                    goku
+                  </text>
+                </svg>
+              } */}
+              {src}
+
+              <p className="text-[22px] small:text-[16px] mobile:text-[12px] font-500 truncate">{name}.zeta</p>
+
               {/* SVG Component */}
               <SVGComponent svgString={src as unknown as SVGRectElement} />
 
@@ -119,8 +167,8 @@ const ListItem = ({
           <p className="w-[130px] text-[16px] font-500 small:hidden text-center">{expiration}</p>
         </Flex>
         <Flex align="items-center" justifyContent="justify-between" className="absolute space-x-5 right-3">
-          <button onClick={() => setIsDrop(true)}>
-            <HiDotsVertical className="w-6 h-6" />
+          <button onClick={() => setIsDrop(!isDrop)}>
+            {!isDrop ? <HiDotsVertical className="w-6 h-6" /> : <SlClose className="w-6 h-6" />}
           </button>
         </Flex>
       </Flex>
@@ -148,7 +196,7 @@ const ListItem = ({
   );
 };
 
-const EndTab: React.FC = () => {
+const SortbyName = ({ items }: { items: any }) => {
   const [showModal, setShowModal] = useState<boolean>(false);
   const [isFetching, setIsFetching] = useState<boolean>(true);
   const [selected, setSelected] = useState<number>(1);
@@ -240,4 +288,4 @@ const EndTab: React.FC = () => {
   );
 };
 
-export default EndTab;
+export default SortbyName;

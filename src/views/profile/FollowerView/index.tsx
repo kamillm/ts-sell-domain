@@ -2,9 +2,21 @@ import React from "react";
 import clsx from "clsx";
 import { Flex, GradientText, Image } from "@/components";
 // assets
-import { FOLLOWER_ITEMS } from "@/utils/constants";
+import { useContextFollower } from "@/contexts";
 
-const FollowerItem = ({ index, src, name }: { index: number; src: string; name: string }) => {
+const FollowerItem = ({
+  index,
+  src,
+  name,
+  isfollow,
+  onFollow
+}: {
+  index: number;
+  src: string;
+  name: string;
+  isfollow: boolean;
+  onFollow: (name: string) => void;
+}) => {
   return (
     <Flex
       align="items-center"
@@ -39,14 +51,39 @@ const FollowerItem = ({ index, src, name }: { index: number; src: string; name: 
           </p>
         </Flex>
       </Flex>
-      <button className={clsx("rounded-3xl inline-flex items-center justify-center p-3", "w-[113px] bg-primary")}>
-        <span className="text-[12px] text-black">{"Follow"}</span>
-      </button>
+      {!isfollow ? (
+        <button
+          onClick={() => onFollow(name)}
+          className={clsx("rounded-3xl inline-flex items-center justify-center p-3", "w-[113px] bg-primary")}
+        >
+          <span className="text-[12px] text-black">{"Follow"}</span>
+        </button>
+      ) : (
+        <button
+          onClick={() => onFollow(name)}
+          className={clsx("rounded-3xl inline-flex items-center justify-center p-3", "w-[113px] border border-primary")}
+        >
+          <span className="text-[12px] text-primary">{"Unfollow"}</span>
+        </button>
+      )}
     </Flex>
   );
 };
 
 const FollowerView: React.FC = () => {
+  const { follower, setFollower } = useContextFollower();
+
+  const onFollow = (name: string) => {
+    const updatedFollowers = follower.map((follower) => {
+      if (follower.name === name) {
+        return { ...follower, isfollow: !follower.isfollow };
+      }
+      return follower;
+    });
+
+    setFollower(updatedFollowers);
+  };
+
   return (
     <div className="w-full">
       <div className="text-[32px] font-500 font-space_grotesk mobile:text-[28px] mobile:text-center pb-2">
@@ -60,9 +97,10 @@ const FollowerView: React.FC = () => {
           "mobile:grid-cols-1 mobile:place-items-center"
         )}
       >
-        {FOLLOWER_ITEMS.map((item, index) => (
-          <FollowerItem key={`follower-item-${index}`} index={index + 1} {...item} />
-        ))}
+        {follower.length !== 0 &&
+          follower.map((item, index) => (
+            <FollowerItem key={`follower-item-${index}`} index={index + 1} {...item} onFollow={onFollow} />
+          ))}
       </div>
     </div>
   );

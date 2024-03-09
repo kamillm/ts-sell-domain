@@ -5,6 +5,7 @@ import { useCredit } from "@/contexts";
 import { Flex, Link } from "@/components";
 import { ascii, gtEq, ltEq } from "@/utils/func";
 import { useContextLocalStorage } from "@/contexts";
+import toast, { Toaster } from "react-hot-toast";
 import { useRouter } from "next/router";
 import TransactionLoading from "@/components/Loaders/TransactionLoading";
 import { useAccount, useBalance, useWriteContract, useWaitForTransactionReceipt } from "wagmi";
@@ -91,6 +92,17 @@ const CheckoutSection: React.FC = () => {
     }
   };
 
+  const onCheckOut = () => {
+    writeContract({
+      abi: baseAbi,
+      address: contractAddress as `0x${string}`,
+      functionName: "registerDomains",
+      value: parseEther(totalPrice.toFixed(8)),
+      args: [address, domainNamesRef.current, expiresRef.current, "0x0000000000000000000000000000000000000000"]
+    });
+
+    toast.success("CheckOut");
+  };
   return (
     <div>
       <Flex
@@ -149,26 +161,14 @@ const CheckoutSection: React.FC = () => {
             <p className="text-[14px] font-400">{"Use your credit"}</p>
           </Flex>
         </Flex>
+
         {isLoading || isPending ? (
           <div className="flex justify-center">
             <TransactionLoading size={40} />
           </div>
         ) : (
           <button
-            onClick={() =>
-              writeContract({
-                abi: baseAbi,
-                address: contractAddress as `0x${string}`,
-                functionName: "registerDomains",
-                value: parseEther(totalPrice.toFixed(8)),
-                args: [
-                  address,
-                  domainNamesRef.current,
-                  expiresRef.current,
-                  "0x0000000000000000000000000000000000000000"
-                ]
-              })
-            }
+            onClick={onCheckOut}
             className="bg-primary text-black text-[16px] font-500 p-3 rounded-xl flex justify-center"
           >
             {"Checkout"}
@@ -181,6 +181,7 @@ const CheckoutSection: React.FC = () => {
           here
         </Link>
       </p>
+      <Toaster />
     </div>
   );
 };

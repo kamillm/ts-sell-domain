@@ -6,6 +6,7 @@ import { MdFavoriteBorder, MdOutlineFavorite } from "react-icons/md";
 import { useContextLocalStorage } from "@/contexts";
 import { useContextFavorite } from "@/contexts/FavoriteProvider";
 import { useDomainDetails } from "@/utils/web3/useDomainDetails";
+import toast, { Toaster } from "react-hot-toast";
 import { usePriceToRegister } from "@/utils/web3/usePriceToRegister";
 
 export const FollowerItem = ({
@@ -54,6 +55,7 @@ export const FollowerItem = ({
 
   const onAddToCart = () => {
     if (domainStatus) {
+      toast.success("Added to cart");
       let saveItems = JSON.parse(localstorage);
       let newItem = { name: name, year: 1, price: priceInEther };
       saveItems.push(newItem);
@@ -61,13 +63,14 @@ export const FollowerItem = ({
       localStorage.setItem("domains", JSON.stringify(saveItems));
     } else {
       router.push({
-        pathname: `profile/[domain]`,
+        pathname: `/profile/[domain]`,
         query: { domain: name, editmode: false, owner: false }
       });
     }
   };
 
   const onDeleteCart = (name: string) => {
+    toast.success("Removed from cart");
     let savedItems = JSON.parse(localstorage);
     let filterItem = savedItems.filter((item: any) => item.name !== name);
     setLocalStorage(JSON.stringify(filterItem));
@@ -78,8 +81,10 @@ export const FollowerItem = ({
     let favoriteItems = JSON.parse(favorite);
     let newArray;
     if (isfollow) {
+      toast.success("Removed from Favorites");
       newArray = favoriteItems.filter((item: string) => item !== name);
     } else {
+      toast.success("Added to Favorites");
       newArray = [...favoriteItems, name];
     }
     localStorage.setItem("favorite", JSON.stringify(newArray));
@@ -116,7 +121,9 @@ export const FollowerItem = ({
           justifyContent="justify-end"
           className={clsx("space-x-5", "desktop:flex-col desktop:space-x-0 desktop:space-y-2")}
         >
-          <p className="w-[100px] text-primary text-[16px] font-500 desktop:text-center">{price}</p>
+          <p className="w-[100px] text-primary text-[16px] font-500 desktop:text-center">
+            {Number(price).toFixed(2).toLocaleString()}
+          </p>
           {onCheckFromStroage() ? (
             <>
               <button
@@ -155,6 +162,7 @@ export const FollowerItem = ({
           </button>
         </Flex>
       </Flex>
+      <Toaster />
     </div>
   );
 };

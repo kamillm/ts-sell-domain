@@ -30,12 +30,13 @@ const TabView: React.FC = () => {
                   "w-full space-x-[15px] px-[25px] py-[17px] rounded-2xl cursor-pointer",
                   tab === item.tabName ? "text-black bg-primary_gradient_text" : "text-main-400 hover:text-white",
                   "tablet:justify-center tablet:px-0",
-                  "small:space-x-2",
+                  "small:space-x-2 small:bg-none small:rounded-none",
+                  tab === item.tabName && "small:text-primary border-b-2 border-primary",
                   "mobile:flex-col mobile:justify-center mobile:items-center mobile:space-y-1 mobile:space-x-0"
                 )}
               >
-                <item.icon className="w-[20px] h-[20px]" />
-                <p className="text-[16px] small:text-[10px] font-500 uppercase">{item.label}</p>
+                <item.icon className="w-[20px] h-[20px] small:w-[25px] small:h-[25px]" />
+                <p className="text-[16px] small:hidden font-500 uppercase">{item.label}</p>
               </Flex>
             ))}
           </Flex>

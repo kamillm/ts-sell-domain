@@ -1,12 +1,12 @@
-import React, { useEffect } from "react";
-import { useState, useRef } from "react";
+import React, { useEffect, useState, useRef } from "react";
+import { TransitionGroup } from "react-transition-group";
 import { useRouter } from "next/router";
 import { EffectCards } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import Autocomplete from "@mui/material/Autocomplete";
 import { Container, Flex, GradientText } from "@/components";
 import { DomainCard } from "@/components/Card";
-
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
 // assets
 import { MdOutlineSearch as Search } from "react-icons/md";
 import { HiOutlineRocketLaunch as Rocket } from "react-icons/hi2";
@@ -14,6 +14,7 @@ import { HiOutlineRocketLaunch as Rocket } from "react-icons/hi2";
 import { DOMAIN_CARD_LIST } from "@/utils/constants";
 import { useDomainDetails } from "@/utils/web3/useDomainDetails";
 import { useQueryClient } from "@tanstack/react-query";
+import { BsArrowLeft, BsArrowRight } from "react-icons/bs";
 
 function HeroView() {
   const router = useRouter();
@@ -23,6 +24,41 @@ function HeroView() {
   const { domainData, domainQuery } = useDomainDetails(searchedDomain);
   const [AutocompleteOpen, setAutocompleteOpen] = useState<boolean>(true);
   const timeoutId = useRef<undefined | ReturnType<typeof setTimeout>>(undefined);
+  const [isLoading, setLoading] = useState<boolean>(false);
+
+  const [active, setActive] = useState<number>(0);
+  const [direction, setDirection] = useState<string>("");
+
+  const moveLeft = () => {
+    let newActive: number = active;
+    newActive--;
+    setActive(newActive < 0 ? DOMAIN_CARD_LIST.length - 1 : newActive);
+    setDirection("left");
+  };
+
+  const moveRight = () => {
+    let newActive = active;
+    setActive((newActive + 1) % DOMAIN_CARD_LIST.length);
+    setDirection("right");
+  };
+
+  const generateItems = () => {
+    let items = [];
+    let level;
+    for (var i = active - 1; i < active + 2; i++) {
+      let index = i;
+      if (i < 0) {
+        index = DOMAIN_CARD_LIST.length + i;
+      } else if (i >= DOMAIN_CARD_LIST.length) {
+        index = i % DOMAIN_CARD_LIST.length;
+      }
+
+      level = active - i;
+
+      items.push(<DomainCard key={index} {...DOMAIN_CARD_LIST[index]} level={level} />);
+    }
+    return items;
+  };
 
   const options = [
     {
@@ -37,6 +73,7 @@ function HeroView() {
     } else {
       setDomainStatus(false);
     }
+    setLoading(false);
   }, [domainData]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -44,8 +81,9 @@ function HeroView() {
     clearTimeout(timeoutId.current);
     setSearchedDomain(inputText);
 
+    setLoading(true);
+
     timeoutId.current = setTimeout(async () => {
-      // const domainData = await fetchDomainDetails(inputText, chain?.id as number);
       queryClient.invalidateQueries({ queryKey: domainQuery });
     }, 500);
   };
@@ -53,7 +91,7 @@ function HeroView() {
   const handleButtonClick = () => {
     setAutocompleteOpen(false);
     router.push({
-      pathname: `register`,
+      pathname: `/search`,
       query: { domain: searchedDomain }
     });
   };
@@ -87,13 +125,22 @@ function HeroView() {
                   return (
                     <Flex
                       key={option.label}
+                      align="items-center"
                       justifyContent="justify-between"
                       className="p-2 px-6 font-space_grotesk cursor-pointer hover:bg-gray-200/40"
                       action={() => handleButtonClick()}
                     >
-                      <p className="text-5- font-600 text-main-300">{option.label}.zeta</p>
+                      <p className="text-5 font-600 text-main-300">{option.label}</p>
                       <p className={`text-4 font-500 ${!option.status ? "text-red-500" : "text-blue-500"}`}>
-                        {option.label === "" ? "" : option.status ? "Available" : "Not Available"}
+                        {isLoading ? (
+                          <AiOutlineLoading3Quarters className="w-5 h-5 loading-icon" />
+                        ) : option.status === "" ? (
+                          ""
+                        ) : option.status ? (
+                          <p className="bg-verified p-2 rounded-full" />
+                        ) : (
+                          <p className="bg-red-500 p-2 rounded-full" />
+                        )}
                       </p>
                     </Flex>
                   );
@@ -163,11 +210,25 @@ function HeroView() {
             </Flex>
           </Flex>
         </div>
-        <div className="w-1/2 laptop:w-full overflow-x-clip">
-          <Swiper
+        <div className="w-1/2 laptop:w-full overflow-x-clip relative">
+          <div id="carousel" className="noselect">
+            <div
+              className="arrow arrow-left inline-flex justify-center items-center bg-main-200 p-2"
+              onClick={moveLeft}
+            >
+              <BsArrowLeft />
+            </div>
+            <TransitionGroup transitionName={direction}>{generateItems()}</TransitionGroup>
+            <div
+              className="arrow arrow-right inline-flex justify-center items-center bg-main-200 p-2"
+              onClick={moveRight}
+            >
+              <BsArrowRight />
+            </div>
+          </div>
+          {/* <Swiper
             effect="cards"
             centeredSlides={true}
-            loop={true}
             grabCursor={true}
             cardsEffect={{
               slideShadows: false,
@@ -183,13 +244,21 @@ function HeroView() {
             rewind
             slideToClickedSlide
             className="badge_effect_swiper"
+            onSlideChange={(swiper) => {
+              if (swiper.isEnd) {
+                handleAppendSlide(swiper.activeIndex);
+              }
+              if (swiper.isBeginning) {
+                console.log("start");
+              }
+            }}
           >
-            {DOMAIN_CARD_LIST.map((item, index) => (
+            {slides.map((item, index) => (
               <SwiperSlide key={`domain_card_${index}`}>
                 <DomainCard {...item} />
               </SwiperSlide>
             ))}
-          </Swiper>
+          </Swiper> */}
         </div>
       </Flex>
     </Container>

@@ -43,7 +43,7 @@ const PersonalizedView: React.FC = () => {
             </p>
           </Flex>
           <button
-            onClick={() => router.push("/register")}
+            onClick={() => router.push("/search")}
             className="max-w-[528px] h-[80px] flex-shrink-0 rounded-[53px] border border-solid border-main-300 bg-primary_gradient_button  desktop:h-[60px]  mobile:h-[60px] laptop:px-6"
           >
             <span className="text-primary text-[28px] font-space_grotesk font-700 desktop:text-[24px] mobile:text-[20px] uppercase">

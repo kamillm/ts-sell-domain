@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/router";
-import { Container, Flex, Link } from "@/components";
+import { Container, Flex, Image, Link } from "@/components";
 import { MdCancel } from "react-icons/md";
 import { MENU_ICON_LIST, MENU_LIST } from "@/utils/constants";
 import { useConnect, useContextLocalStorage, useMenu } from "@/contexts";
@@ -11,6 +11,8 @@ import { MdOutlineSearch as Search } from "react-icons/md";
 import { useDomainDetails } from "@/utils/web3/useDomainDetails";
 import { useQueryClient } from "@tanstack/react-query";
 import { useContextFavorite } from "@/contexts/FavoriteProvider";
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
+import clsx from "clsx";
 
 const Menu: React.FC = () => {
   const router = useRouter();
@@ -27,6 +29,7 @@ const Menu: React.FC = () => {
   const [domainStatus, setDomainStatus] = useState<boolean>(false);
   const timeoutId = useRef<undefined | ReturnType<typeof setTimeout>>(undefined);
   const { domainData, domainQuery } = useDomainDetails(searchedDomain);
+  const [isLoading, setLoading] = useState<boolean>(false);
 
   const options = [
     {
@@ -41,6 +44,7 @@ const Menu: React.FC = () => {
     } else {
       setDomainStatus(false);
     }
+    setLoading(false);
   }, [domainData]);
 
   const handleInputChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -48,9 +52,8 @@ const Menu: React.FC = () => {
 
     clearTimeout(timeoutId.current);
     setSearchedDomain(inputText);
-
+    setLoading(true);
     timeoutId.current = setTimeout(async () => {
-      // const domainData = await fetchDomainDetails(inputText);
       queryClient.invalidateQueries({ queryKey: domainQuery });
     }, 500);
   };
@@ -58,7 +61,7 @@ const Menu: React.FC = () => {
   const handleButtonClick = () => {
     setAutocompleteOpen(false);
     router.push({
-      pathname: `register`,
+      pathname: `/search`,
       query: { domain: searchedDomain }
     });
   };
@@ -78,8 +81,17 @@ const Menu: React.FC = () => {
     >
       <Container>
         <Flex direction="flex-col" justifyContent="justify-between" className="h-full">
-          <Flex align="items-center" justifyContent="justify-between">
-            <div className="relative border border-white-400 rounded-full w-[60%] mobile:w-[70%]">
+          <Flex direction="flex-col" className="space-y-5">
+            <Flex align="items-center" justifyContent="justify-between" className="pb-5">
+              <Link href="/" onClick={handleClose} className="cursor-pointer">
+                <Image src="/img/zns-logo.png" alt="ZNS Connect logo" width={59} height={59} />
+              </Link>
+
+              <button onClick={handleClose}>
+                <MdCancel className="w-[35px] h-[35px] mobile:w-[30px] mobile:h-[30px]" />
+              </button>
+            </Flex>
+            <div className="relative border border-white-400 rounded-full">
               <Autocomplete
                 open={searchedDomain !== "" && AutocompleteOpen}
                 onBlur={() => setAutocompleteOpen(false)}
@@ -89,13 +101,22 @@ const Menu: React.FC = () => {
                   return (
                     <Flex
                       key={option.label}
+                      align="items-center"
                       justifyContent="justify-between"
                       className="px-6 font-space_grotesk cursor-pointer hover:bg-gray-200/40"
                       action={() => handleButtonClick()}
                     >
-                      <p className="text-5- font-600 text-main-300">{option.label}</p>
+                      <p className="text-[12px] font-600 text-main-300">{option.label}</p>
                       <p className={`text-4 font-500 ${!option.status ? "text-red-500" : "text-blue-500"}`}>
-                        {option.status === "" ? "" : option.status ? "Available" : "Not Available"}
+                        {isLoading ? (
+                          <AiOutlineLoading3Quarters className="w-5 h-5 loading-icon" />
+                        ) : option.status === "" ? (
+                          ""
+                        ) : option.status ? (
+                          <p className="bg-verified p-2 rounded-full" />
+                        ) : (
+                          <p className="bg-red-500 p-2 rounded-full" />
+                        )}
                       </p>
                     </Flex>
                   );
@@ -123,9 +144,14 @@ const Menu: React.FC = () => {
                 )}
               />
             </div>
-            <button onClick={handleClose}>
-              <MdCancel className="w-[35px] h-[35px] mobile:w-[30px] mobile:h-[30px]" />
-            </button>
+            {!isConnect && (
+              <span
+                onClick={openConnectModal}
+                className={`text-primary text-[20px] mobile:text-[16px] font-400 cursor-pointer border border-primary rounded-lg py-2 text-center`}
+              >
+                Connect Wallet
+              </span>
+            )}
           </Flex>
 
           <Flex direction="flex-col" className="space-y-5">
@@ -141,21 +167,16 @@ const Menu: React.FC = () => {
                 </Link>
               );
             })}
-
-            {!isConnect && (
-              <span
-                onClick={openConnectModal}
-                className={`text-start hover:text-primary text-[20px] mobile:text-[16px] font-400 cursor-pointer`}
-              >
-                Connect
-              </span>
-            )}
           </Flex>
           <Flex className="relative space-x-5 w-fit">
             {MENU_ICON_LIST.map((menu, index) => (
-              <div key={`navbar_menu_icon_${index}`}>
-                <Link href={menu.link} className="cursor-pointer">
-                  {<menu.icon className="w-10 h-10 mobile:w-8 mobile:h-8" />}
+              <div key={`navbar_menu_icon_${index}`} className="relative hover:text-primary">
+                <Link
+                  href={menu.link}
+                  onClick={handleClose}
+                  className={clsx(`cursor-pointer`, router.asPath === menu.link && "text-primary")}
+                >
+                  {<menu.icon className="w-8 h-8 mobile:w-6 mobile:h-6" />}
                 </Link>
 
                 {menu.link === "/settings?tab=favorite" && JSON.parse(favorite).length != 0 && (

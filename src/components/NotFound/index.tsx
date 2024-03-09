@@ -6,6 +6,7 @@ import { useRouter } from "next/router";
 import { Autocomplete } from "@mui/material";
 import { useDomainDetails } from "@/utils/web3/useDomainDetails";
 import { useQueryClient } from "@tanstack/react-query";
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
 
 const NotFound: React.FC<{ label: string }> = ({ label }) => {
   const router = useRouter();
@@ -17,6 +18,7 @@ const NotFound: React.FC<{ label: string }> = ({ label }) => {
   const [searchedDomain, setSearchedDomain] = useState<string>("");
   const [AutocompleteOpen, setAutocompleteOpen] = useState<boolean>(true);
   const { domainData, domainQuery } = useDomainDetails(searchedDomain);
+  const [isLoading, setLoading] = useState<boolean>(false);
 
   const options = [
     {
@@ -35,16 +37,16 @@ const NotFound: React.FC<{ label: string }> = ({ label }) => {
     } else {
       setDomainStatus(false);
     }
+    setLoading(false);
   }, [domainData]);
 
   const handleInputChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const inputText = e.target.value;
     clearTimeout(timeoutId.current);
     setSearchedDomain(inputText);
+    setLoading(true);
 
     timeoutId.current = setTimeout(async () => {
-      // const domainData = await fetchDomainDetails(inputText);
-
       queryClient.invalidateQueries({ queryKey: domainQuery });
     }, 500);
   };
@@ -52,7 +54,7 @@ const NotFound: React.FC<{ label: string }> = ({ label }) => {
   const handleButtonClick = () => {
     setAutocompleteOpen(false);
     router.push({
-      pathname: `register`,
+      pathname: `/search`,
       query: { domain: searchedDomain }
     });
   };
@@ -83,13 +85,22 @@ const NotFound: React.FC<{ label: string }> = ({ label }) => {
             return (
               <Flex
                 key={option.label}
+                align="items-center"
                 justifyContent="justify-between"
                 className="p-2 px-6 font-space_grotesk cursor-pointer hover:bg-gray-200/40"
                 action={() => handleButtonClick()}
               >
-                <p className="text-5- font-600 text-main-300">{option.label}</p>
+                <p className="text-5 font-600 text-main-300">{option.label}</p>
                 <p className={`text-4 font-500 ${!option.status ? "text-red-500" : "text-blue-500"}`}>
-                  {option.status === "" ? "" : option.status ? "Available" : "Not Available"}
+                  {isLoading ? (
+                    <AiOutlineLoading3Quarters className="w-5 h-5 loading-icon" />
+                  ) : option.status === "" ? (
+                    ""
+                  ) : option.status ? (
+                    <p className="bg-verified p-2 rounded-full" />
+                  ) : (
+                    <p className="bg-red-500 p-2 rounded-full" />
+                  )}
                 </p>
               </Flex>
             );

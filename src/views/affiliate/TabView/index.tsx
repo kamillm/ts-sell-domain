@@ -2,12 +2,30 @@ import React, { useState } from "react";
 import { Flex, GradientText } from "@/components";
 import { AFFILIATE_ITEMS, AFFILIATE_TAB_LIST, AFFILIATE_ITEM_YOU } from "@/utils/constants";
 import { TabItem } from "..";
-
 import clsx from "clsx";
 import HelpSection from "../HelpSection";
+import { BsCopy } from "react-icons/bs";
+import toast, { Toaster } from "react-hot-toast";
 
 const TabView: React.FC = () => {
   const [tabIndex, setTabIndex] = useState<number>(1);
+  const [inputData, setInputData] = useState<string>("https://app.znsconnect.io?ref=bond.zeta");
+
+  const copyToClipboard = (text: string) => {
+    if (!navigator.clipboard) {
+      console.error("Clipboard API not supported");
+      return;
+    }
+    navigator.clipboard.writeText(text).then(
+      () => {
+        toast.success("Affiliate Link Copied");
+      },
+      (err) => {
+        console.error("Failed to copy:", err);
+      }
+    );
+  };
+
   return (
     <Flex direction="flex-col" className="pt-[200px] mobile:pt-[150px] space-y-[30px] px-20 laptop:px-0">
       <Flex direction="flex-col" justifyContent="justify-center" align="items-center">
@@ -19,23 +37,25 @@ const TabView: React.FC = () => {
 
         <div className="relative border border-white-200 bg-black-400 rounded-full w-full mt-[70px]">
           <input
+            value={inputData}
+            onChange={(e) => setInputData(e.target.value)}
             placeholder="https://app.znsconnect.io?ref=bond.zeta"
-            className="w-full h-[55px] px-[45px] py-6 text-[16px] font-400 placeholder:text-white-500 border-none outline-none bg-transparent"
+            className="w-full h-[55px] px-[45px] mobile:px-[20px] py-6 text-[16px] mobile:text-[14px] font-400 placeholder:text-white-500 border-none outline-none bg-transparent"
           />
 
           <button
             type="submit"
-            className="absolute w-[263px] tablet:w-[185px] small:w-[110px] h-full right-0 bg-primary rounded-full inline-flex items-center justify-center"
+            onClick={() => copyToClipboard(String())}
+            className="absolute w-[263px] tablet:w-[185px] small:w-[55px] h-full right-0 bg-primary rounded-full inline-flex items-center justify-center"
           >
-            <span className="text-black text-[16px] font-500">
-              Copy<span className="small:hidden"> Affiliate Link</span>
-            </span>
+            <span className="text-black text-[16px] font-500 small:hidden">Copy Affiliate Link</span>
+            <BsCopy className="hidden small:w-5 small:h-5 small:block text-black" />
           </button>
         </div>
       </Flex>
       <br />
 
-      <TabItem affilate_items={AFFILIATE_ITEM_YOU} />
+      <TabItem affilate_items={AFFILIATE_ITEM_YOU} isYou={true} />
       <br />
       <Flex
         justifyContent="justify-between"
@@ -60,10 +80,8 @@ const TabView: React.FC = () => {
         ))}
       </Flex>
 
-      {tabIndex === 1 && <TabItem affilate_items={AFFILIATE_ITEMS} />}
-      {tabIndex === 2 && <TabItem affilate_items={AFFILIATE_ITEMS} />}
-      {tabIndex === 3 && <TabItem affilate_items={AFFILIATE_ITEMS} />}
-      {tabIndex === 4 && <TabItem affilate_items={AFFILIATE_ITEMS} />}
+      <TabItem affilate_items={AFFILIATE_ITEMS} isYou={false} />
+      <Toaster />
     </Flex>
   );
 };

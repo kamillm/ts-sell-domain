@@ -5,6 +5,7 @@ import { RiDeleteBin5Line } from "react-icons/ri";
 import { useContextLocalStorage } from "@/contexts";
 import { usePriceToRenew } from "@/utils/web3/usePriceToRenew";
 import clsx from "clsx";
+import toast, { Toaster } from "react-hot-toast";
 
 
 const PeriodCounter = ({ index, item }: { index: number; item: any }) => {
@@ -42,6 +43,7 @@ const PeriodCounter = ({ index, item }: { index: number; item: any }) => {
     let filterItem = savedItems.filter((item: any) => item.name !== name);
     setLocalStorage(JSON.stringify(filterItem));
     localStorage.setItem("domains", JSON.stringify(filterItem));
+    toast.success("Removed Domain");
   };
 
   return (
@@ -79,6 +81,7 @@ const PeriodCounter = ({ index, item }: { index: number; item: any }) => {
         onClick={() => removeItem(item.name)}
         className="w-5 h-5 text-danger/60 hover:text-danger cursor-pointer"
       />
+      <Toaster />
     </Flex>
   );
 };

@@ -1,7 +1,7 @@
 import React from "react";
 import { Flex, Image } from "@/components";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Autoplay, Pagination } from "swiper/modules";
+import { Autoplay, Navigation, Pagination } from "swiper/modules";
 
 const HelpSection: React.FC = () => {
   return (
@@ -12,11 +12,12 @@ const HelpSection: React.FC = () => {
         pagination={{
           clickable: true
         }}
+        navigation={true}
         autoplay={{
           delay: 2500,
           disableOnInteraction: false
         }}
-        modules={[Pagination, Autoplay]}
+        modules={[Pagination, Autoplay, Navigation]}
         breakpoints={{
           500: {
             slidesPerView: 2

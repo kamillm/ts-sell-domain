@@ -1,23 +1,35 @@
 import React, { useState } from "react";
 import { Flex } from "@/components";
 import { FollowerView, BadgeView, GalleryView, FollowingView } from "@/views/profile";
-import { TAB_ITEMS } from "@/utils/constants";
+import { FOLLOWER_ITEMS, GALLERY_ITEMS, MINT_ITEMS, TAB_ITEMS } from "@/utils/constants";
 
 import clsx from "clsx";
+import { Follower, useContextFollower } from "@/contexts";
 
 const TabItem = ({
   tabIndex,
   mapIndex,
   onClick,
-  label,
-  count
+  label
 }: {
   tabIndex: number;
   mapIndex: number;
   onClick: any;
   label: string;
-  count: number;
 }) => {
+  const { follower } = useContextFollower();
+  const onCountItems = (mapIndex: number) => {
+    if (mapIndex === 1) {
+      return GALLERY_ITEMS.length;
+    } else if (mapIndex === 2) {
+      return MINT_ITEMS.length;
+    } else if (mapIndex === 3) {
+      return FOLLOWER_ITEMS.length;
+    } else {
+      return follower.filter((item: Follower) => item.isfollow).length;
+    }
+  };
+
   return (
     <Flex
       align="items-center"
@@ -32,8 +44,8 @@ const TabItem = ({
         {mapIndex === 1 || mapIndex === 2 ? <span className="small:hidden">{"My "}</span> : ""}
         {label}
 
-        <span className="absolute -top-3 px-2 rounded-3xl bg-gray-400 text-[16px] tablet:text-[12px] mobile:text-[12px] mobile:px-1">
-          {count}
+        <span className="absolute -top-3 px-2 rounded-3xl bg-gray-400 text-[16px] tablet:text-[12px] mobile:text-[10px] mobile:-right-[10px] mobile:px-1">
+          {onCountItems(mapIndex)}
         </span>
       </p>
     </Flex>

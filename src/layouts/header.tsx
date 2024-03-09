@@ -12,15 +12,19 @@ import { useConnectModal } from "@rainbow-me/rainbowkit";
 import { MdOutlineSearch as Search, MdOutlineMenu as Menu } from "react-icons/md";
 import { Autocomplete } from "@mui/material";
 import { useQueryClient } from "@tanstack/react-query";
-import { useDetectClickOutside } from "react-detect-click-outside";
 import { useDomainDetails } from "@/utils/web3/useDomainDetails";
 import { useContextFavorite } from "@/contexts/FavoriteProvider";
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
 
 export default function Header() {
   const router = useRouter();
   const queryClient = useQueryClient();
   const { isConnect } = useConnect();
+
+  const wrapperRef = useRef<any>(null);
+  const menuButtonRef = useRef<any>(null);
   const [showDropdown, setShowDropdown] = useState(false);
+
   const { showMenu, setShowMenu } = useMenu();
   const { localstorage } = useContextLocalStorage();
   const { favorite } = useContextFavorite();
@@ -32,10 +36,7 @@ export default function Header() {
   const { domainData, domainQuery } = useDomainDetails(searchedDomain);
   const [AutocompleteOpen, setAutocompleteOpen] = useState<boolean>(true);
   const timeoutId = useRef<undefined | ReturnType<typeof setTimeout>>(undefined);
-
-  const closeDropdown = () => setShowDropdown(false);
-
-  const ref = useDetectClickOutside({ onTriggered: closeDropdown });
+  const [isLoading, setLoading] = useState<boolean>(false);
 
   const options = [
     {
@@ -45,11 +46,26 @@ export default function Header() {
   ];
 
   useEffect(() => {
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
+  useEffect(() => {
+    document.addEventListener("click", handleClickOutside, false);
+    return () => {
+      document.removeEventListener("click", handleClickOutside, false);
+    };
+  }, [showDropdown]);
+
+  useEffect(() => {
     if ((domainData as { domainName: string })?.domainName === "") {
       setDomainStatus(true);
     } else {
       setDomainStatus(false);
     }
+    setLoading(false);
   }, [domainData]);
 
   const handleInputChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -57,9 +73,8 @@ export default function Header() {
 
     clearTimeout(timeoutId.current);
     setSearchedDomain(inputText);
-
+    setLoading(true);
     timeoutId.current = setTimeout(async () => {
-      // const domainData = await fetchDomainDetails(inputText);
       queryClient.invalidateQueries({ queryKey: domainQuery });
     }, 300);
   };
@@ -68,22 +83,26 @@ export default function Header() {
     setAutocompleteOpen(false);
     setSearchedDomain("");
     router.push({
-      pathname: `register`,
+      pathname: "/search",
       query: { domain: searchedDomain }
     });
   };
 
-  useEffect(() => {
-    const handleScroll = () => {
-      setUnScrolled(document.documentElement.scrollTop === 0);
-    };
-
-    window.addEventListener("scroll", handleScroll);
-
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, []);
+  const handleScroll = () => {
+    setUnScrolled(document.documentElement.scrollTop === 0);
+  };
+  const handleClickOutside = (e: any) => {
+    if (wrapperRef.current && wrapperRef.current.contains(e.target)) {
+      return;
+    } else {
+      if (menuButtonRef.current && menuButtonRef.current.contains(e.target)) {
+        setShowDropdown(!showDropdown);
+        return;
+      } else {
+        setShowDropdown(false);
+      }
+    }
+  };
 
   return (
     <div
@@ -101,7 +120,7 @@ export default function Header() {
                   key={`navbar_menu_${index}`}
                   href={menu.link}
                   className={clsx(
-                    router.asPath === menu.link ? "text-[16px] font-700 text-primary" : "text-[14px] font-400",
+                    router.pathname === menu.link ? "text-[16px] font-700 text-primary" : "text-[14px] font-400",
                     "cursor-pointer"
                   )}
                 >
@@ -121,13 +140,22 @@ export default function Header() {
                   return (
                     <Flex
                       key={option.label}
+                      align="items-center"
                       justifyContent="justify-between"
                       className="px-6 font-space_grotesk cursor-pointer hover:bg-gray-200/40"
                       action={() => handleButtonClick()}
                     >
-                      <p className="text-5- font-600 text-main-300">{option.label}</p>
+                      <p className="text-[12px] font-600 text-main-300 break-all">{option.label}</p>
                       <p className={`text-4 font-500 ${!option.status ? "text-red-500" : "text-blue-500"}`}>
-                        {option.status === "" ? "" : option.status ? "Available" : "Not Available"}
+                        {isLoading ? (
+                          <AiOutlineLoading3Quarters className="w-5 h-5 loading-icon" />
+                        ) : option.status === "" ? (
+                          ""
+                        ) : option.status ? (
+                          <p className="bg-verified p-2 rounded-full" />
+                        ) : (
+                          <p className="bg-red-500 p-2 rounded-full" />
+                        )}
                       </p>
                     </Flex>
                   );
@@ -155,10 +183,13 @@ export default function Header() {
                 )}
               />
             </div>
-            <Flex className="relative space-x-7 desktop:space-x-3 small:hidden">
+            <Flex className="relative space-x-7 desktop:space-x-5 small:hidden">
               {MENU_ICON_LIST.map((menu, index) => (
-                <div key={`navbar_menu_icon_${index}`} className="relative">
-                  <Link href={menu.link} className="cursor-pointer">
+                <div key={`navbar_menu_icon_${index}`} className="relative hover:text-primary">
+                  <Link
+                    href={menu.link}
+                    className={clsx(`cursor-pointer`, router.asPath === menu.link && "text-primary")}
+                  >
                     {<menu.icon className="w-6 h-6" />}
                   </Link>
                   {menu.link === "/settings?tab=favorite" && JSON.parse(favorite).length != 0 && (
@@ -183,7 +214,7 @@ export default function Header() {
                 Connect
               </button>
             ) : (
-              <button ref={ref} onClick={() => setShowDropdown(!showDropdown)}>
+              <button ref={menuButtonRef}>
                 <Image
                   src={"/img/profile.png"}
                   alt={"profile"}
@@ -198,7 +229,7 @@ export default function Header() {
             </button>
           </Flex>
         </Flex>
-        <ProfileMenu showDropdown={showDropdown} closeDropdown={closeDropdown} />
+        <ProfileMenu showDropdown={showDropdown} wrapperRef={wrapperRef} setShowDropdown={setShowDropdown} />
       </Container>
     </div>
   );

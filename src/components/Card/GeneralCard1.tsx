@@ -4,16 +4,7 @@ import { Flex, Image } from "..";
 import clsx from "clsx";
 import { GeneralCardProps } from "@/types/card";
 
-const GeneralCard: React.FC<GeneralCardProps & { level: number }> = ({
-  level,
-  name,
-  avatar,
-  type,
-  src,
-  borderColor,
-  tld
-}) => {
-  const className = "item level" + level;
+const GeneralCard: React.FC<GeneralCardProps> = ({ name, avatar, type, src, borderColor, tld }) => {
   return (
     <Flex
       direction="flex-col"
@@ -23,17 +14,11 @@ const GeneralCard: React.FC<GeneralCardProps & { level: number }> = ({
         "border border-solid border-black ",
         "font-space_grotesk ",
         "cursor-pointer backdrop-blur-sm backdrop-filter",
-        borderColor,
-        className
+        borderColor
       )}
     >
-      <div className={clsx("relative")}>
-        <div
-          className={clsx(
-            "rounded-3xl overflow-hidden w-full h-[185px] tablet:h-[170px]",
-            level != 0 && "tablet:h-[230px]"
-          )}
-        >
+      <div className="relative">
+        <div className="rounded-3xl overflow-hidden w-full h-[185px] tablet:h-[180px]">
           <Image
             src={src}
             alt={`card-${name}`}
@@ -42,7 +27,7 @@ const GeneralCard: React.FC<GeneralCardProps & { level: number }> = ({
             className="rounded-2xl object-cover w-full h-full"
           />
         </div>
-        <div className="rounded-3xl overflow-hidden w-[104px] h-[104px] absolute right-[84px] -bottom-[52px] tablet:right-[60px] tablet:-bottom-[60px]">
+        <div className="rounded-3xl overflow-hidden w-[104px] h-[104px] absolute right-[84px] -bottom-[52px] tablet:right-[44px] tablet:-bottom-[60px] mobile:right-[44px]">
           <Image
             src={avatar}
             alt={`avatar-${name}`}

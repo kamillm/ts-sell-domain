@@ -4,7 +4,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { EffectCoverflow, Autoplay } from "swiper/modules";
 
 import { useRouter } from "next/router";
-import { GeneralCard } from "@/components/Card";
+import { GeneralCard1 } from "@/components/Card";
 import { GENERAL_CARD_LIST_2 } from "@/utils/constants";
 import { Container, Flex, GradientText } from "@/components";
 
@@ -72,7 +72,7 @@ function BadgesView() {
           >
             {GENERAL_CARD_LIST_2.map((item, index) => (
               <SwiperSlide key={`domain_card_${index}`}>
-                <GeneralCard {...item} />
+                <GeneralCard1 {...item} />
               </SwiperSlide>
             ))}
           </Swiper>

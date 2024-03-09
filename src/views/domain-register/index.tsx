@@ -8,6 +8,7 @@ import { useRouter } from "next/router";
 import { Autocomplete } from "@mui/material";
 import { useSearchParams } from "next/navigation";
 import { useDomainDetails } from "@/utils/web3/useDomainDetails";
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { useQueryClient } from "@tanstack/react-query";
 
 // import { useRegisterDomain } from "@/utils/web3/useRegisterDomain";
@@ -19,8 +20,9 @@ const DomainRegisterView: React.FC = () => {
   const [domainStatus, setDomainStatus] = useState<boolean>(false);
   const timeoutId = useRef<undefined | ReturnType<typeof setTimeout>>(undefined);
   const [searchedDomain, setSearchedDomain] = useState<string>("");
+  const [isLoading, setLoading] = useState<boolean>(false);
 
-  const { domainData, domainQuery } = useDomainDetails(searchedDomain);
+  const { domainData, domainQuery } = useDomainDetails(searchedDomain || "");
   const [AutocompleteOpen, setAutocompleteOpen] = useState<boolean>(false);
 
   const options = [
@@ -36,6 +38,7 @@ const DomainRegisterView: React.FC = () => {
     } else {
       setDomainStatus(false);
     }
+    setLoading(true);
   }, [domainData]);
 
   useEffect(() => {
@@ -54,7 +57,7 @@ const DomainRegisterView: React.FC = () => {
   const handleButtonClick = () => {
     setAutocompleteOpen(false);
     router.push({
-      pathname: `register`,
+      pathname: `/search`,
       query: { domain: searchedDomain }
     });
   };
@@ -82,9 +85,17 @@ const DomainRegisterView: React.FC = () => {
                     className="p-2 px-6 font-space_grotesk cursor-pointer hover:bg-gray-200/40"
                     action={() => handleButtonClick()}
                   >
-                    <p className="text-5- font-600 text-main-300">{option.label}</p>
+                    <p className="text-5 font-600 text-main-300">{option.label}</p>
                     <p className={`text-4 font-500 ${!option.status ? "text-red-500" : "text-blue-500"}`}>
-                      {option.status === "" ? "" : option.status ? "Available" : "Not Available"}
+                      {isLoading ? (
+                        <AiOutlineLoading3Quarters className="w-5 h-5 loading-icon" />
+                      ) : option.status === "" ? (
+                        ""
+                      ) : option.status ? (
+                        <p className="bg-verified p-2 rounded-full" />
+                      ) : (
+                        <p className="bg-red-500 p-2 rounded-full" />
+                      )}
                     </p>
                   </Flex>
                 );
@@ -99,7 +110,7 @@ const DomainRegisterView: React.FC = () => {
                       if (e.key === "Enter") handleButtonClick();
                     }}
                     placeholder="Search Domain Names"
-                    className="w-full h-[55px] placeholder:px-[45px] p-6 text-[16px] font-400 placeholder:text-white-500 border-none outline-none bg-transparent"
+                    className="w-full h-[55px] p-6 text-[16px] font-400 placeholder:text-white-500 border-none outline-none bg-transparent"
                   />
                   <button
                     type="submit"
@@ -115,7 +126,7 @@ const DomainRegisterView: React.FC = () => {
 
           <Flex direction="flex-col" className="w-full pt-[47px] space-y-[80px] small:space-y-[50px]">
             <SearchSection search={search || ""} />
-            <TradingSection />
+            {(search || "") !== "" && <TradingSection />}
           </Flex>
         </>
       )}

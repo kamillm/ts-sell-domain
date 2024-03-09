@@ -83,7 +83,7 @@ const CreditView: React.FC = () => {
                   placeholder="Enter amount to send"
                   className="flex-1  placeholder:text-[14px] w-full h-[54px] rounded-xl px-4 placeholder:text-white-500 border border-main-300 outline-none bg-black/40"
                 />
-                <p className="text-main-300 absolute right-3 top-4 text-[14px] cursor-pointer">Max</p>
+                <p className="text-primary absolute right-3 top-4 text-[14px] cursor-pointer">Max</p>
               </div>
 
               <input
