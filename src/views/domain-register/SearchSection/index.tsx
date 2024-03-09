@@ -1,33 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { useRouter } from "next/router";
 import { Flex } from "@/components";
 import { FollowerItem } from "@/components/Item/FollowerItem";
-// import { fetchDomainDetails } from "@/utils/web3/lookup";
 import { useContextLocalStorage } from "@/contexts";
 // import { FAVORITE_ITEMS } from "@/utils/constants";
-
-import { AddCartModal } from "@/components/Modal";
-import { useDomainDetails } from "@/utils/web3/useDomainDetails";
 import { usePriceToRegister } from "@/utils/web3/usePriceToRegister";
 
 const SearchSection: React.FC<{ search: string }> = ({ search }) => {
   const router = useRouter();
-
-  const [domainStatus, setDomainStatus] = useState<boolean>(false);
-  const [showModal, setShowModal] = useState<boolean>(false);
-  const [selected, setSelected] = useState<string>("");
-  const { domainData } = useDomainDetails(search || "");
-  const { priceInEther, symbol } = usePriceToRegister(search.length);
   const { localstorage } = useContextLocalStorage();
-
-  useEffect(() => {
-    // const domainData = await fetchDomainDetails(search || "");
-    if ((domainData as { domainName: string })?.domainName === "") {
-      setDomainStatus(true);
-    } else {
-      setDomainStatus(false);
-    }
-  }, [search, domainData]);
+  const { priceInEther, symbol } = usePriceToRegister(search.length);
 
   return (
     <div className="w-full">
@@ -46,13 +28,9 @@ const SearchSection: React.FC<{ search: string }> = ({ search }) => {
             <FollowerItem
               src="/img/profile/1.png"
               name={search}
-              isfollow={false}
               count={23}
-              minted={!domainStatus}
               price={priceInEther + " " + symbol}
               index={1}
-              setShowModal={setShowModal}
-              setSelected={setSelected}
             />
           ) : (
             <p className="inline-flex items-center justify-center uppercase rounded-xl text-main-300 text-[45px] small:text-[30px] border border-main-300 h-full p-5">

@@ -10,7 +10,7 @@ import TransactionLoading from "@/components/Loaders/TransactionLoading";
 import { useAccount, useBalance, useWriteContract, useWaitForTransactionReceipt } from "wagmi";
 import { baseAbi } from "@/utils/web3/baseAbi";
 import { parseEther } from "viem";
-const contractAddress = "0x6079cCb64952F788F58A1EB1df96Cbe447e07d6f";
+import { useContractAddressByChain } from "@/utils/web3/useContractAddressByChain";
 
 const CheckoutSection: React.FC = () => {
   const router = useRouter();
@@ -19,6 +19,7 @@ const CheckoutSection: React.FC = () => {
   const [isCredit, setIsCredit] = useState<boolean>(false);
   const [totalPrice, setTotalPrice] = useState<number>(0);
   const [creditPrice, setCreditPrice] = useState<number>(0);
+  const contractAddress = useContractAddressByChain();
 
   //web3
   const { address } = useAccount();
@@ -30,7 +31,6 @@ const CheckoutSection: React.FC = () => {
   });
   const domainNamesRef = useRef<Array<string>>([]);
   const expiresRef = useRef<Array<number>>([]);
-  // const { writeContract } = useRegisterDomain(totalPrice, domainNamesRef.current, expiresRef.current);
 
   useEffect(() => {
     if (isError) {
@@ -158,7 +158,7 @@ const CheckoutSection: React.FC = () => {
             onClick={() =>
               writeContract({
                 abi: baseAbi,
-                address: contractAddress,
+                address: contractAddress as `0x${string}`,
                 functionName: "registerDomains",
                 value: parseEther(totalPrice.toFixed(8)),
                 args: [

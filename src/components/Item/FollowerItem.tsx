@@ -2,13 +2,11 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import clsx from "clsx";
 import { Flex, Image } from "..";
-
 import { MdFavoriteBorder, MdOutlineFavorite } from "react-icons/md";
-import { useDomainDetails } from "@/utils/web3/useDomainDetails";
-import { usePriceToRegister } from "@/utils/web3/usePriceToRegister";
 import { useContextLocalStorage } from "@/contexts";
 import { useContextFavorite } from "@/contexts/FavoriteProvider";
-
+import { useDomainDetails } from "@/utils/web3/useDomainDetails";
+import { usePriceToRegister } from "@/utils/web3/usePriceToRegister";
 
 export const FollowerItem = ({
   src = "/img/profile/1.png",
@@ -19,7 +17,7 @@ export const FollowerItem = ({
   src?: string;
   name: string;
   index: number;
-  price?: number;
+  price?: number | string;
   count?: number;
 }) => {
   const router = useRouter();
@@ -29,7 +27,6 @@ export const FollowerItem = ({
   const [isfollow, setIsFollow] = useState<boolean>(false);
   const { localstorage, setLocalStorage } = useContextLocalStorage();
   const { domainData } = useDomainDetails(name || "");
-
 
   useEffect(() => {
     let favoriteItems = JSON.parse(favorite);
@@ -119,7 +116,7 @@ export const FollowerItem = ({
           justifyContent="justify-end"
           className={clsx("space-x-5", "desktop:flex-col desktop:space-x-0 desktop:space-y-2")}
         >
-          <p className="w-[100px] text-primary text-[16px] font-500 desktop:text-center">{price} MATIC</p>
+          <p className="w-[100px] text-primary text-[16px] font-500 desktop:text-center">{price}</p>
           {onCheckFromStroage() ? (
             <>
               <button
