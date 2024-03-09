@@ -151,7 +151,7 @@ const CheckoutSection: React.FC = () => {
         </Flex>
         {isLoading || isPending ? (
           <div className="flex justify-center">
-            <TransactionLoading />
+            <TransactionLoading size={40} />
           </div>
         ) : (
           <button

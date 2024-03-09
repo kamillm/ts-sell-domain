@@ -1,5 +1,5 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
-import { Flex, Image } from "@/components";
+import React, { ReactElement, use, useCallback, useEffect, useRef, useState } from "react";
+import { Flex } from "@/components";
 import { ViewDomainModal } from "@/components/Modal";
 // assets
 import { HiDotsVertical } from "react-icons/hi";
@@ -33,10 +33,6 @@ const ListItem = ({
   const router = useRouter();
   const modalRef = useRef<HTMLDivElement>(null);
   const [isDrop, setIsDrop] = useState<boolean>(false);
-
-  // const { domainInfo } = useDomainLookup(Number(tokenId));
-
-  // console.log(Number(userDomains?.primaryDomain));
 
   const onClickView = () => {
     router.push({
@@ -73,6 +69,36 @@ const ListItem = ({
     };
   }, [modalRef, handleClickOutside]);
 
+  const decodeImageData = (dataUri: string) => {
+    if (!dataUri) {
+      console.error("Invalid dataUri:", dataUri);
+      return null;
+    }
+    const base64Json = dataUri.split(",")[1];
+    const jsonString = atob(base64Json);
+    const jsonData = JSON.parse(jsonString);
+    const imageWithPrefix = jsonData?.image;
+    if (!imageWithPrefix) {
+      console.error("Invalid image property:", imageWithPrefix);
+      return null;
+    }
+    const base64Image = imageWithPrefix.split(",")[1];
+    const decodedImage = atob(base64Image);
+    return decodedImage;
+  };
+
+  const svgString = decodeImageData(src);
+  // TODO: get an alternative for dangerouslySetInnerHTML
+  const SVGComponent = ({ svgString }: { svgString: ReactElement }) => (
+    <svg
+      viewBox="0 0 144 144"
+      className="w-[62px] h-[62px] small:w-14 small:h-14 shrink-0 rounded-full object-top "
+      dangerouslySetInnerHTML={{
+        __html: svgString as unknown as string
+      }}
+    />
+  );
+
   return (
     <div className="relative">
       <Flex
@@ -95,54 +121,10 @@ const ListItem = ({
               {index}
             </div>
             <Flex align="items-center" className="space-x-4 mobile:space-x-2">
-              <Image
-                src={src}
-                alt={name}
-                fill
-                className="w-[62px] h-[62px] small:w-14 small:h-14 shrink-0 rounded-full"
-              />
-
-
-              {/* {
-                <svg
-                  width="160"
-                  height="160"
-                  viewBox="0 0 1000 1000"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="w-[62px] h-[62px] small:w-14 small:h-14 shrink-0 rounded-full"
-                >
-                  <g clip-path="url(#a)">
-                    <path fill="#000" d="M0 0h1000v1000H0z" />
-                    <path d="M1000 885c-178.771 139.55-551.222 50.439-1000 0v115h1000z" fill="#CAFC01" />
-                    <text x="60" y="800" font-size="50" fill="#FFF" font-family="arial">
-                      Future of decentralised
-                    </text>
-                    <text x="580" y="800" font-size="50" fill="#CAFC01" font-family="arial">
-                      naming
-                    </text>
-                    <text x="200" y="135" font-size="50" fill="#FFF" font-family="arial">
-                      Connect
-                    </text>
-                    <circle cx="120" cy="120" r="70" fill="#CAFC01" />
-                    <text x="60" y="140" font-size="60" fill="#000" font-weight="bold" font-family="arial">
-                      ZNS
-                    </text>
-                    <text x="65" y="655" font-size="100" fill="#CAFC01" font-weight="bold" font-family="arial">
-                      .zeta
-                    </text>
-                    <path d="m61 739.319 683.316-1.259" stroke="#CAFC01" stroke-width="4" />
-                  </g>
-                  <text x="5%" y="50%" font-size="250" fill="#CAFC01" font-weight="bold" font-family="arial">
-                    goku
-                  </text>
-                </svg>
-              } */}
-              {src}
+              {/* SVG Component */}
+              <SVGComponent svgString={svgString as unknown as ReactElement} />
 
               <p className="text-[22px] small:text-[16px] mobile:text-[12px] font-500 truncate">{name}.zeta</p>
-
-
               {isprimary && (
                 <div className="tablet:hidden inline-flex text-center items-center border-[0.5px] border-verified/60 rounded-xl text-[12px] font-500 px-2 py-[2px]">
                   {"Primary"}
@@ -162,7 +144,6 @@ const ListItem = ({
         </Flex>
       </Flex>
 
-      {/*  */}
       {isDrop && (
         <div
           ref={modalRef}
@@ -188,8 +169,20 @@ const ListItem = ({
 
 const EndTab: React.FC = () => {
   const [showModal, setShowModal] = useState<boolean>(false);
+  const [isFetching, setIsFetching] = useState<boolean>(true);
   const [selected, setSelected] = useState<number>(1);
   const { userDomains, allOwnedDomains, domainList, domainUrisList } = useDomainLookup();
+
+  useEffect(() => {
+    if (
+      userDomains !== undefined &&
+      allOwnedDomains !== undefined &&
+      domainList !== undefined &&
+      domainUrisList !== undefined
+    ) {
+      setIsFetching(false);
+    }
+  }, [userDomains, allOwnedDomains, domainList, domainUrisList]);
 
   const formatExpirationDate = (timestamp: bigint) => {
     const date = new Date(Number(timestamp) * 1000);
@@ -206,28 +199,15 @@ const EndTab: React.FC = () => {
       return true;
     }
   };
-  const decodeImageData = (dataUri: string) => {
-    const base64Json = dataUri?.split(",")[1];
-    const jsonString = atob(base64Json);
-    const jsonData = JSON.parse(jsonString);
-    const image = jsonData?.image;
-    const base64svg = image.split(",")[1];
-    const svgString = atob(base64svg);
-    return svgString;
-  };
-
-  // const svg = decodeImageData(domainUrisList[0]);
-  // console.log(typeof domainUrisList[0]);
-  // console.log("Decoded Image:", typeof svg);
 
   return (
     <div>
       <Flex direction="flex-col" className="space-y-3">
-        {domainList ? (
+        {!isFetching ? (
           domainList.map((item: any, index: number) => (
             <ListItem
               {...item}
-              // src={decodeImageData(domainUrisList[0])}
+              src={domainUrisList[index]}
               name={item.domainName}
               isprimary={checkPrimary(Number(allOwnedDomains[index]))}
               tokenId={Number(allOwnedDomains[index])}
@@ -240,7 +220,9 @@ const EndTab: React.FC = () => {
             />
           ))
         ) : (
-          <TransactionLoading />
+          <div className="flex justify-center">
+            <TransactionLoading size={60} />
+          </div>
         )}
       </Flex>
       <ViewDomainModal showModal={showModal} setShowModal={setShowModal} selected={selected} />
