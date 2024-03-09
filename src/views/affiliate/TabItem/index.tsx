@@ -93,7 +93,7 @@ const TabItem: React.FC<{ affilate_items: any }> = ({ affilate_items }) => {
         </div>
       </Flex>
 
-      <ViewDomainModal showModal={showModal} setShowModal={setShowModal} selected={selected} />
+      {/* <ViewDomainModal showModal={showModal} setShowModal={setShowModal} selected={selected} /> */}
     </div>
   );
 };

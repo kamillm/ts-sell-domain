@@ -1,4 +1,4 @@
-import React, { ReactElement, use, useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Flex } from "@/components";
 import { ViewDomainModal } from "@/components/Modal";
 // assets
@@ -69,27 +69,8 @@ const ListItem = ({
     };
   }, [modalRef, handleClickOutside]);
 
-  const decodeImageData = (dataUri: string) => {
-    if (!dataUri) {
-      console.error("Invalid dataUri:", dataUri);
-      return null;
-    }
-    const base64Json = dataUri.split(",")[1];
-    const jsonString = atob(base64Json);
-    const jsonData = JSON.parse(jsonString);
-    const imageWithPrefix = jsonData?.image;
-    if (!imageWithPrefix) {
-      console.error("Invalid image property:", imageWithPrefix);
-      return null;
-    }
-    const base64Image = imageWithPrefix.split(",")[1];
-    const decodedImage = atob(base64Image);
-    return decodedImage;
-  };
-
-  const svgString = decodeImageData(src);
   // TODO: get an alternative for dangerouslySetInnerHTML
-  const SVGComponent = ({ svgString }: { svgString: ReactElement }) => (
+  const SVGComponent = ({ svgString }: { svgString: SVGRectElement }) => (
     <svg
       viewBox="0 0 144 144"
       className="w-[62px] h-[62px] small:w-14 small:h-14 shrink-0 rounded-full object-top "
@@ -122,7 +103,7 @@ const ListItem = ({
             </div>
             <Flex align="items-center" className="space-x-4 mobile:space-x-2">
               {/* SVG Component */}
-              <SVGComponent svgString={svgString as unknown as ReactElement} />
+              <SVGComponent svgString={src as unknown as SVGRectElement} />
 
               <p className="text-[22px] small:text-[16px] mobile:text-[12px] font-500 truncate">{name}.zeta</p>
               {isprimary && (
@@ -184,21 +165,41 @@ const EndTab: React.FC = () => {
     }
   }, [userDomains, allOwnedDomains, domainList, domainUrisList]);
 
+  const decodeImageData = (dataUri: string) => {
+    if (!dataUri) {
+      console.error("Invalid dataUri:", dataUri);
+      return null;
+    }
+    const base64Json = dataUri.split(",")[1];
+    const jsonString = atob(base64Json);
+    const jsonData = JSON.parse(jsonString);
+    const imageWithPrefix = jsonData?.image;
+    if (!imageWithPrefix) {
+      console.error("Invalid image property:", imageWithPrefix);
+      return null;
+    }
+    const base64Image = imageWithPrefix.split(",")[1];
+    const decodedImage = atob(base64Image);
+    return decodedImage;
+  };
+
+  const svgString = decodeImageData(domainUrisList[selected]);
+
   const formatExpirationDate = (timestamp: bigint) => {
     const date = new Date(Number(timestamp) * 1000);
-    const formattedDate = new Intl.DateTimeFormat("en-US", {
-      year: "numeric",
-      month: "2-digit",
-      day: "2-digit"
-    }).format(date);
-    return formattedDate.replace(/\//g, "-");
+    const formattedDate = `${date.getDate().toString().padStart(2, "0")}-${(date.getMonth() + 1).toString().padStart(2, "0")}-${date.getFullYear()}`;
+    return formattedDate;
   };
+
+  const expirationDate = formatExpirationDate(domainList[selected]?.expirationDate);
 
   const checkPrimary = (tokenId: number) => {
     if (tokenId === Number((userDomains as { primaryDomain: bigint })?.primaryDomain)) {
       return true;
     }
   };
+
+  const isPrimary = checkPrimary(Number(allOwnedDomains?.[selected]));
 
   return (
     <div>
@@ -207,7 +208,7 @@ const EndTab: React.FC = () => {
           domainList.map((item: any, index: number) => (
             <ListItem
               {...item}
-              src={domainUrisList[index]}
+              src={decodeImageData(domainUrisList[index])}
               name={item.domainName}
               isprimary={checkPrimary(Number(allOwnedDomains[index]))}
               tokenId={Number(allOwnedDomains[index])}
@@ -225,7 +226,16 @@ const EndTab: React.FC = () => {
           </div>
         )}
       </Flex>
-      <ViewDomainModal showModal={showModal} setShowModal={setShowModal} selected={selected} />
+      <ViewDomainModal
+        showModal={showModal}
+        setShowModal={setShowModal}
+        domainSvg={svgString}
+        domainName={domainList[selected]?.domainName}
+        tokenId={Number(allOwnedDomains?.[selected])}
+        registrant={domainList[selected]?.owner}
+        expirationDate={expirationDate}
+        isPrimary={isPrimary}
+      />
     </div>
   );
 };
