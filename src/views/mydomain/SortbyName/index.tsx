@@ -1,4 +1,4 @@
-import React, { ReactElement, useCallback, useEffect, useRef, useState } from "react";
+import React, { ReactElement, use, useCallback, useEffect, useRef, useState } from "react";
 import { Flex } from "@/components";
 import { ViewDomainModal } from "@/components/Modal";
 // assets
@@ -8,7 +8,6 @@ import clsx from "clsx";
 import { useRouter } from "next/router";
 import TransactionLoading from "@/components/Loaders/TransactionLoading";
 import { useDomainLookup } from "@/utils/web3/useDomainLookup";
-// import {TrustedHTML} from "react-type";
 
 const ListItem = ({
   index,
@@ -71,17 +70,24 @@ const ListItem = ({
   }, [modalRef, handleClickOutside]);
 
   const decodeImageData = (dataUri: string) => {
-    const base64Json = dataUri?.split(",")[1];
+    if (!dataUri) {
+      console.error("Invalid dataUri:", dataUri);
+      return null;
+    }
+    const base64Json = dataUri.split(",")[1];
     const jsonString = atob(base64Json);
     const jsonData = JSON.parse(jsonString);
-    const image = jsonData?.image;
-    const base64svg = image.split(",")[1];
-    const svgString = atob(base64svg);
-    return svgString;
+    const imageWithPrefix = jsonData?.image;
+    if (!imageWithPrefix) {
+      console.error("Invalid image property:", imageWithPrefix);
+      return null;
+    }
+    const base64Image = imageWithPrefix.split(",")[1];
+    const decodedImage = atob(base64Image);
+    return decodedImage;
   };
 
   const svgString = decodeImageData(src);
-
   // TODO: get an alternative for dangerouslySetInnerHTML
   const SVGComponent = ({ svgString }: { svgString: ReactElement }) => (
     <svg
@@ -138,7 +144,6 @@ const ListItem = ({
         </Flex>
       </Flex>
 
-      {/*  */}
       {isDrop && (
         <div
           ref={modalRef}
@@ -164,8 +169,20 @@ const ListItem = ({
 
 const EndTab: React.FC = () => {
   const [showModal, setShowModal] = useState<boolean>(false);
+  const [isFetching, setIsFetching] = useState<boolean>(true);
   const [selected, setSelected] = useState<number>(1);
   const { userDomains, allOwnedDomains, domainList, domainUrisList } = useDomainLookup();
+
+  useEffect(() => {
+    if (
+      userDomains !== undefined &&
+      allOwnedDomains !== undefined &&
+      domainList !== undefined &&
+      domainUrisList !== undefined
+    ) {
+      setIsFetching(false);
+    }
+  }, [userDomains, allOwnedDomains, domainList, domainUrisList]);
 
   const formatExpirationDate = (timestamp: bigint) => {
     const date = new Date(Number(timestamp) * 1000);
@@ -183,14 +200,10 @@ const EndTab: React.FC = () => {
     }
   };
 
-  // const svg = decodeImageData(domainUrisList[0]);
-  // console.log(typeof domainUrisList[0]);
-  // console.log("Decoded Image:", typeof svg);
-
   return (
     <div>
       <Flex direction="flex-col" className="space-y-3">
-        {domainList ? (
+        {!isFetching ? (
           domainList.map((item: any, index: number) => (
             <ListItem
               {...item}
@@ -207,7 +220,9 @@ const EndTab: React.FC = () => {
             />
           ))
         ) : (
-          <TransactionLoading />
+          <div className="flex justify-center">
+            <TransactionLoading size={60} />
+          </div>
         )}
       </Flex>
       <ViewDomainModal showModal={showModal} setShowModal={setShowModal} selected={selected} />
