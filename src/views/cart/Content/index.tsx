@@ -3,10 +3,13 @@ import { Flex } from "@/components";
 import { LuMinus, LuPlus } from "react-icons/lu";
 import { RiDeleteBin5Line } from "react-icons/ri";
 import { useContextLocalStorage } from "@/contexts";
+import { usePriceToRenew } from "@/utils/web3/usePriceToRenew";
 import clsx from "clsx";
+
 
 const PeriodCounter = ({ index, item }: { index: number; item: any }) => {
   const { localstorage, setLocalStorage } = useContextLocalStorage();
+  const { renewPriceInEther, symbol } = usePriceToRenew(item.name.length);
 
   const handlePeriod = (name: string, type: boolean) => {
     let savedItems = JSON.parse(localstorage);
@@ -15,7 +18,7 @@ const PeriodCounter = ({ index, item }: { index: number; item: any }) => {
     if (type) {
       savedItems = savedItems.map((item: any) => {
         if (item.name === name) {
-          return { ...item, year: item.year + 1 };
+          return { ...item, year: item.year + 1, renewPrice: renewPriceInEther };
         }
         return item;
       });
@@ -29,6 +32,7 @@ const PeriodCounter = ({ index, item }: { index: number; item: any }) => {
         });
       }
     }
+
     setLocalStorage(JSON.stringify(savedItems));
     localStorage.setItem("domains", JSON.stringify(savedItems));
   };
@@ -50,22 +54,25 @@ const PeriodCounter = ({ index, item }: { index: number; item: any }) => {
         "tablet:flex-col tablet:space-y-2"
       )}
     >
-      <div className="relative w-[60%] tablet:w-full tablet:text-center">
-        <p className="text-[20px]	text- small:flex-1 font-500 break-all">{item.name}.zeta</p>
-        <span className="absolute left-0 -top-5 border border-verified rounded-xl px-2 text-verified text-[12px] font-400">
-          Available
-        </span>
-      </div>
 
-      <p className="text-[16px] text-primary font-500">{"10 MATIC"}</p>
-      <Flex className="space-x-1" align="items-center">
-        <button onClick={() => handlePeriod(item.name, false)}>
-          <LuMinus className="w-[12px] h-[12px]" />
-        </button>
-        <div className="p-1 px-3 rounded-lg text-[14px] font-500">{`${item.year} Year`}</div>
-        <button onClick={() => handlePeriod(item.name, true)}>
-          <LuPlus className="w-[12px] h-[12px]" />
-        </button>
+      <p className="text-[20px] small:flex-1 font-500 w-[150px] truncate">{item.name}.zeta</p>
+      <span className="small:hidden text-verified text-[16px] font-400">
+        {/* {item.status ? "Available" : "Not Available"} */}
+        Available
+      </span>
+      <p className="text-[16px] text-primary font-500 small:hidden">{item.price + " " + symbol}</p>
+      <Flex className="space-x-[10px]">
+        <Flex className="space-x-5">
+          <Flex className="space-x-3" align="items-center">
+            <button onClick={() => handlePeriod(item.name, false)}>
+              <LuMinus className="w-[12px] h-[12px]" />
+            </button>
+            <div className="p-1 rounded-lg px-6 text-[14px] font-500">{`${item.year} Year`}</div>
+            <button onClick={() => handlePeriod(item.name, true)}>
+              <LuPlus className="w-[12px] h-[12px]" />
+            </button>
+          </Flex>
+        </Flex>
       </Flex>
 
       <RiDeleteBin5Line

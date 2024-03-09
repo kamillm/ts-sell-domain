@@ -22,7 +22,7 @@ const Menu: React.FC = () => {
   const { isConnected, isDisconnected } = useAccount();
   const handleClose = () => setShowMenu(!showMenu);
   const { openConnectModal } = useConnectModal();
-
+  const [AutocompleteOpen, setAutocompleteOpen] = useState<boolean>(true);
   const [searchedDomain, setSearchedDomain] = useState<string>("");
   const [domainStatus, setDomainStatus] = useState<boolean>(false);
   const timeoutId = useRef<undefined | ReturnType<typeof setTimeout>>(undefined);
@@ -56,6 +56,7 @@ const Menu: React.FC = () => {
   };
 
   const handleButtonClick = () => {
+    setAutocompleteOpen(false);
     router.push({
       pathname: `register`,
       query: { domain: searchedDomain }
@@ -80,6 +81,9 @@ const Menu: React.FC = () => {
           <Flex align="items-center" justifyContent="justify-between">
             <div className="relative border border-white-400 rounded-full w-[60%] mobile:w-[70%]">
               <Autocomplete
+                open={searchedDomain !== "" && AutocompleteOpen}
+                onBlur={() => setAutocompleteOpen(false)}
+                onFocus={() => setAutocompleteOpen(true)}
                 options={options}
                 renderOption={(props, option) => {
                   return (
@@ -87,6 +91,7 @@ const Menu: React.FC = () => {
                       key={option.label}
                       justifyContent="justify-between"
                       className="px-6 font-space_grotesk cursor-pointer hover:bg-gray-200/40"
+                      action={() => handleButtonClick()}
                     >
                       <p className="text-5- font-600 text-main-300">{option.label}</p>
                       <p className={`text-4 font-500 ${!option.status ? "text-red-500" : "text-blue-500"}`}>

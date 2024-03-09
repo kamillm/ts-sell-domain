@@ -21,6 +21,7 @@ function HeroView() {
   const [searchedDomain, setSearchedDomain] = useState<string>("");
   const [domainStatus, setDomainStatus] = useState<boolean>(false);
   const { domainData, domainQuery } = useDomainDetails(searchedDomain);
+  const [AutocompleteOpen, setAutocompleteOpen] = useState<boolean>(true);
   const timeoutId = useRef<undefined | ReturnType<typeof setTimeout>>(undefined);
 
   const options = [
@@ -50,6 +51,7 @@ function HeroView() {
   };
 
   const handleButtonClick = () => {
+    setAutocompleteOpen(false);
     router.push({
       pathname: `register`,
       query: { domain: searchedDomain }
@@ -77,6 +79,9 @@ function HeroView() {
             </Flex>
             <div className="relative uppercase">
               <Autocomplete
+                open={searchedDomain !== "" && AutocompleteOpen}
+                onBlur={() => setAutocompleteOpen(false)}
+                onFocus={() => setAutocompleteOpen(true)}
                 options={options}
                 renderOption={(props, option) => {
                   return (
@@ -84,11 +89,11 @@ function HeroView() {
                       key={option.label}
                       justifyContent="justify-between"
                       className="p-2 px-6 font-space_grotesk cursor-pointer hover:bg-gray-200/40"
+                      action={() => handleButtonClick()}
                     >
-                      <p className="text-5- font-600 text-main-300">{option.label}</p>
+                      <p className="text-5- font-600 text-main-300">{option.label}.zeta</p>
                       <p className={`text-4 font-500 ${!option.status ? "text-red-500" : "text-blue-500"}`}>
-                        {option.status === "" ? "" : option.status ? "Available" : "Not Available"}
-                        {/* {option.status ? "Available" : "Not Available"} */}
+                        {option.label === "" ? "" : option.status ? "Available" : "Not Available"}
                       </p>
                     </Flex>
                   );

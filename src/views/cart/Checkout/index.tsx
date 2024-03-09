@@ -1,23 +1,64 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useRef, useCallback, useEffect, useState } from "react";
 import { LuMinusCircle, LuPlusCircle } from "react-icons/lu";
 import clsx from "clsx";
-
 import { useCredit } from "@/contexts";
 import { Flex, Link } from "@/components";
 import { ascii, gtEq, ltEq } from "@/utils/func";
 import { useContextLocalStorage } from "@/contexts";
+import { useRouter } from "next/router";
+import TransactionLoading from "@/components/Loaders/TransactionLoading";
+import { useAccount, useBalance, useWriteContract, useWaitForTransactionReceipt } from "wagmi";
+import { baseAbi } from "@/utils/web3/baseAbi";
+import { parseEther } from "viem";
+const contractAddress = "0x6079cCb64952F788F58A1EB1df96Cbe447e07d6f";
 
 const CheckoutSection: React.FC = () => {
+  const router = useRouter();
   const { creditValue } = useCredit();
-  const { localstorage } = useContextLocalStorage();
+  const { localstorage, setLocalStorage } = useContextLocalStorage();
   const [isCredit, setIsCredit] = useState<boolean>(false);
   const [totalPrice, setTotalPrice] = useState<number>(0);
   const [creditPrice, setCreditPrice] = useState<number>(0);
 
+  //web3
+  const { address } = useAccount();
+  const { data } = useBalance({ address: address });
+  const symbol = data?.symbol;
+  const { data: hash, isPending, error, isError, writeContract } = useWriteContract();
+  const { isSuccess, isLoading } = useWaitForTransactionReceipt({
+    hash: hash
+  });
+  const domainNamesRef = useRef<Array<string>>([]);
+  const expiresRef = useRef<Array<number>>([]);
+  // const { writeContract } = useRegisterDomain(totalPrice, domainNamesRef.current, expiresRef.current);
+
+  useEffect(() => {
+    if (isError) {
+      console.log("Error : ", error);
+    }
+  }, [isError, error]);
+
+  useEffect(() => {
+    if (isSuccess) {
+      setLocalStorage(JSON.stringify([]));
+      localStorage.removeItem("domains");
+      router.push("/mydomain");
+    }
+  }, [isSuccess]);
+
   useEffect(() => {
     let savedItems = JSON.parse(localstorage);
-    const sumOfYear = savedItems.reduce((sum: number, item: any) => sum + item.year, 0);
-    setTotalPrice(sumOfYear * 10);
+    domainNamesRef.current = savedItems.map((item: any) => item.name);
+    expiresRef.current = savedItems.map((item: any) => item.year);
+
+    const sumOfPrice = savedItems.reduce((sum: number, item: any) => {
+      const price = parseFloat(item.price) || 0;
+      const renewPrice = parseFloat(item.renewPrice) || 0;
+      const additionalYears = Math.max(item.year - 1, 0);
+      return sum + price + renewPrice * additionalYears;
+    }, 0);
+
+    setTotalPrice(sumOfPrice);
   }, [localstorage]);
 
   const handleTransferCount = (type: boolean) => {
@@ -60,16 +101,16 @@ const CheckoutSection: React.FC = () => {
         <Flex direction="flex-col" className="space-y-1">
           <Flex align="items-center" justifyContent="justify-between">
             <p className="text-[14px] font-400 capitalize">{"Total price"}</p>
-            <p className="text-[20px] font-500 text-primary">{`${totalPrice} MATIC`}</p>
+            <p className="text-[20px] font-500 text-primary">{`${totalPrice.toFixed(8)} ${symbol}`}</p>
           </Flex>
           <Flex align="items-center" justifyContent="justify-between">
             <p className="text-[14px] font-400 capitalize">{"Available Credits"}</p>
-            <p className="text-[20px] font-500 text-primary">{`${isCredit ? creditPrice : 0} MATIC`}</p>
+            <p className="text-[20px] font-500 text-primary">{`${isCredit ? creditPrice : 0} ${symbol}`}</p>
           </Flex>
           <Flex align="items-center" justifyContent="justify-between">
             <p className="text-[14px] font-400 capitalize">{"Subtotal"}</p>
             <p className="text-[20px] font-500 text-primary">
-              {isCredit ? totalPrice - creditPrice : totalPrice} MATIC
+              {isCredit ? totalPrice - creditPrice : totalPrice.toFixed(8)} {symbol}
             </p>
           </Flex>
         </Flex>
@@ -108,7 +149,31 @@ const CheckoutSection: React.FC = () => {
             <p className="text-[14px] font-400">{"Use your credit"}</p>
           </Flex>
         </Flex>
-        <button className="bg-primary text-black text-[16px] font-500 p-3 rounded-xl">{"Checkout"}</button>
+        {isLoading || isPending ? (
+          <div className="flex justify-center">
+            <TransactionLoading />
+          </div>
+        ) : (
+          <button
+            onClick={() =>
+              writeContract({
+                abi: baseAbi,
+                address: contractAddress,
+                functionName: "registerDomains",
+                value: parseEther(totalPrice.toFixed(8)),
+                args: [
+                  address,
+                  domainNamesRef.current,
+                  expiresRef.current,
+                  "0x0000000000000000000000000000000000000000"
+                ]
+              })
+            }
+            className="bg-primary text-black text-[16px] font-500 p-3 rounded-xl flex justify-center"
+          >
+            {"Checkout"}
+          </button>
+        )}
       </Flex>
       <p className="text-[14px] font-400 text-center pt-[20px]">
         Need more credits ? Get them{" "}

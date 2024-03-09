@@ -9,8 +9,32 @@ import { MdOutlineSearch } from "react-icons/md";
 const TabView: React.FC = () => {
   const [tabIndex, setTabIndex] = useState<number>(1);
   const [searchedDomain, setSearchedDomain] = useState<string>("");
+  const [AutocompleteOpen, setAutocompleteOpen] = useState<boolean>(true);
+  const { domainData, domainQuery } = useDomainDetails(searchedDomain);
+  const timeoutId = useRef<undefined | ReturnType<typeof setTimeout>>(undefined);
+  const options = [
+    {
+      label: searchedDomain,
+      status: searchedDomain === "" ? "" : domainStatus
+    }
+  ];
 
-  const handleButtonClick = () => {};
+  const handleButtonClick = () => {
+    setAutocompleteOpen(false);
+    router.push({
+      pathname: "search",
+      query: { domain: searchedDomain }
+    });
+  };
+
+  useEffect(() => {
+    if ((domainData as { domainName: string })?.domainName === "") {
+      setDomainStatus(true);
+    } else {
+      setDomainStatus(false);
+    }
+  }, [domainData]);
+
 
   const handleInputChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchedDomain(e.target.value);
@@ -47,6 +71,26 @@ const TabView: React.FC = () => {
         ))}
       </Flex>
       <div className="relative border border-white-200 bg-black-400 rounded-full w-full mt-[70px]">
+        <Autocomplete
+          open={searchedDomain !== "" && AutocompleteOpen}
+          onBlur={() => setAutocompleteOpen(false)}
+          onFocus={() => setAutocompleteOpen(true)}
+          options={options}
+          renderOption={(props, option) => {
+            return (
+              <Flex
+                key={option.label}
+                justifyContent="justify-between"
+                className="p-2 px-6 font-space_grotesk cursor-pointer hover:bg-gray-200/40"
+                action={() => handleButtonClick()}
+              >
+                <p className="text-5- font-600 text-main-300">{option.label}</p>
+                <p className={`text-4 font-500 ${!option.status ? "text-red-500" : "text-blue-500"}`}>
+                  {option.status === "" ? "" : option.status ? "Available" : "Not Available"}
+                  {/* {option.status ? "Available" : "Not Available"} */}
+                </p>
+              </Flex>
+            );
         <input
           value={searchedDomain}
           onChange={handleInputChange}

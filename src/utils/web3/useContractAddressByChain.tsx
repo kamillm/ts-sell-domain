@@ -4,6 +4,9 @@ export const useContractAddressByChain = () => {
   const chainID = chain?.id;
   let registryAddress: string | undefined;
   switch (chainID) {
+    case 84532:
+      registryAddress = process.env.NEXT_PUBLIC_REGISTRY_ADDRESS_BASE_SEPOLIA;
+      break;
     case 80001:
       registryAddress = process.env.NEXT_PUBLIC_REGISTRY_ADDRESS_POLYGON_MUMBAI;
       break;

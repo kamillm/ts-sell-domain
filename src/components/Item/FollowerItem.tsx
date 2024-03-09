@@ -4,9 +4,11 @@ import clsx from "clsx";
 import { Flex, Image } from "..";
 
 import { MdFavoriteBorder, MdOutlineFavorite } from "react-icons/md";
+import { useDomainDetails } from "@/utils/web3/useDomainDetails";
+import { usePriceToRegister } from "@/utils/web3/usePriceToRegister";
 import { useContextLocalStorage } from "@/contexts";
 import { useContextFavorite } from "@/contexts/FavoriteProvider";
-import { useDomainDetails } from "@/utils/web3/useDomainDetails";
+
 
 export const FollowerItem = ({
   src = "/img/profile/1.png",
@@ -21,11 +23,13 @@ export const FollowerItem = ({
   count?: number;
 }) => {
   const router = useRouter();
+  const [domainStatus, setDomainStatus] = useState<boolean>(false);
+  const { priceInEther } = usePriceToRegister(name.length);
   const { favorite, setFavorite } = useContextFavorite();
   const [isfollow, setIsFollow] = useState<boolean>(false);
   const { localstorage, setLocalStorage } = useContextLocalStorage();
   const { domainData } = useDomainDetails(name || "");
-  const [domainStatus, setDomainStatus] = useState<boolean>(false);
+
 
   useEffect(() => {
     let favoriteItems = JSON.parse(favorite);
@@ -54,7 +58,7 @@ export const FollowerItem = ({
   const onAddToCart = () => {
     if (domainStatus) {
       let saveItems = JSON.parse(localstorage);
-      let newItem = { name: name, year: 1 };
+      let newItem = { name: name, year: 1, price: priceInEther };
       saveItems.push(newItem);
       setLocalStorage(JSON.stringify(saveItems));
       localStorage.setItem("domains", JSON.stringify(saveItems));
