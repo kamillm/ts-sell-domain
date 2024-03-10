@@ -38,7 +38,7 @@ const DomainRegisterView: React.FC = () => {
     } else {
       setDomainStatus(false);
     }
-    setLoading(true);
+    setLoading(false);
   }, [domainData]);
 
   useEffect(() => {
@@ -49,6 +49,7 @@ const DomainRegisterView: React.FC = () => {
     const inputText = e.target.value;
     clearTimeout(timeoutId.current);
     setSearchedDomain(inputText);
+    setLoading(true);
     timeoutId.current = setTimeout(async () => {
       queryClient.invalidateQueries({ queryKey: domainQuery });
     }, 300);
@@ -81,6 +82,7 @@ const DomainRegisterView: React.FC = () => {
                 return (
                   <Flex
                     key={option.label}
+                    align="items-center"
                     justifyContent="justify-between"
                     className="p-2 px-6 font-space_grotesk cursor-pointer hover:bg-gray-200/40"
                     action={() => handleButtonClick()}

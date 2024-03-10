@@ -13,12 +13,12 @@ export const FollowerItem = ({
   src = "/img/profile/1.png",
   name,
   count = 214,
-  price = 10
+  price
 }: {
   src?: string;
   name: string;
   index: number;
-  price?: number | string;
+  price?: string;
   count?: number;
 }) => {
   const router = useRouter();
@@ -121,9 +121,7 @@ export const FollowerItem = ({
           justifyContent="justify-end"
           className={clsx("space-x-5", "desktop:flex-col desktop:space-x-0 desktop:space-y-2")}
         >
-          <p className="w-[100px] text-primary text-[16px] font-500 desktop:text-center">
-            {Number(price).toFixed(2).toLocaleString()}
-          </p>
+          <p className="w-[150px] text-primary text-[16px] font-500 desktop:text-center">{price}</p>
           {onCheckFromStroage() ? (
             <>
               <button

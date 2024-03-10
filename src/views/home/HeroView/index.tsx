@@ -1,8 +1,8 @@
 import React, { useEffect, useState, useRef } from "react";
 import { TransitionGroup } from "react-transition-group";
 import { useRouter } from "next/router";
-import { EffectCards } from "swiper/modules";
-import { Swiper, SwiperSlide } from "swiper/react";
+// import { EffectCards } from "swiper/modules";
+// import { Swiper, SwiperSlide } from "swiper/react";
 import Autocomplete from "@mui/material/Autocomplete";
 import { Container, Flex, GradientText } from "@/components";
 import { DomainCard } from "@/components/Card";

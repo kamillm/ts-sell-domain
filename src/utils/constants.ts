@@ -343,9 +343,9 @@ export const FAVORITE_ITEMS = [
     isfollow: true,
     count: 2,
     minted: true,
-    price: 10
+    price: "10"
   },
-  { src: "/img/profile/2.png", name: "dyor", isfollow: false, count: 456, minted: false, price: 10 }
+  { src: "/img/profile/2.png", name: "dyor", isfollow: false, count: 456, minted: false, price: "10" }
 ];
 
 export const DOMAIN_TAB_LIST = [
