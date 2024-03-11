@@ -5,7 +5,6 @@ import { Flex, GradientText, Image } from "@/components";
 import { useContextFollower } from "@/contexts";
 import { useRouter } from "next/router";
 
-
 const FollowerItem = ({
   index,
   src,
@@ -161,6 +160,7 @@ const FollowerView: React.FC<{ domain?: any }> = ({ domain }) => {
         ) : (
           followers.map((follower, index) => (
             <FollowerItem
+              isfollow={false}
               key={`follower-item-${index}`}
               index={index + 1}
               src={

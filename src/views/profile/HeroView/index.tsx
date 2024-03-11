@@ -34,7 +34,7 @@ const HeroView: React.FC<{ domainName?: string; editmode?: boolean; owner?: bool
   const [bannerImg, setBannerImg] = useState<string>("/img/profile/banner.png");
   const [avatarImg] = useState<string>("/img/home/badges/con2.png");
   const [showModal, setShowModal] = useState<boolean>(false);
-  const [isFollow, setFollow] = useState<boolean>(false);
+  // const [isFollow, setFollow] = useState<boolean>(false);
 
   domain = domain.domain;
   user = user.user;
@@ -120,15 +120,7 @@ const HeroView: React.FC<{ domainName?: string; editmode?: boolean; owner?: bool
     router.push(router);
   };
 
-  const copyToClipboard = (id: number, label: string) => {
-    let text = "";
-    if (id === 1) {
-      text = "share link";
-    } else if (id === 2) {
-      text = "0xc0E3...B79C";
-    } else if (id == 3) {
-      text = "twitter share link";
-    }
+  const copyToClipboard = (text: string, label: string) => {
     if (!navigator.clipboard) {
       console.error("Clipboard API not supported");
       return;
@@ -207,15 +199,14 @@ const HeroView: React.FC<{ domainName?: string; editmode?: boolean; owner?: bool
             )}
             <label
               onClick={() =>
-                copyToClipboard(`${window.location.origin}${window.location.pathname}`, "Share link Copied")
+                copyToClipboard(`${window.location.origin}${window.location.pathname}`, "Share Link Copied")
               }
-
               className="p-2 bg-black/40 rounded-xl text-main-400 cursor-pointer"
             >
               <LuLink className="w-5 h-5" />
             </label>
             <label
-              onClick={() => copyToClipboard(3, "Twitter Share link Copied")}
+              onClick={() => copyToClipboard("Twitter Link", "Twitter Share link Copied")}
               className="p-2 bg-black/40 rounded-xl text-main-400 cursor-pointer"
             >
               <FaXTwitter className="w-5 h-5" />
@@ -265,13 +256,11 @@ const HeroView: React.FC<{ domainName?: string; editmode?: boolean; owner?: bool
                   <p className="text-[12px] laptop:text-[10px] font-400 text-main-400 text-center">
                     {domainData?.location || "No location added"}
                   </p>
-
                 </Flex>
                 <Flex direction="flex-col" className="space-y-1  tablet:w-[120px]" align="items-center">
                   <MdOutlineWidgets className="w-[18px] h-[18px]" />
                   <p className="text-[12px] laptop:text-[10px] font-400 text-main-400 text-center">
                     {domainData?.category}
-
                   </p>
                 </Flex>
               </Flex>
@@ -335,7 +324,6 @@ const HeroView: React.FC<{ domainName?: string; editmode?: boolean; owner?: bool
                     )}
                     <button
                       onClick={() => copyToClipboard(user?.wallet, "Address Copied")}
-
                       className="bg-primary text-black rounded-3xl w-full inline-flex items-center justify-center p-3"
                     >
                       <Flex align="items-center" className="space-x-[10px]">

@@ -7,11 +7,11 @@ import { Follower, useContextFollower } from "@/contexts";
 // import { FOLLOWER_ITEMS } from "@/utils/constants";
 import { useRouter } from "next/router";
 
-
 const FollowingItem = ({
   index,
   src,
   name,
+  isfollow,
   onUnFollow
 }: {
   index: number;
@@ -63,7 +63,6 @@ const FollowingItem = ({
     </Flex>
   );
 };
-
 
 const FollowingView: React.FC<{ domain: any }> = ({ domain }) => {
   // const router = useRouter();
@@ -152,7 +151,6 @@ const FollowingView: React.FC<{ domain: any }> = ({ domain }) => {
         <GradientText>Following</GradientText>
 
         <GradientText>Following</GradientText>
-
       </div>
 
       <div
@@ -162,13 +160,13 @@ const FollowingView: React.FC<{ domain: any }> = ({ domain }) => {
           "mobile:grid-cols-1 mobile:place-items-center"
         )}
       >
-
         {loading ? ( // Render loading indicator while loading
           <div>Loading following...</div>
         ) : (
           following.map((following, index) => (
-            <FollowerItem
+            <FollowingItem
               key={`follower-item-${index}`}
+              isfollow={false}
               index={index + 1}
               src={
                 "https://images.pexels.com/photos/417074/pexels-photo-417074.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"
@@ -178,7 +176,6 @@ const FollowingView: React.FC<{ domain: any }> = ({ domain }) => {
             />
           ))
         )}
-
       </div>
     </div>
   );
