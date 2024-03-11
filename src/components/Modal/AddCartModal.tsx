@@ -8,6 +8,7 @@ import { useRouter } from "next/router";
 import { useContextLocalStorage } from "@/contexts";
 import { useDomainDetails } from "@/utils/web3/useDomainDetails";
 import { usePriceToRegister } from "@/utils/web3/usePriceToRegister";
+import { useGetDomainTLD } from "@/utils/web3/useGetDomainTLD";
 
 const AddCartModal = ({
   domain,
@@ -23,6 +24,7 @@ const AddCartModal = ({
   const [domainStatus, setDomainStatus] = useState<boolean>(false);
   const { domainData } = useDomainDetails(domain || "");
   const { priceInEther } = usePriceToRegister(domain.length);
+  const TLD = useGetDomainTLD();
 
   useEffect(() => {
     if ((domainData as { domainName: string })?.domainName === "") {
@@ -86,7 +88,7 @@ const AddCartModal = ({
             className="w-[160px] h-[160px] small:w-14 small:h-14 shrink-0 rounded-full"
           />
           <div className="text-[38px] small:text-[26px] font-500 truncate w-full text-center inline bg-primary_gradient_text bg-clip-text text-transparent">
-            {domain}.zeta
+            {domain}.{TLD}
           </div>
           <Flex direction="flex-col" className="w-full space-y-3">
             <Flex justifyContent="justify-between" align="items-center">

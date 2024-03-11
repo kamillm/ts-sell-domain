@@ -6,6 +6,8 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import toast from "react-hot-toast";
 // import { useDomainDetails } from "@/utils/web3/useDomainDetails";
+import { useGetChainName } from "@/utils/web3/useGetChainName";
+import { useAccount } from "wagmi";
 
 const MyProfile: NextPage = () => {
   const router = useRouter();
@@ -23,8 +25,11 @@ const MyProfile: NextPage = () => {
   const [userDetails, setUserDetails] = useState<any>({});
   const [domainDetails, setDomainDetails] = useState<any>({});
 
-  let walletAddress = "dummy_wallet";
-  let chain = "ZETA";
+  const chainName = useGetChainName();
+  const { address } = useAccount();
+
+  let walletAddress = address as string;
+  let chain = chainName as string;
 
   const getDomaindetails = async (domainName: string | string[] | undefined, walletAddress: string, chain: string) => {
     if (walletAddress != "" && chain != "" && domainName != "") {

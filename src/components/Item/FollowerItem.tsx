@@ -8,6 +8,7 @@ import { useContextFavorite } from "@/contexts/FavoriteProvider";
 import { useDomainDetails } from "@/utils/web3/useDomainDetails";
 import toast, { Toaster } from "react-hot-toast";
 import { usePriceToRegister } from "@/utils/web3/usePriceToRegister";
+import { useGetDomainTLD } from "@/utils/web3/useGetDomainTLD";
 
 export const FollowerItem = ({
   src = "/img/profile/1.png",
@@ -28,6 +29,7 @@ export const FollowerItem = ({
   const [isfollow, setIsFollow] = useState<boolean>(false);
   const { localstorage, setLocalStorage } = useContextLocalStorage();
   const { domainData } = useDomainDetails(name || "");
+  const TLD = useGetDomainTLD();
 
   useEffect(() => {
     let favoriteItems = JSON.parse(favorite);
@@ -112,7 +114,9 @@ export const FollowerItem = ({
             className={clsx("w-[62px] h-[62px] shrink-0 rounded-full", "desktop:w-[100px] desktop:h-[100px]")}
           />
           <div className="desktop:text-center desktop:h-full">
-            <p className="text-[20px] font-500 break-all">{name}.zeta</p>
+            <p className="text-[20px] font-500 break-all">
+              {name}.{TLD}
+            </p>
             <p className={clsx("text-success text-[16px] font-700", "mobile:text-[14px]")}>{count}</p>
           </div>
         </Flex>

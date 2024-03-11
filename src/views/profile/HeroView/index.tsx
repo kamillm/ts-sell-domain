@@ -263,7 +263,7 @@ const HeroView: React.FC<{ domainName?: string; editmode?: boolean; owner?: bool
               <div className="text-[40px] font-500 tablet:text-[34px]">
                 <GradientText>{domainData?.name}</GradientText>
               </div>
-              <p className="text-[22px] font-400 tablet:text-[20px]">{domainData?.domainName}.zeta</p>
+              <p className="text-[22px] font-400 tablet:text-[20px]">{domainData?.domainName}</p>
               <p className="font-space_grotesk text-[12px] tablet:text-[10px] font-400 text-center">
                 {domainData?.bio || "Add your bio here"}
               </p>

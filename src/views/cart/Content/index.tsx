@@ -6,11 +6,12 @@ import { useContextLocalStorage } from "@/contexts";
 import { usePriceToRenew } from "@/utils/web3/usePriceToRenew";
 import clsx from "clsx";
 import toast, { Toaster } from "react-hot-toast";
-
+import { useGetDomainTLD } from "@/utils/web3/useGetDomainTLD";
 
 const PeriodCounter = ({ index, item }: { index: number; item: any }) => {
   const { localstorage, setLocalStorage } = useContextLocalStorage();
   const { renewPriceInEther, symbol } = usePriceToRenew(item.name.length);
+  const TLD = useGetDomainTLD();
 
   const handlePeriod = (name: string, type: boolean) => {
     let savedItems = JSON.parse(localstorage);
@@ -56,8 +57,9 @@ const PeriodCounter = ({ index, item }: { index: number; item: any }) => {
         "tablet:flex-col tablet:space-y-2"
       )}
     >
-
-      <p className="text-[20px] small:flex-1 font-500 w-[150px] truncate">{item.name}.zeta</p>
+      <p className="text-[20px] small:flex-1 font-500 w-[150px] truncate">
+        {item.name}.{TLD}
+      </p>
       <span className="small:hidden text-verified text-[16px] font-400">
         {/* {item.status ? "Available" : "Not Available"} */}
         Available

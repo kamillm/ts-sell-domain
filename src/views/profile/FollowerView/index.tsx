@@ -4,6 +4,7 @@ import { Flex, GradientText, Image } from "@/components";
 // assets
 import { useContextFollower } from "@/contexts";
 import { useRouter } from "next/router";
+import { useGetDomainTLD } from "@/utils/web3/useGetDomainTLD";
 
 const FollowerItem = ({
   index,
@@ -18,6 +19,7 @@ const FollowerItem = ({
   isfollow: boolean;
   onFollow: (name: string) => void;
 }) => {
+  const TLD = useGetDomainTLD();
   return (
     <Flex
       align="items-center"
@@ -48,7 +50,7 @@ const FollowerItem = ({
             )}
           />
           <p className={clsx("text-[22px] small:text-[16px] font-500 break-all", "tablet:text-center tablet:px-10")}>
-            {name}.zeta
+            {name}.{TLD}
           </p>
         </Flex>
       </Flex>

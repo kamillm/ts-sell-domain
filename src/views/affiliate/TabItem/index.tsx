@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Flex, Image } from "@/components";
 import { AffiliateModal, ViewDomainModal } from "@/components/Modal";
+import { useGetDomainTLD } from "@/utils/web3/useGetDomainTLD";
 // assets
 import clsx from "clsx";
 
@@ -37,6 +38,7 @@ const CustomRank = ({ rank }: { rank: number }) => {
 const TabItem: React.FC<{ affilate_items: any; isYou: boolean }> = ({ affilate_items, isYou }) => {
   const [showModal, setShowModal] = useState<boolean>(false);
   const [selected, setSelected] = useState<number>(1);
+  const TLD = useGetDomainTLD();
 
   const onClickItem = (id: number) => {
     setShowModal(true);
@@ -90,7 +92,7 @@ const TabItem: React.FC<{ affilate_items: any; isYou: boolean }> = ({ affilate_i
                           />
                           <Flex direction="flex-col" className="relative space-y-1">
                             <p className="text-[18px] font-500 break-all tablet:text-[16px] small:text-[14px] mobile:text-[12px]">
-                              {item.domain}.zeta
+                              {item.domain}.{TLD}
                             </p>
                             {item.isPrimary && (
                               <p className="absolute -top-5 text-[10px] border border-verified rounded-full inline-flex items-center justify-center px-2">

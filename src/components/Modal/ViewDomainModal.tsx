@@ -1,6 +1,7 @@
 import React from "react";
 import { Flex } from "..";
 import { IoMdCloseCircle } from "react-icons/io";
+import { useGetDomainTLD } from "@/utils/web3/useGetDomainTLD";
 
 const ViewDomainModal = ({
   showModal,
@@ -24,6 +25,8 @@ const ViewDomainModal = ({
   const onHandleClose = () => {
     setShowModal(false);
   };
+
+  const TLD = useGetDomainTLD();
 
   // TODO: get an alternative for dangerouslySetInnerHTML
   const SVGComponent = ({ svgString }: { svgString: SVGRectElement }) => (
@@ -51,7 +54,7 @@ const ViewDomainModal = ({
           <SVGComponent svgString={domainSvg as unknown as SVGRectElement} />
           <div className="text-center">
             <div className="break-all text-[38px] small:text-[26px] font-500 w-full text-center inline bg-primary_gradient_text bg-clip-text text-transparent">
-              {domainName}.zeta
+              {domainName}.{TLD}
             </div>
             <br />
             {isPrimary && (

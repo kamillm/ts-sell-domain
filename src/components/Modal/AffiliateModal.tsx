@@ -3,6 +3,7 @@ import { Flex, Image } from "..";
 import { AFFILIATE_ITEMS, AFFILIATE_ITEM_YOU } from "@/utils/constants";
 
 import { IoMdCloseCircle } from "react-icons/io";
+import { useGetDomainTLD } from "@/utils/web3/useGetDomainTLD";
 
 const AffiliateModal = ({
   selected,
@@ -16,6 +17,7 @@ const AffiliateModal = ({
   setShowModal: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
   const [item, setItem] = useState<any>(null);
+  const TLD = useGetDomainTLD();
 
   useEffect(() => {
     if (isYou) {
@@ -44,7 +46,7 @@ const AffiliateModal = ({
               <Image src={item.src} alt={"logo"} fill className="w-[150px] h-[150px] shrink-0 rounded-full" />
               <div className="text-center">
                 <div className="break-all text-[38px] small:text-[26px] font-500 w-full text-center inline bg-primary_gradient_text bg-clip-text text-transparent">
-                  {item.domain}.zeta
+                  {item.domain}.{TLD}
                 </div>
               </div>
               <Flex direction="flex-col" className="w-full space-y-3">

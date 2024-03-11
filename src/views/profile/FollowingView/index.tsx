@@ -6,6 +6,7 @@ import { Follower, useContextFollower } from "@/contexts";
 
 // import { FOLLOWER_ITEMS } from "@/utils/constants";
 import { useRouter } from "next/router";
+import { useGetDomainTLD } from "@/utils/web3/useGetDomainTLD";
 
 const FollowingItem = ({
   index,
@@ -20,6 +21,7 @@ const FollowingItem = ({
   isfollow: boolean;
   onUnFollow: (name: string) => void;
 }) => {
+  const TLD = useGetDomainTLD();
   return (
     <Flex
       align="items-center"
@@ -50,7 +52,7 @@ const FollowingItem = ({
             )}
           />
           <p className={clsx("text-[22px] small:text-[16px] font-500 break-all", "tablet:text-center tablet:px-10")}>
-            {name}.zeta
+            {name}.{TLD}
           </p>
         </Flex>
       </Flex>

@@ -10,6 +10,8 @@ import clsx from "clsx";
 import { useRouter } from "next/router";
 import TransactionLoading from "@/components/Loaders/TransactionLoading";
 import { useDomainLookup } from "@/utils/web3/useDomainLookup";
+// import { set } from "nprogress";
+import { useGetDomainTLD } from "@/utils/web3/useGetDomainTLD";
 
 const ListItem = ({
   index,
@@ -35,17 +37,18 @@ const ListItem = ({
   const router = useRouter();
   const modalRef = useRef<HTMLDivElement>(null);
   const [isDrop, setIsDrop] = useState<boolean>(false);
+  const TLD = useGetDomainTLD();
 
   const onClickView = () => {
     router.push({
-      pathname: `/profile/[domain]`,
+      pathname: `/profile/${name}.${TLD}`,
       query: { domain: name, editmode: false, owner: isprimary }
     });
   };
 
   const onClickManage = () => {
     router.push({
-      pathname: `/profile/manage/[domain]`,
+      pathname: `/profile/manage/${name}.${TLD}`,
       query: { domain: name }
     });
   };
@@ -107,7 +110,9 @@ const ListItem = ({
               {/* SVG Component */}
               <SVGComponent svgString={src as unknown as SVGRectElement} />
 
-              <p className="text-[22px] small:text-[16px] mobile:text-[12px] font-500 truncate">{name}.zeta</p>
+              <p className="text-[22px] small:text-[16px] mobile:text-[12px] font-500 truncate">
+                {name}.{TLD}
+              </p>
               {isprimary && (
                 <div className="tablet:hidden inline-flex text-center items-center border-[0.5px] border-verified/60 rounded-xl text-[12px] font-500 px-2 py-[2px]">
                   {"Primary"}

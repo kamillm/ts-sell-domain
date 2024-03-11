@@ -12,6 +12,8 @@ import { useAccount, useBalance, useWriteContract, useWaitForTransactionReceipt 
 import { baseAbi } from "@/utils/web3/baseAbi";
 import { parseEther } from "viem";
 import { useContractAddressByChain } from "@/utils/web3/useContractAddressByChain";
+import { useGetDomainTLD } from "@/utils/web3/useGetDomainTLD";
+import { useGetChainName } from "@/utils/web3/useGetChainName";
 // import { set } from "nprogress";
 
 const CheckoutSection: React.FC = () => {
@@ -34,6 +36,8 @@ const CheckoutSection: React.FC = () => {
   const domainNamesRef = useRef<Array<string>>([]);
   const expiresRef = useRef<Array<number>>([]);
   const [userId, setUserId] = useState<string>("");
+  const TLD = useGetDomainTLD();
+  const chainName = useGetChainName();
 
   const getUserDetails = async (walletAddress: string, chainName: string) => {
     if (walletAddress != "" && chainName != "") {
@@ -92,31 +96,12 @@ const CheckoutSection: React.FC = () => {
   };
 
   useEffect(() => {
-    const getChainName = (chainId: number) => {
-      if (chainId) {
-        if (chainId === 84532) {
-          return "BASE";
-        }
-        if (chainId === 204) {
-          return "OPBNB";
-        }
-        if (chainId === 195) {
-          return "X1";
-        }
-        if (chainId === 80085) {
-          return "BERA";
-        }
-      }
-    };
-
-    const chainName = getChainName(chainId as number);
     if (isConnected) {
       const fetchUser = async () => {
         try {
           if (address && chainName) {
             const res = await getUserDetails(address, chainName);
             setUserId(res.user.id);
-            console.log("res", res.user.id);
           }
         } catch (error) {
           console.error("Error fetching user:", error);
@@ -124,13 +109,14 @@ const CheckoutSection: React.FC = () => {
       };
       fetchUser();
     }
-  }, [isConnected, address, chainId]);
+  }, [isConnected, chainId]);
 
   useEffect(() => {
+    const domainWithTLDs = domainNamesRef.current.map((domain) => `${domain}.${TLD}`);
     if (isSuccess) {
       const fetchDomain = async () => {
         try {
-          await createDomain(domainNamesRef.current, userId);
+          await createDomain(domainWithTLDs, userId);
         } catch (error) {
           console.error("Error fetching domain:", error);
         }
