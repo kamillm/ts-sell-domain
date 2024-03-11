@@ -149,8 +149,6 @@ const FollowingView: React.FC<{ domain: any }> = ({ domain }) => {
     <div className="w-full">
       <div className="text-[32px] font-500 font-space_grotesk mobile:text-[28px] mobile:text-center pb-2">
         <GradientText>Following</GradientText>
-
-        <GradientText>Following</GradientText>
       </div>
 
       <div
