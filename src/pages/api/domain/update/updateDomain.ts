@@ -1,6 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 import { NextApiRequest, NextApiResponse } from "next";
 import getCategoryEnum from "@/utils/api/getCategoryEnum";
+import getChainEnum from "@/utils/api/getChainEnum";
 
 const prisma = new PrismaClient();
 
@@ -11,9 +12,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         id,
         mainImgUrl,
         bannerURL,
+        domainName,
         location,
         bio,
         name,
+        chain,
+        walletAddress,
         category,
         website,
         discord,
@@ -25,12 +29,23 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       } = req.body;
 
       // Find the domain to be updated
-      const domain = await prisma.domain.findUnique({
+      const domain = await prisma.domain.findFirst({
         where: {
-          id: Number(id)
+          id // Specify the condition to search by domainName
+        },
+        include: {
+          User: {
+            where: {
+              walletAddress,
+              chain: {
+                name: getChainEnum(chain)
+              }
+            }
+          }
         }
       });
 
+      console.log("Domain from API:", domain);
       if (!domain) {
         return res.status(404).json({ error: "Domain not found" });
       }
@@ -57,12 +72,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         (key) => dataToUpdate[key] === undefined || (dataToUpdate[key] === null && delete dataToUpdate[key])
       );
 
-      dataToUpdate.category = getCategoryEnum(dataToUpdate.category);
+      if (dataToUpdate.category) {
+        dataToUpdate.category = getCategoryEnum(dataToUpdate.category);
+      }
 
+      console.log("trying to update second", domain.id);
       // Update the domain in the database
       const updatedDomain = await prisma.domain.update({
         where: {
-          id: Number(id)
+          id: domain.id
         },
         data: dataToUpdate
       });

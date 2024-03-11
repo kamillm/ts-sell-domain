@@ -19,9 +19,10 @@ model User {
     walletAddress String
     dateJoined    DateTime @default(now())
     chainId       Int
-    // emailId       Int
     domains       Domain[]
     chain         Chains   @relation(fields: [chainId], references: [id])
+
+    primaryDomain String? @default("")
 
     email    String? @default("")
     verified Boolean @default(false)
@@ -33,7 +34,7 @@ model Domain {
     id         Int    @id @default(autoincrement())
     domainName String
 
-    mainImgUrl String?
+    mainImgUrl String?  @default("/img/zns-logo.png")
     bannerURL  String?
     location   String?
     bio        String?  @default("Add your bio here")
@@ -44,8 +45,8 @@ model Domain {
     User   User? @relation(fields: [userId], references: [id])
     userId Int?
 
-    followers Follows[] @relation("followers")
-    following Follows[] @relation("following")
+    followerIds  Int[]
+    followingIds Int[]
 
     website           String  @default("https://app.znsconnect.io") @map(name: "website_url")
     discord           String  @default("https://discord.com/invite/skbA5Ucmmc") @map(name: "discord_url")
@@ -65,15 +66,6 @@ model Domain {
     @@unique([domainName, userId])
 }
 
-model Follows {
-    followers   Domain @relation("followers", fields: [followerId], references: [id])
-    followerId  Int
-    following   Domain @relation("following", fields: [followingId], references: [id])
-    followingId Int
-
-    @@id([followerId, followingId])
-}
-
 enum Category {
     DigitalCreator
     BlockchainEnthusiast
@@ -88,4 +80,5 @@ enum Chain {
     BERA
     X1
     OPBNB
+    BASE
 }

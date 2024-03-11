@@ -6,7 +6,7 @@ import { ProfileView, AccountView, DomainView } from "@/views/dynamic-setting";
 // assets
 import { PROFILE_SETTINGS } from "@/utils/constants";
 
-const TabView: React.FC<{ domainName: string }> = ({ domainName }) => {
+const TabView: React.FC<{ domainName: string; domain: any; user: any }> = ({ domainName, domain, user }) => {
   const [tabIndex, setTabIndex] = useState<number>(1);
 
   return (
@@ -21,7 +21,7 @@ const TabView: React.FC<{ domainName: string }> = ({ domainName }) => {
           <Image src="/img/zns-logo.png" width={160} height={160} alt="profile_avatar" className="w-full h-full" />
         </div>
         <Flex direction="flex-col" className="space-y-2 final:items-center">
-          <p className="font-space_grotesk text-[32px] font-500">{domainName}</p>
+          <p className="font-space_grotesk text-[32px] font-500">{domain.domainName}</p>
           <p className="text-verified font-space_grotesk text-[16px] font-500">Primary</p>
         </Flex>
       </Flex>
@@ -49,8 +49,8 @@ const TabView: React.FC<{ domainName: string }> = ({ domainName }) => {
           ))}
         </Flex>
         <div className="w-full flex-1">
-          {tabIndex === 1 && <ProfileView />}
-          {tabIndex === 2 && <AccountView />}
+          {tabIndex === 1 && <ProfileView domain={domain} />}
+          {tabIndex === 2 && <AccountView domain={domain} />}
           {tabIndex === 3 && <DomainView />}
         </div>
       </Flex>

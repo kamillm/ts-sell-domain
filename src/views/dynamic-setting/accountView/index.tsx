@@ -3,7 +3,7 @@ import { Flex, GradientText, Image } from "@/components";
 import { USER_SOCIAL_LINKS } from "@/utils/constants";
 import { MdOutlineVerified } from "react-icons/md";
 
-const AccountView: React.FC = () => {
+const AccountView: React.FC<{ domain: any }> = ({ domain }) => {
   return (
     <div className="w-full">
       <div className="uppercase text-[36px] font-500 font-space_grotesk border-b-2 border-primary/30 pb-3  small:text-center">

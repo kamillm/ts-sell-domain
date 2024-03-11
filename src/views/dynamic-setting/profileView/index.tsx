@@ -4,14 +4,60 @@ import clsx from "clsx";
 import React, { useState } from "react";
 import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
 
-const ProfileView: React.FC = () => {
+const ProfileView: React.FC<{ domain: any }> = ({ domain }) => {
   const [isDrop, setIsDrop] = useState<boolean>(false);
   const [category, setCategory] = useState<number>(0);
+  let updatedCategory = "";
+
+  // State variables for profile data
+  const [name, setName] = useState<string>(domain.name);
+  const [bio, setBio] = useState<string>(domain.bio);
+  const [location, setLocation] = useState<string>(domain.location);
+  const [website, setWebsite] = useState<string>(domain.website);
 
   const handleCategory = (id: number) => {
-    setCategory(id);
+    const categoryItem = CATEGORY_LIST.find((item) => item.id === id);
+    if (categoryItem) {
+      updatedCategory = categoryItem.label;
+      setCategory(categoryItem.id);
+    }
     setIsDrop(false);
   };
+  let chain = "ZETA";
+
+  // Handler for updating the profile
+  const handleUpdateProfile = async () => {
+    try {
+      const response = await fetch("/api/domain/update/updateDomain", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          id: domain.id,
+          name,
+          bio,
+          location,
+          website,
+          // updatedCategory,
+          chain
+        })
+      });
+
+      if (response.ok) {
+        // Handle success
+        console.log(response.json());
+        console.log("Profile updated successfully");
+      } else {
+        // Handle error
+        console.error("Error updating profile:", response.statusText);
+      }
+    } catch (error) {
+      console.error("Error updating profile:", error);
+    }
+  };
+
+  console.log(domain);
 
   return (
     <div className="w-full">
@@ -22,28 +68,32 @@ const ProfileView: React.FC = () => {
         <Flex direction="flex-col" className="w-full space-y-[10px]">
           <p className="text-[16px] font-500 text-main-900 ">Name</p>
           <input
-            placeholder="Enter your name"
+            placeholder={`${name || "Enter your name"}`}
+            onChange={(e) => setName(e.target.value)}
             className="placeholder:text-[14px] w-full h-[54px] rounded-xl px-4 placeholder:text-white-500 border border-main-300 outline-none bg-black/40"
           />
         </Flex>
         <Flex direction="flex-col" className="w-full space-y-[10px]">
           <p className="text-[16px] font-500 text-main-900 ">Short bio</p>
           <textarea
-            placeholder="Enter a short brief about you"
+            placeholder={`${bio || "Enter your bio"}`}
+            onChange={(e) => setBio(e.target.value)}
             className="placeholder:text-[14px] w-full h-[135px] rounded-xl p-4 placeholder:text-white-500 border border-main-300 outline-none bg-black/40"
           />
         </Flex>
         <Flex direction="flex-col" className="w-full space-y-[10px]">
           <p className="text-[16px] font-500 text-main-900 ">Location</p>
           <input
-            placeholder="Enter your location"
+            placeholder={`${location || "Enter your location"}`}
+            onChange={(e) => setLocation(e.target.value)}
             className="placeholder:text-[14px] w-full h-[54px] rounded-xl px-4 placeholder:text-white-500 border border-main-300 outline-none bg-black/40"
           />
         </Flex>
         <Flex direction="flex-col" className="w-full space-y-[10px]">
           <p className="text-[16px] font-500 text-main-900 ">Web Site</p>
           <input
-            placeholder="Paste link to your website"
+            placeholder={`${website || "Enter your website"}`}
+            onChange={(e) => setWebsite(e.target.value)}
             className="placeholder:text-[14px] w-full h-[54px] rounded-xl px-4 placeholder:text-white-500 border border-main-300 outline-none bg-black/40"
           />
         </Flex>
@@ -92,7 +142,10 @@ const ProfileView: React.FC = () => {
           </Flex>
         </Flex>
         <div className="pt-10  w-[141px] tablet:w-full">
-          <button className="w-full bg-primary text-[16px] font-500 px-[38px] py-[11px] rounded-3xl text-black ">
+          <button
+            onClick={handleUpdateProfile}
+            className="w-full bg-primary text-[16px] font-500 px-[38px] py-[11px] rounded-3xl text-black "
+          >
             Update
           </button>
         </div>

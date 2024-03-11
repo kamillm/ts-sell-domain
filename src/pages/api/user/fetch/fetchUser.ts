@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient, Chain } from "@prisma/client";
 import { NextApiRequest, NextApiResponse } from "next";
 import getChainEnum from "@/utils/api/getChainEnum";
 
@@ -8,7 +8,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   if (req.method === "POST") {
     try {
       // Parse incoming data from request body
-      const { chainName, walletAddress } = req.body;
+      const { walletAddress, chainName } = req.body;
 
       // Fetch user details based on wallet address and chainId
       const user = await prisma.user.findFirst({
@@ -26,9 +26,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       // // // Fetch user details based on wallet address and chainId
       // const user = await prisma.user.findFirst({
       //   where: {
-      //     walletAddress: "dummy_wallet_address2",
+      //     walletAddress: "dummy_wallet",
       //     chain: {
-      //       name: Chain.X1
+      //       name: Chain.ZETA
       //     }
       //   },
       //   include: {

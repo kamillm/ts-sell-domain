@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient, Chain } from "@prisma/client";
 import { NextApiRequest, NextApiResponse } from "next";
 import getChainEnum from "@/utils/api/getChainEnum";
 
@@ -10,7 +10,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   if (req.method === "POST") {
     try {
       // Parse incoming data from request body
-      const { chainName, walletAddress } = req.body;
+      const { walletAddress, chainName } = req.body;
       // Create user entry
       const user = await prisma.user.create({
         data: {
@@ -23,8 +23,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       // const user = await prisma.user.create({
       //   data: {
       //     walletAddress: "dummy_wallet_address2",
-      //     email: "",
-      //     chain: { connect: { name: Chain.OPBNB } }
+      //     chain: { connect: { name: Chain.BASE } }
       //   }
       // });
 

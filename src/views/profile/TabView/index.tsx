@@ -52,7 +52,7 @@ const TabItem = ({
   );
 };
 
-const TabView: React.FC = () => {
+const TabView: React.FC<{ domain?: any; user?: any }> = (domain) => {
   const [tabIndex, setTabIndex] = useState<number>(1);
 
   return (
@@ -75,8 +75,8 @@ const TabView: React.FC = () => {
 
         {tabIndex === 1 && <GalleryView />}
         {tabIndex === 2 && <BadgeView />}
-        {tabIndex === 3 && <FollowerView />}
-        {tabIndex === 4 && <FollowingView />}
+        {tabIndex === 3 && <FollowerView domain={domain.domain} />}
+        {tabIndex === 4 && <FollowingView domain={domain.domain} />}
       </Flex>
     </div>
   );

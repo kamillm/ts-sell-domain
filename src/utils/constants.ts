@@ -312,11 +312,11 @@ export const CREDIT_SETTINGS = [
 
 // categroy list
 export const CATEGORY_LIST = [
-  { id: 1, label: "Digital creator" },
-  { id: 2, label: "Blockchain enthusiast" },
-  { id: 3, label: "Social creator" },
-  { id: 4, label: "Financial wizard" },
-  { id: 5, label: "Tech innovator" },
+  { id: 1, label: "Digital Creator" },
+  { id: 2, label: "Blockchain Enthusiast" },
+  { id: 3, label: "Social Creator" },
+  { id: 4, label: "Financial Wizard" },
+  { id: 5, label: "Tech Innovator" },
   { id: 6, label: "Gamer" }
 ];
 
@@ -460,4 +460,12 @@ export const DOMAIN_ITEMS = [
     price: "366 USDT",
     expiration: "2025-08-21"
   }
+];
+
+// Get month
+export const monthNames = [
+  "January", "February", "March",
+  "April", "May", "June", "July",
+  "August", "September", "October",
+  "November", "December"
 ];

@@ -1,8 +1,10 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import clsx from "clsx";
 import { Flex, GradientText, Image } from "@/components";
 // assets
 import { useContextFollower } from "@/contexts";
+import { useRouter } from "next/router";
+
 
 const FollowerItem = ({
   index,
@@ -37,10 +39,10 @@ const FollowerItem = ({
           align="items-center"
           className={clsx("space-x-4", "tablet:flex-col tablet:space-x-0 tablet:w-full tablet:space-y-3")}
         >
-          <Image
+          <img
             src={src}
             alt={name}
-            fill
+            // fill
             className={clsx(
               "w-[62px] h-[62px] shrink-0 rounded-full",
               "tablet:rounded-none tablet:w-full tablet:h-[200px] object-cover"
@@ -70,7 +72,64 @@ const FollowerItem = ({
   );
 };
 
-const FollowerView: React.FC = () => {
+const FollowerView: React.FC<{ domain?: any }> = ({ domain }) => {
+  // const router = useRouter();
+  domain = domain.domain;
+  // const [domain, setDomain] = useState<string | string[] | undefined>(router.query.slug);
+  const [followers, setFollowers] = useState<any[]>([]);
+  const [loading, setLoading] = useState<boolean>(true); // Add loading state
+  let walletAddress = "dummy_wallet";
+  let chain = "ZETA";
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        // Fetch domain details
+        const domainData = domain;
+        console.log("domainData", domainData);
+
+        // Fetch follower details based on domain details
+        if (domainData.followerIds && loading) {
+          const followerIds = domainData.followerIds;
+          const followerDetails = await Promise.all(
+            followerIds.map(async (followerId: number) => {
+              const domainRequestBody = {
+                domainId: followerId
+              };
+
+              try {
+                const response = await fetch("/api/domain/fetch/fetchDomainById", {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json"
+                  },
+                  body: JSON.stringify(domainRequestBody)
+                });
+
+                if (response.ok) {
+                  const data = await response.json();
+                  return data.data.domain; // Assuming data contains necessary follower information
+                } else {
+                  throw new Error("Failed to fetch follower details");
+                }
+              } catch (error) {
+                console.error("Error fetching follower details:", error);
+                return null; // Handle error gracefully
+              }
+            })
+          );
+          console.log("followerDetails", followerDetails);
+
+          setFollowers(followerDetails.filter((follower: any) => follower !== null));
+          setLoading(false); // Update loading state when followers are fetched
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        setLoading(false); // Ensure loading state is updated on error
+      }
+    };
+
+    fetchData();
+  }, [domain, walletAddress, chain]);
   const { follower, setFollower } = useContextFollower();
 
   const onFollow = (name: string) => {
@@ -97,10 +156,21 @@ const FollowerView: React.FC = () => {
           "mobile:grid-cols-1 mobile:place-items-center"
         )}
       >
-        {follower.length !== 0 &&
-          follower.map((item, index) => (
-            <FollowerItem key={`follower-item-${index}`} index={index + 1} {...item} onFollow={onFollow} />
-          ))}
+        {loading ? ( // Render loading indicator while loading
+          <div>Loading followers...</div>
+        ) : (
+          followers.map((follower, index) => (
+            <FollowerItem
+              key={`follower-item-${index}`}
+              index={index + 1}
+              src={
+                "https://images.pexels.com/photos/417074/pexels-photo-417074.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"
+              }
+              name={follower.domainName}
+              onFollow={onFollow}
+            />
+          ))
+        )}
       </div>
     </div>
   );

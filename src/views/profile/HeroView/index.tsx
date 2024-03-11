@@ -4,7 +4,13 @@ import { Container, Flex, GradientText, Image } from "@/components";
 import { QRCode } from "react-qrcode-logo";
 import toast, { Toaster } from "react-hot-toast";
 // assets
-import { USER_SOCIAL_LINKS } from "@/utils/constants";
+import { monthNames } from "@/utils/constants";
+import { MdOutlineEmail as Email } from "react-icons/md";
+import { FaInstagram as Instagram } from "react-icons/fa";
+import { TfiTwitter as Twitter } from "react-icons/tfi";
+import { LiaDiscord as Discord, LiaTelegram as Telegram } from "react-icons/lia";
+
+import { CiLinkedin as Linkedin } from "react-icons/ci";
 // icons
 import { BsCopy } from "react-icons/bs";
 import { LuLink } from "react-icons/lu";
@@ -15,10 +21,13 @@ import { IoMdCloseCircle } from "react-icons/io";
 import { RxUpdate } from "react-icons/rx";
 import { MdOutlineAccessTime, MdOutlineLocationOn, MdOutlineWidgets, MdOutlineEdit } from "react-icons/md";
 import clsx from "clsx";
+import { Category } from "@prisma/client";
 
-const HeroView: React.FC<{ domainName?: string; editmode?: boolean; owner?: boolean }> = ({
+const HeroView: React.FC<{ domainName?: string; editmode?: boolean; owner?: boolean; domain: any; user: any }> = ({
   domainName = "",
   editmode = false,
+  domain,
+  user,
   owner = false
 }) => {
   const router = useRouter();
@@ -27,6 +36,85 @@ const HeroView: React.FC<{ domainName?: string; editmode?: boolean; owner?: bool
   const [showModal, setShowModal] = useState<boolean>(false);
   const [isFollow, setFollow] = useState<boolean>(false);
 
+  domain = domain.domain;
+  user = user.user;
+  const { pathname } = router.query;
+  console.log(pathname);
+
+  console.log("domain", domain);
+  console.log("user", user);
+
+  // bannerURL: null;
+  // bio: "Add your bio here";
+  // category: "DigitalCreator";
+  // dateJoined: "2024-03-09T14:00:11.478Z";
+  // discord: "https://discord.com/invite/skbA5Ucmmc";
+  // discordVerified: false;
+  // domainName: "ekansh";
+  // id: 11;
+  // instagram: "https://www.instagram.com";
+  // instagramVerified: false;
+  // linkedin: "https://www.linkedin.com";
+  // linkedinVerified: false;
+  // location: null;
+  // mainImgUrl: null;
+  // name: null;
+  // telegram: "https://t.me/znsconnect";
+  // telegramVerified: false;
+  // twitter: "https://twitter.com/ZNSConnect";
+  // twitterVerified: false;
+  // userId: 14;
+  // website: "https://app.znsconnect.io";
+  // websiteVerified: false;
+  // youtube: "https://www.youtube.com/@znsconnect";
+  // youtubeVerified: false;
+
+  const [domainData, setDomainData] = useState({
+    bannerURL: domain?.bannerURL || "",
+    bio: domain?.bio || "",
+    category: domain?.category || "",
+    dateJoined: domain?.dateJoined || "",
+    discord: domain?.discord || "",
+    discordVerified: domain?.discordVerified || false,
+    domainName: domain?.domainName || "",
+    id: domain?.id || "",
+    instagram: domain?.instagram || "",
+    instagramVerified: domain?.instagramVerified || false,
+    linkedin: domain?.linkedin || "",
+    linkedinVerified: domain?.linkedinVerified || false,
+    location: domain?.location || "",
+    mainImgUrl: domain?.mainImgUrl || "",
+    name: domain?.name || "",
+    telegram: domain?.telegram || "",
+    telegramVerified: domain?.telegramVerified || false,
+    twitter: domain?.twitter || "",
+    twitterVerified: domain?.twitterVerified || false,
+    userId: domain?.userId || "",
+    website: domain?.website || "",
+    websiteVerified: domain?.websiteVerified || false,
+    youtube: domain?.youtube || "",
+    youtubeVerified: domain?.youtubeVerified || false,
+    followerCount: domain?.followerIds.length || 0,
+    followingCount: domain?.followingIds.length || 0
+  });
+
+  console.log();
+  // Define the USER_SOCIAL_LINKS array
+  const USER_SOCIAL_LINKS = [
+    { id: 1, icon: Instagram, link: domainData.instagram, isVerify: domainData.instagramVerified, label: "Instagram" },
+    { id: 2, icon: Twitter, link: domainData.twitter, isVerify: domainData.twitterVerified, label: "Twitter" },
+    { id: 3, icon: Discord, link: domainData.discord, isVerify: domainData.discordVerified, label: "Discord" },
+    { id: 4, icon: Linkedin, link: domainData.linkedin, isVerify: domainData.linkedinVerified, label: "Linkedin" },
+    { id: 5, icon: Telegram, link: domainData.telegram, isVerify: domainData.telegramVerified, label: "Telegram" },
+    { id: 6, icon: Email, link: `mailto:${user?.email}`, isVerify: user?.verified, label: "Email" } // Assuming email doesn't come from domainData
+  ];
+
+  const formattedDate = new Date(domain?.dateJoined);
+  const month = monthNames[formattedDate.getMonth()];
+  const year = formattedDate.getFullYear();
+  const formattedDateString = `${month}, ${year}`;
+
+  const [isFollow, setFollow] = useState<boolean>(false);
   const onClickSetting = (mode: string) => {
     router.query.editmode = mode;
     router.push(router);
@@ -71,7 +159,7 @@ const HeroView: React.FC<{ domainName?: string; editmode?: boolean; owner?: bool
       >
         <div className="relative w-full max-w-[1440px] h-[250px] tablet:h-[200px] mt-[99px]">
           <Image
-            src={bannerImg}
+            src={domainData?.bannerURL || bannerImg}
             width={1440}
             height={250}
             className="w-full h-full object-cover"
@@ -81,20 +169,22 @@ const HeroView: React.FC<{ domainName?: string; editmode?: boolean; owner?: bool
             <div className="absolute group -bottom-1/3 tablet:-bottom-[70px] w-[200px] h-[200px] tablet:w-[140px] tablet:h-[140px] rounded-full bg-main-200 flex justify-center items-center">
               <div className="relative">
                 <Image
-                  src={avatarImg}
+                  src={domainData?.mainImgUrl || avatarImg}
                   width={185}
                   height={185}
                   className="object-cover rounded-full tablet:w-[130px] tablet:h-[130px]"
                   alt="profile avatar"
                 />
 
-                <Image
-                  src={"/img/verify.png"}
-                  width={34}
-                  height={34}
-                  className="absolute top-2 right-1 w-10 h-10 tablet:w-8 tablet:h-8 tablet:right-0"
-                  alt="profile_verify_avatar"
-                />
+                {user?.verified && (
+                  <Image
+                    src={"/img/verify.png"}
+                    width={34}
+                    height={34}
+                    className="absolute top-2 right-1 w-10 h-10 tablet:w-8 tablet:h-8 tablet:right-0"
+                    alt="profile_verify_avatar"
+                  />
+                )}
               </div>
               {editmode && owner && (
                 <label
@@ -116,7 +206,10 @@ const HeroView: React.FC<{ domainName?: string; editmode?: boolean; owner?: bool
               </>
             )}
             <label
-              onClick={() => copyToClipboard(1, "Share link Copied")}
+              onClick={() =>
+                copyToClipboard(`${window.location.origin}${window.location.pathname}`, "Share link Copied")
+              }
+
               className="p-2 bg-black/40 rounded-xl text-main-400 cursor-pointer"
             >
               <LuLink className="w-5 h-5" />
@@ -141,15 +234,16 @@ const HeroView: React.FC<{ domainName?: string; editmode?: boolean; owner?: bool
                 className="w-1/3 tablet:w-10/12 mobile:w-full  tablet:items-start"
               >
                 <Flex direction="flex-col" className="space-y-1 tablet:w-[120px]" align="items-center">
-                  <p className="text-[18px] laptop:text-[16px] font-600">2.5K</p>
+                  <p className="text-[18px] laptop:text-[16px] font-600">{domainData.followerCount}</p>
                   <p className="text-[12px] laptop:text-[10px] font-400 text-main-400 text-center">FOLLOWERS</p>
                 </Flex>
                 <Flex direction="flex-col" className="space-y-1 tablet:w-[120px]" align="items-center">
-                  <p className="text-[18px] laptop:text-[16px] font-600">1.5K</p>
+                  <p className="text-[18px] laptop:text-[16px] font-600">{domainData.followingCount}</p>
                   <p className="text-[12px] laptop:text-[10px] font-400 text-main-400 text-center">FOLLOWING</p>
                 </Flex>
                 <Flex direction="flex-col" className="space-y-1 tablet:w-[120px]" align="items-center">
-                  <p className="text-[18px] laptop:text-[16px] font-600">2345</p>
+                  <p className="text-[18px] laptop:text-[16px] font-600">{domainData?.id}</p>
+
                   <p className="text-[12px] laptop:text-[10px] font-400 text-main-400 text-center">ZNS ID</p>
                 </Flex>
               </Flex>
@@ -161,45 +255,53 @@ const HeroView: React.FC<{ domainName?: string; editmode?: boolean; owner?: bool
               >
                 <Flex direction="flex-col" className="space-y-1  tablet:w-[120px]" align="items-center">
                   <MdOutlineAccessTime className="w-[18px] h-[18px]" />
-                  <p className="text-[12px] laptop:text-[10px] font-400 text-main-400 text-center">April, 2024</p>
+
+                  <p className="text-[12px] laptop:text-[10px] font-400 text-main-400 text-center">
+                    {formattedDateString}
+                  </p>
                 </Flex>
                 <Flex direction="flex-col" className="space-y-1  tablet:w-[120px]" align="items-center">
                   <MdOutlineLocationOn className="w-[18px] h-[18px]" />
-                  <p className="text-[12px] laptop:text-[10px] font-400 text-main-400 text-center">Paris, France</p>
+                  <p className="text-[12px] laptop:text-[10px] font-400 text-main-400 text-center">
+                    {domainData?.location || "No location added"}
+                  </p>
+
                 </Flex>
                 <Flex direction="flex-col" className="space-y-1  tablet:w-[120px]" align="items-center">
                   <MdOutlineWidgets className="w-[18px] h-[18px]" />
                   <p className="text-[12px] laptop:text-[10px] font-400 text-main-400 text-center">
-                    Blockchain Enthusist
+                    {domainData?.category}
+
                   </p>
                 </Flex>
               </Flex>
             </Flex>
             <Flex direction="flex-col" align="items-center" className="space-y-3 max-w-[400px] pt-5">
               <div className="text-[40px] font-500 tablet:text-[34px]">
-                <GradientText>{domainName}</GradientText>
+                <GradientText>{domainData?.name}</GradientText>
               </div>
-              <p className="text-[22px] font-400 tablet:text-[20px]">{domainName}.zeta</p>
+              <p className="text-[22px] font-400 tablet:text-[20px]">{domainData?.domainName}.zeta</p>
               <p className="font-space_grotesk text-[12px] tablet:text-[10px] font-400 text-center">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
-                dolore magna aliqua. Ut enim ad minim veniam.
+                {domainData?.bio || "Add your bio here"}
               </p>
               <Flex align="items-center" className="space-x-5 mobile:space-x-3">
                 {USER_SOCIAL_LINKS.map((item, index) => (
-                  <div className="relative" key={`user-profile-link-${index}`}>
-                    <item.icon
-                      className={`w-10 h-10 tablet:w-8 tablet:h-8 cursor-pointer hover:text-verified/70 ${item.isVerify && "text-verified"}`}
-                    />
-                    {item.isVerify && (
-                      <Image
-                        src={"/img/verify_blue.png"}
-                        width={20}
-                        height={20}
-                        className="absolute w-6 h-6 -bottom-1 right-0  tablet:w-5 tablet:h-5"
-                        alt="profile_verify_avatar"
+                  <a href={item.link} target="_blank" rel="noreferrer" key={`user-profile-link-${index}`}>
+                    <div className="relative" key={`user-profile-link-${index}`}>
+                      <item.icon
+                        className={`w-10 h-10 tablet:w-8 tablet:h-8 cursor-pointer hover:text-verified/70 ${item.isVerify && "text-verified"}`}
                       />
-                    )}
-                  </div>
+                      {item.isVerify && (
+                        <Image
+                          src={"/img/verify_blue.png"}
+                          width={20}
+                          height={20}
+                          className="absolute w-6 h-6 -bottom-1 right-0  tablet:w-5 tablet:h-5"
+                          alt="profile_verify_avatar"
+                        />
+                      )}
+                    </div>
+                  </a>
                 ))}
               </Flex>
 
@@ -232,12 +334,13 @@ const HeroView: React.FC<{ domainName?: string; editmode?: boolean; owner?: bool
                       </button>
                     )}
                     <button
-                      onClick={() => copyToClipboard(2, "Address Copied")}
+                      onClick={() => copyToClipboard(user?.wallet, "Address Copied")}
+
                       className="bg-primary text-black rounded-3xl w-full inline-flex items-center justify-center p-3"
                     >
                       <Flex align="items-center" className="space-x-[10px]">
                         <BsCopy className="w-5 h-5" />
-                        <span className="text-[12px]">0xc0E3...B79C</span>
+                        <span className="text-[12px]">{user?.wallet}</span>
                       </Flex>
                     </button>
                   </>

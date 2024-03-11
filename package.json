@@ -5,8 +5,8 @@
   "author": "ZNS Connect Team <team@znsconnect.io>",
   "homepage": "https://znsconnect.io",
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
+    "dev": "prisma generate && next dev",
+    "build": "prisma generate && next build",
     "start": "next start",
     "static": "npx serve@latest out",
     "lint": "next lint",

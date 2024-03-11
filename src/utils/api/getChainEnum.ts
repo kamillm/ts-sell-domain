@@ -15,8 +15,11 @@ export default function getChainEnum(chainName: string) {
     case "OPBNB":
       chain = Chain.OPBNB;
       break;
+    case "BASE":
+      chain = Chain.BASE;
+      break;
     default:
-      throw new Error("Invalid Chain");
+      throw new Error("Invalid Chain / getChainEnum: Chain not found.");
   }
   return chain;
 }

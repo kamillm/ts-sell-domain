@@ -4,6 +4,10 @@ import { Flex, GradientText, Image } from "@/components";
 import { Follower, useContextFollower } from "@/contexts";
 // assets
 
+// import { FOLLOWER_ITEMS } from "@/utils/constants";
+import { useRouter } from "next/router";
+
+
 const FollowingItem = ({
   index,
   src,
@@ -26,7 +30,7 @@ const FollowingItem = ({
         "mobile:w-[80%]"
       )}
     >
-      <Flex align="items-center" className={clsx("space-x-5 tablet:space-x-0 tablet:w-full")}>
+      <Flex align="items-center" className={clsx("w-[80%] space-x-5 tablet:space-x-0 tablet:w-full")}>
         <Flex justifyContent="justify-center" align="items-center" className="tablet:hidden">
           <div className="w-5 h-5 rounded-full bg-main-200 text-main-900 text-[16px] inline-flex items-center justify-center">
             {index}
@@ -36,10 +40,10 @@ const FollowingItem = ({
           align="items-center"
           className={clsx("space-x-4", "tablet:flex-col tablet:space-x-0 tablet:w-full tablet:space-y-3")}
         >
-          <Image
+          <img
             src={src}
             alt={name}
-            fill
+            // fill
             className={clsx(
               "w-[62px] h-[62px] shrink-0 rounded-full",
               "tablet:rounded-none tablet:w-full tablet:h-[200px] object-cover"
@@ -60,7 +64,68 @@ const FollowingItem = ({
   );
 };
 
-const FollowingView: React.FC = () => {
+
+const FollowingView: React.FC<{ domain: any }> = ({ domain }) => {
+  // const router = useRouter();
+
+  domain = domain.domain;
+  console.log(domain);
+  const [following, setfollowing] = useState<any[]>([]);
+  const [loading, setLoading] = useState<boolean>(true); // Add loading state
+  let walletAddress = "dummy_wallet";
+  let chain = "ZETA";
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        // Fetch domain details
+        const domainData = domain;
+        console.log("domainData", domainData);
+
+        // Fetch follower details based on domain details
+        if (domainData.followerIds && loading) {
+          const followingIds = domainData.followingIds;
+          const followingDetails = await Promise.all(
+            followingIds.map(async (followingId: number) => {
+              const domainRequestBody = {
+                domainId: followingId
+              };
+
+              try {
+                const response = await fetch("/api/domain/fetch/fetchDomainById", {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json"
+                  },
+                  body: JSON.stringify(domainRequestBody)
+                });
+
+                if (response.ok) {
+                  const data = await response.json();
+                  return data.data.domain; // Assuming data contains necessary following information
+                } else {
+                  throw new Error("Failed to fetch following details");
+                }
+              } catch (error) {
+                console.error("Error fetching following details:", error);
+                return null; // Handle error gracefully
+              }
+            })
+          );
+          console.log("followingDetails", followingDetails);
+
+          setfollowing(followingDetails.filter((following: any) => following !== null));
+          setLoading(false); // Update loading state when following are fetched
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        setLoading(false); // Ensure loading state is updated on error
+      }
+    };
+
+    fetchData();
+  }, [domain, walletAddress, chain]);
+
   const { follower, setFollower } = useContextFollower();
   const [items, setItems] = useState<Follower[]>([]);
 
@@ -85,6 +150,9 @@ const FollowingView: React.FC = () => {
     <div className="w-full">
       <div className="text-[32px] font-500 font-space_grotesk mobile:text-[28px] mobile:text-center pb-2">
         <GradientText>Following</GradientText>
+
+        <GradientText>Following</GradientText>
+
       </div>
 
       <div
@@ -94,10 +162,23 @@ const FollowingView: React.FC = () => {
           "mobile:grid-cols-1 mobile:place-items-center"
         )}
       >
-        {items.length !== 0 &&
-          items.map((item, index) => (
-            <FollowingItem key={`follower-item-${index}`} index={index + 1} {...item} onUnFollow={onUnFollow} />
-          ))}
+
+        {loading ? ( // Render loading indicator while loading
+          <div>Loading following...</div>
+        ) : (
+          following.map((following, index) => (
+            <FollowerItem
+              key={`follower-item-${index}`}
+              index={index + 1}
+              src={
+                "https://images.pexels.com/photos/417074/pexels-photo-417074.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"
+              }
+              name={following.domainName}
+              onUnFollow={onUnFollow}
+            />
+          ))
+        )}
+
       </div>
     </div>
   );
