@@ -29,12 +29,73 @@ const ProfileMenu = ({
   const [exitHover, setExitHover] = useState<boolean>(false);
 
   // Account Details Reflection
-  const { address, isConnected, isDisconnected } = useAccount();
+  const { address, isConnected, isDisconnected, chainId } = useAccount();
   const { data } = useBalance({ address: address });
   const shortenedAddress = address ? `${address?.slice(0, 6)}...${address?.slice(-4)}` : "";
   const balance = data?.formatted.slice(0, 5);
   const symbol = data?.symbol;
   const { disconnect } = useDisconnect();
+
+  const createUser = async (walletAddress: string, chainName: string) => {
+    if (walletAddress != "" && chainName != "") {
+      try {
+        const domainRequestBody = {
+          walletAddress,
+          chainName
+        };
+
+        const response = await fetch("/api/user/create/createUser", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(domainRequestBody)
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          return data.data;
+        } else {
+          console.error("Failed to fetch domain:", response.statusText);
+        }
+      } catch (error) {
+        console.error("Error fetching domain:", error);
+      }
+    }
+  };
+
+  useEffect(() => {
+    const getChainName = (chainId: number) => {
+      if (chainId) {
+        if (chainId === 84532) {
+          return "BASE";
+        }
+        if (chainId === 204) {
+          return "OPBNB";
+        }
+        if (chainId === 195) {
+          return "X1";
+        }
+        if (chainId === 80085) {
+          return "BERA";
+        }
+      }
+    };
+
+    const chainName = getChainName(chainId as number);
+    if (isConnected) {
+      const fetchUser = async () => {
+        try {
+          if (address && chainName) {
+            await createUser(address, chainName);
+          }
+        } catch (error) {
+          console.error("Error fetching user:", error);
+        }
+      };
+      fetchUser();
+    }
+  }, [isConnected, address, chainId]);
 
   const onHover = (type: string, action: boolean) => {
     if (type === "copy") {

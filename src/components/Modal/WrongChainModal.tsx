@@ -1,22 +1,35 @@
-// import { useSwitchChain } from "wagmi";
-import { useChainModal } from "@rainbow-me/rainbowkit";
+import { useSwitchChain } from "wagmi";
+// import { useChainModal } from "@rainbow-me/rainbowkit";
+import { Flex } from "@/components";
 
 export default function WrongChainModal() {
-  //   const { switchChain } = useSwitchChain();
-  const { openChainModal } = useChainModal();
+  const { switchChain } = useSwitchChain();
 
   return (
-    <dialog id="incorrect_chain_modal" className="modal modal-bottom sm:modal-middle">
-      <form method="dialog" className="modal-box">
-        <h3 className="text-lg font-bold">Incorrect Chain</h3>
-        <p className="py-4">Seems like you are connected to an unsupported chain.</p>
-
-        <div className="modal-action">
-          <button className="btn btn-primary" onClick={openChainModal}>
-            Switch Chain
+    <div
+      className={
+        "fixed h-full w-full transition-all duration-300 z-[500] left-0 top-0 bg-black/60 flex justify-center items-center visible opacity-100 backdrop-blur-2xl"
+      }
+    >
+      <div className="absolute bg-main-100 p-8 rounded-xl w-[450px] small:w-[80%]">
+        <Flex direction="flex-col" justifyContent="justify-between" className="space-y-5">
+          <div className="text-left">
+            In Our Testing Phase We Only Support <br />
+            <span className="text-sky-500">Base Sepolia </span>
+            Network
+          </div>
+          <div className="text-left">
+            {" "}
+            It Looks Like You Are Connected To An <div className="text-danger">Unsupported Network</div>
+          </div>
+          <button
+            onClick={() => switchChain({ chainId: 84532 })}
+            className="w-full bg-primary text-black rounded-3xl p-2 text-[20px] small:text-[16px] font-400"
+          >
+            Switch To Base Sepolia
           </button>
-        </div>
-      </form>
-    </dialog>
+        </Flex>
+      </div>
+    </div>
   );
 }

@@ -21,7 +21,6 @@ import { IoMdCloseCircle } from "react-icons/io";
 import { RxUpdate } from "react-icons/rx";
 import { MdOutlineAccessTime, MdOutlineLocationOn, MdOutlineWidgets, MdOutlineEdit } from "react-icons/md";
 import clsx from "clsx";
-import { Category } from "@prisma/client";
 
 const HeroView: React.FC<{ domainName?: string; editmode?: boolean; owner?: boolean; domain: any; user: any }> = ({
   domainName = "",
@@ -38,11 +37,6 @@ const HeroView: React.FC<{ domainName?: string; editmode?: boolean; owner?: bool
 
   domain = domain.domain;
   user = user.user;
-  const { pathname } = router.query;
-  console.log(pathname);
-
-  console.log("domain", domain);
-  console.log("user", user);
 
   // bannerURL: null;
   // bio: "Add your bio here";

@@ -10,9 +10,11 @@ export const NetworkBtn = () => {
             {(() => {
               if (chain?.unsupported) {
                 return (
-                  <button onClick={openChainModal} type="button">
-                    Wrong network
-                  </button>
+                  <div>
+                    <button onClick={openChainModal} type="button">
+                      Wrong network
+                    </button>
+                  </div>
                 );
               }
               return (

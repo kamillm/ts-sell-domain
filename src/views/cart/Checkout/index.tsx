@@ -12,6 +12,7 @@ import { useAccount, useBalance, useWriteContract, useWaitForTransactionReceipt 
 import { baseAbi } from "@/utils/web3/baseAbi";
 import { parseEther } from "viem";
 import { useContractAddressByChain } from "@/utils/web3/useContractAddressByChain";
+// import { set } from "nprogress";
 
 const CheckoutSection: React.FC = () => {
   const router = useRouter();
@@ -23,7 +24,7 @@ const CheckoutSection: React.FC = () => {
   const contractAddress = useContractAddressByChain();
 
   //web3
-  const { address } = useAccount();
+  const { address, isConnected, chainId } = useAccount();
   const { data } = useBalance({ address: address });
   const symbol = data?.symbol;
   const { data: hash, isPending, error, isError, writeContract } = useWriteContract();
@@ -32,6 +33,111 @@ const CheckoutSection: React.FC = () => {
   });
   const domainNamesRef = useRef<Array<string>>([]);
   const expiresRef = useRef<Array<number>>([]);
+  const [userId, setUserId] = useState<string>("");
+
+  const getUserDetails = async (walletAddress: string, chainName: string) => {
+    if (walletAddress != "" && chainName != "") {
+      try {
+        const userRequestBody = {
+          walletAddress,
+          chainName
+        };
+
+        const response = await fetch("/api/user/fetch/fetchUser", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(userRequestBody)
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          return data.data;
+        } else {
+          console.error("Failed to fetch user:", response.statusText);
+        }
+      } catch (error) {
+        console.error("Error fetching user:", error);
+      }
+    }
+  };
+
+  const createDomain = async (domainNames: Array<string>, userID: string) => {
+    if (domainNames.length > 0 && userID != "") {
+      try {
+        const domainRequestBody = {
+          domainNames,
+          userID
+        };
+
+        const response = await fetch("/api/domain/create/createDomain", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(domainRequestBody)
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          return data.data;
+        } else {
+          console.error("Failed to fetch domain:", response.statusText);
+        }
+      } catch (error) {
+        console.error("Error fetching domain:", error);
+      }
+    }
+  };
+
+  useEffect(() => {
+    const getChainName = (chainId: number) => {
+      if (chainId) {
+        if (chainId === 84532) {
+          return "BASE";
+        }
+        if (chainId === 204) {
+          return "OPBNB";
+        }
+        if (chainId === 195) {
+          return "X1";
+        }
+        if (chainId === 80085) {
+          return "BERA";
+        }
+      }
+    };
+
+    const chainName = getChainName(chainId as number);
+    if (isConnected) {
+      const fetchUser = async () => {
+        try {
+          if (address && chainName) {
+            const res = await getUserDetails(address, chainName);
+            setUserId(res.user.id);
+            console.log("res", res.user.id);
+          }
+        } catch (error) {
+          console.error("Error fetching user:", error);
+        }
+      };
+      fetchUser();
+    }
+  }, [isConnected, address, chainId]);
+
+  useEffect(() => {
+    if (isSuccess) {
+      const fetchDomain = async () => {
+        try {
+          await createDomain(domainNamesRef.current, userId);
+        } catch (error) {
+          console.error("Error fetching domain:", error);
+        }
+      };
+      fetchDomain();
+    }
+  }, [isSuccess]);
 
   useEffect(() => {
     if (isError) {

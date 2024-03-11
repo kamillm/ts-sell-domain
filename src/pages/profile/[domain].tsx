@@ -127,7 +127,6 @@ const MyProfile: NextPage = () => {
 
   useEffect(() => {
     setDomain(Array.isArray(router.query.domain) ? router.query.domain[0] : router.query.domain || "");
-    console.log(router.query.domain);
   }, [router.query.domain]);
 
   return (
