@@ -168,6 +168,7 @@ const SortbyName = ({ items }: { items: any }) => {
   }, [userDomains, allOwnedDomains, domainList, domainUrisList]);
 
   const decodeImageData = (dataUri: string) => {
+    dataUri = dataUri.toString();
     if (!dataUri) {
       console.error("Invalid dataUri:", dataUri);
       return null;
