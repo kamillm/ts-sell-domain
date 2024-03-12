@@ -132,23 +132,55 @@ const HeroView: React.FC<{ domainName?: string; editmode?: boolean; owner?: bool
   };
 
   const onSelectBannerImg = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    console.log("Start uploading");
+
     if (e.target.files && e.target.files.length > 0) {
-      setBannerImg(URL.createObjectURL(e.target.files[0]));
+      const toastId = toast.loading("Uploading Image", { duration: 10000 });
+      console.log("Start uploading");
+      // setBannerImg(URL.createObjectURL(e.target.files[0]));
+      const file = e.target.files[0];
+      console.log(file);
+      try {
+        const newBlob = await upload(file.name, file, {
+          access: "public",
+          handleUploadUrl: "/api/upload/banner?id=" + domainData.id
+        });
+
+        // console.log(newBlob, "newBlob");
+        toast.dismiss(toastId);
+        toast.success("Image Uploaded");
+        setShowModal(false);
+        setDomainData({ ...domainData, bannerURL: newBlob.url });
+      } catch (e) {
+        console.log(e);
+        // console.log(newBlob);
+      }
     }
   };
 
   const onSelectMainImg = async (e: React.ChangeEvent<HTMLInputElement>) => {
     console.log("Start uploading");
+
     if (e.target.files && e.target.files.length > 0) {
+      const toastId = toast.loading("Uploading Image", { duration: 10000 });
       console.log("Start uploading");
       // setBannerImg(URL.createObjectURL(e.target.files[0]));
       const file = e.target.files[0];
       console.log(file);
-      const newBlob = await upload(file.name, file, {
-        access: "public",
-        handleUploadUrl: "/api/upload/avatar?id=" + domainData.id
-      });
-      console.log(newBlob);
+      try {
+        const newBlob = await upload(file.name, file, {
+          access: "public",
+          handleUploadUrl: "/api/upload/avatar?id=" + domainData.id
+        });
+        toast.dismiss(toastId);
+        // console.log(newBlob, "newBlob");
+        toast.success("Image Uploaded");
+        setShowModal(false);
+        setDomainData({ ...domainData, mainImgUrl: newBlob.url });
+      } catch (e) {
+        console.log(e);
+        // console.log(newBlob);
+      }
     }
   };
 
