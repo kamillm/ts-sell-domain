@@ -155,22 +155,21 @@ const ListItem = ({
   );
 };
 
-const SortbyName = ({ items }: { items: any }) => {
+const SortbyName = ({
+  domainList,
+  domainUrisList,
+  userDomains,
+  isFetching,
+  allOwnedDomains
+}: {
+  domainList: any;
+  domainUrisList: any;
+  userDomains: any;
+  isFetching: boolean;
+  allOwnedDomains: any;
+}) => {
   const [showModal, setShowModal] = useState<boolean>(false);
-  const [isFetching, setIsFetching] = useState<boolean>(true);
   const [selected, setSelected] = useState<number>(1);
-  const { userDomains, allOwnedDomains, domainList, domainUrisList } = useDomainLookup();
-
-  useEffect(() => {
-    if (
-      userDomains !== undefined &&
-      allOwnedDomains !== undefined &&
-      domainList !== undefined &&
-      domainUrisList !== undefined
-    ) {
-      setIsFetching(false);
-    }
-  }, [userDomains, allOwnedDomains, domainList, domainUrisList]);
 
   const decodeImageData = (dataUri: string) => {
     if (!dataUri) {
@@ -212,21 +211,27 @@ const SortbyName = ({ items }: { items: any }) => {
     <div>
       <Flex direction="flex-col" className="space-y-3">
         {!isFetching ? (
-          domainList.map((item: any, index: number) => (
-            <ListItem
-              {...item}
-              src={decodeImageData(domainUrisList[index])}
-              name={item.domainName}
-              isprimary={checkPrimary(Number(allOwnedDomains[index]))}
-              tokenId={Number(allOwnedDomains[index])}
-              registrant={item.owner ? `${item.owner.slice(0, 4)}...${item.owner.slice(-5)}` : ""}
-              expiration={formatExpirationDate(item.expirationDate)}
-              key={`follower-item-${index}`}
-              index={index + 1}
-              setShowModal={setShowModal}
-              setSelected={setSelected}
-            />
-          ))
+          domainList.length !== 0 ? (
+            domainList.map((item: any, index: number) => (
+              <ListItem
+                {...item}
+                src={decodeImageData(domainUrisList[index])}
+                name={item.domainName}
+                isprimary={checkPrimary(Number(allOwnedDomains[index]))}
+                tokenId={Number(allOwnedDomains[index])}
+                registrant={item.owner ? `${item.owner.slice(0, 4)}...${item.owner.slice(-5)}` : ""}
+                expiration={formatExpirationDate(item.expirationDate)}
+                key={`follower-item-${index}`}
+                index={index + 1}
+                setShowModal={setShowModal}
+                setSelected={setSelected}
+              />
+            ))
+          ) : (
+            <p className="border border-main-200 rounded-lg inline-flex justify-center items-center w-full py-[100px] text-[30px] text-main-200 font-700 text-center desktop:text-[22px] font-space_grotesk">
+              {"You don't have any domains"}
+            </p>
+          )
         ) : (
           <div className="flex justify-center">
             <TransactionLoading size={60} />

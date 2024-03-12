@@ -8,6 +8,7 @@ import toast from "react-hot-toast";
 // import { useDomainDetails } from "@/utils/web3/useDomainDetails";
 import { useGetChainName } from "@/utils/web3/useGetChainName";
 import { useAccount } from "wagmi";
+import TransactionLoading from "@/components/Loaders/TransactionLoading";
 
 const MyProfile: NextPage = () => {
   const router = useRouter();
@@ -142,9 +143,9 @@ const MyProfile: NextPage = () => {
           <TabView domain={domainDetails} user={userDetails} />
         </>
       ) : domainStatus === "false" ? (
-        <p className="text-main-300 h-[50vh] pt-[100px] inline-flex items-center justify-center text-[50px] uppercase">
-          Loading Profile
-        </p>
+        <div className="text-main-300 h-[50vh] pt-[100px] inline-flex items-center justify-center text-[50px] uppercase">
+          <TransactionLoading size={60} />
+        </div>
       ) : (
         <p className="text-main-300 h-[50vh] pt-[100px] inline-flex items-center justify-center text-[50px] uppercase">
           No profile Found

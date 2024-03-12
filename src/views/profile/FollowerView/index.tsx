@@ -5,6 +5,7 @@ import { Flex, GradientText, Image } from "@/components";
 import { useContextFollower } from "@/contexts";
 import { useRouter } from "next/router";
 import { useGetDomainTLD } from "@/utils/web3/useGetDomainTLD";
+import TransactionLoading from "@/components/Loaders/TransactionLoading";
 
 const FollowerItem = ({
   index,
@@ -146,10 +147,6 @@ const FollowerView: React.FC<{ domain?: any }> = ({ domain }) => {
 
   return (
     <div className="w-full">
-      <div className="text-[32px] font-500 font-space_grotesk mobile:text-[28px] mobile:text-center pb-2">
-        <GradientText>Followers</GradientText>
-      </div>
-
       <div
         className={clsx(
           "flex-col space-y-3",
@@ -158,8 +155,10 @@ const FollowerView: React.FC<{ domain?: any }> = ({ domain }) => {
         )}
       >
         {loading ? ( // Render loading indicator while loading
-          <div>Loading followers...</div>
-        ) : (
+          <div className="flex items-center justify-center">
+            <TransactionLoading size={60} />
+          </div>
+        ) : followers.length !== 0 ? (
           followers.map((follower, index) => (
             <FollowerItem
               isfollow={false}
@@ -172,6 +171,10 @@ const FollowerView: React.FC<{ domain?: any }> = ({ domain }) => {
               onFollow={onFollow}
             />
           ))
+        ) : (
+          <p className="border border-main-200 rounded-lg inline-flex justify-center items-center w-full py-[100px] text-[30px] text-main-200 font-700 text-center desktop:text-[22px] font-space_grotesk">
+            {"You don't have any followers"}
+          </p>
         )}
       </div>
     </div>

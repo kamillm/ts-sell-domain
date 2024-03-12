@@ -7,6 +7,7 @@ import { Follower, useContextFollower } from "@/contexts";
 // import { FOLLOWER_ITEMS } from "@/utils/constants";
 import { useRouter } from "next/router";
 import { useGetDomainTLD } from "@/utils/web3/useGetDomainTLD";
+import TransactionLoading from "@/components/Loaders/TransactionLoading";
 
 const FollowingItem = ({
   index,
@@ -149,10 +150,6 @@ const FollowingView: React.FC<{ domain: any }> = ({ domain }) => {
 
   return (
     <div className="w-full">
-      <div className="text-[32px] font-500 font-space_grotesk mobile:text-[28px] mobile:text-center pb-2">
-        <GradientText>Following</GradientText>
-      </div>
-
       <div
         className={clsx(
           "flex-col space-y-3",
@@ -161,8 +158,10 @@ const FollowingView: React.FC<{ domain: any }> = ({ domain }) => {
         )}
       >
         {loading ? ( // Render loading indicator while loading
-          <div>Loading following...</div>
-        ) : (
+          <div className="flex items-center justify-center">
+            <TransactionLoading size={60} />
+          </div>
+        ) : following.length !== 0 ? (
           following.map((following, index) => (
             <FollowingItem
               key={`follower-item-${index}`}
@@ -175,6 +174,10 @@ const FollowingView: React.FC<{ domain: any }> = ({ domain }) => {
               onUnFollow={onUnFollow}
             />
           ))
+        ) : (
+          <p className="border border-main-200 rounded-lg inline-flex justify-center items-center w-full py-[100px] text-[30px] text-main-200 font-700 text-center desktop:text-[22px] font-space_grotesk">
+            {"You don't have any following"}
+          </p>
         )}
       </div>
     </div>

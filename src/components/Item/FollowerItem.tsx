@@ -35,7 +35,7 @@ export const FollowerItem = ({
     let favoriteItems = JSON.parse(favorite);
     const isInclude = favoriteItems.includes(name);
     setIsFollow(isInclude);
-  }, [favorite]);
+  }, [favorite, name]);
 
   useEffect(() => {
     if ((domainData as { domainName: string })?.domainName === "") {
