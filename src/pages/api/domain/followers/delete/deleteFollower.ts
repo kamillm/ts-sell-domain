@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient, Domain } from "@prisma/client";
 import { NextApiRequest, NextApiResponse } from "next";
 
 const prisma = new PrismaClient();
@@ -13,17 +13,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     try {
       // Ensure both followerId and followingId are provided
       if (!followerId || !followingId) {
-        return res.status(400).json({ error: "followerId and followingId are required" });
+        return res.status(400).json({ error: "Unique followerId and followingId are required" });
       }
 
-      // Check if the domain IDs exist
-      const followingExists = await prisma.domain.findUnique({
+      const followerExists = (await prisma.domain.findUnique({
         where: { id: followerId }
-      });
+      })) as Domain; // Explicitly cast to your Domain type
 
-      const followerExists = await prisma.domain.findUnique({
+      const followingExists = (await prisma.domain.findUnique({
         where: { id: followingId }
-      });
+      })) as Domain; // Explicitly cast to your Domain type
 
       if (!followerExists || !followingExists) {
         return res.status(404).json({ error: "One or both of the domains do not exist" });
