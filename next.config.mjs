@@ -3,9 +3,14 @@
 const nextConfig = {
   reactStrictMode: true,
   images: {
-    domains: ['*'],
-  },
-
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "ek65wlrwd0szvdez.public.blob.vercel-storage.com",
+        port: ""
+      }
+    ]
+  }
 };
 
 export default nextConfig;
