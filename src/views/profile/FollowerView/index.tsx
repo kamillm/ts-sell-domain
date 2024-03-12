@@ -3,23 +3,80 @@ import clsx from "clsx";
 import { Flex, GradientText, Image } from "@/components";
 // assets
 import { useContextFollower } from "@/contexts";
-import { useRouter } from "next/router";
+import toast from "react-hot-toast";
+// import { useRouter } from "next/router";
 import { useGetDomainTLD } from "@/utils/web3/useGetDomainTLD";
 
 const FollowerItem = ({
   index,
   src,
   name,
-  isfollow,
-  onFollow
+  parentDomain,
+  follower
 }: {
   index: number;
   src: string;
   name: string;
-  isfollow: boolean;
-  onFollow: (name: string) => void;
+  follower: any;
+  parentDomain: any;
 }) => {
   const TLD = useGetDomainTLD();
+  const [isFollow, setIsFollow] = useState<boolean>(parentDomain.followingIds.includes(follower.id));
+
+  const onFollow = async (parentID: string, followerID: string) => {
+    try {
+      if (isFollow) {
+        try {
+          const toastId = toast.loading("Unfollowing...");
+          const followerRequestBody = {
+            followerId: parentID,
+            followingId: followerID
+          };
+          await fetch("/api/domain/followers/delete/deleteFollower", {
+            method: "DELETE",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify(followerRequestBody)
+          });
+          toast.dismiss(toastId);
+          setIsFollow(!isFollow);
+          toast.success("Unfollowed successfully");
+        } catch (e) {
+          console.log(e);
+        }
+      } else {
+        try {
+          const toastId = toast.loading("Following...");
+          const followerRequestBody = {
+            followerId: parentID,
+            followingId: followerID
+          };
+          await fetch("/api/domain/followers/add/addFollower", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify(followerRequestBody)
+          });
+          toast.dismiss(toastId);
+          setIsFollow(!isFollow);
+          toast.success("Followed successfully");
+        } catch (e) {
+          console.log(e);
+        }
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  };
+  // const updatedFollowers = follower.map((follower) => {
+  // if (follower.name === name) {
+  //   return { ...follower, isfollow: !follower.isfollow };
+  // }
+  // return follower;
+  // });
+
   return (
     <Flex
       align="items-center"
@@ -54,16 +111,16 @@ const FollowerItem = ({
           </p>
         </Flex>
       </Flex>
-      {!isfollow ? (
+      {!isFollow ? (
         <button
-          onClick={() => onFollow(name)}
+          onClick={() => onFollow(parentDomain.id, follower.id)}
           className={clsx("rounded-3xl inline-flex items-center justify-center p-3", "w-[113px] bg-primary")}
         >
           <span className="text-[12px] text-black">{"Follow"}</span>
         </button>
       ) : (
         <button
-          onClick={() => onFollow(name)}
+          onClick={() => onFollow(parentDomain.id, follower.id)}
           className={clsx("rounded-3xl inline-flex items-center justify-center p-3", "w-[113px] border border-primary")}
         >
           <span className="text-[12px] text-primary">{"Unfollow"}</span>
@@ -120,6 +177,8 @@ const FollowerView: React.FC<{ domain?: any }> = ({ domain }) => {
           );
           console.log("followerDetails", followerDetails);
 
+          domain.followingIds.includes(domain.id);
+
           setFollowers(followerDetails.filter((follower: any) => follower !== null));
           setLoading(false); // Update loading state when followers are fetched
         }
@@ -131,18 +190,8 @@ const FollowerView: React.FC<{ domain?: any }> = ({ domain }) => {
 
     fetchData();
   }, [domain, walletAddress, chain]);
+
   const { follower, setFollower } = useContextFollower();
-
-  const onFollow = (name: string) => {
-    const updatedFollowers = follower.map((follower) => {
-      if (follower.name === name) {
-        return { ...follower, isfollow: !follower.isfollow };
-      }
-      return follower;
-    });
-
-    setFollower(updatedFollowers);
-  };
 
   return (
     <div className="w-full">
@@ -162,14 +211,14 @@ const FollowerView: React.FC<{ domain?: any }> = ({ domain }) => {
         ) : (
           followers.map((follower, index) => (
             <FollowerItem
-              isfollow={false}
+              follower={follower}
+              parentDomain={domain}
+              // follower={domain.followingIds.includes(follower.id)}
               key={`follower-item-${index}`}
               index={index + 1}
-              src={
-                "https://images.pexels.com/photos/417074/pexels-photo-417074.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"
-              }
+              src={follower.mainImgUrl}
               name={follower.domainName}
-              onFollow={onFollow}
+              // onFollow={onFollow}
             />
           ))
         )}
