@@ -55,24 +55,24 @@ export const SOCIAL_LIST = [
 
 export const DOMAIN_CARD_LIST: DomainCardProps[] = [
   {
-    name: "boss.poly",
-    tld: "zeta",
+    name: "boss",
+    tld: "poly",
     src: "/img/home/hero/clubman.png",
     hoverScale: true,
     heroEmbed: true,
     borderColor: "border-primary"
   },
   {
-    name: "bitcoin.bera",
-    tld: "zeta",
+    name: "bitcoin",
+    tld: "bera",
     src: "/img/home/hero/zkme.png",
     hoverScale: true,
     heroEmbed: true,
     borderColor: "border-warning"
   },
   {
-    name: "money.x1",
-    tld: "zeta",
+    name: "money",
+    tld: "x1",
     src: "/img/home/hero/monkey.png",
     hoverScale: true,
     heroEmbed: true,
