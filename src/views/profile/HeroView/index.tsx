@@ -143,9 +143,10 @@ const HeroView: React.FC<{ domainName?: string; editmode?: boolean; owner?: bool
       console.log("Start uploading");
       // setBannerImg(URL.createObjectURL(e.target.files[0]));
       const file = e.target.files[0];
+      console.log(file);
       const newBlob = await upload(file.name, file, {
         access: "public",
-        handleUploadUrl: "/api/upload/upload?id=" + domainData.id
+        handleUploadUrl: "/api/upload/avatar?id=" + domainData.id
       });
       console.log(newBlob);
     }
