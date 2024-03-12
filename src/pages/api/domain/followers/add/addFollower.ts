@@ -5,9 +5,9 @@ const prisma = new PrismaClient();
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === "POST") {
-    // const { followerId, followingId } = req.body;
-    const followerId = 11;
-    const followingId = 6;
+    const { followerId, followingId } = req.body;
+    // const followerId = 11;
+    // const followingId = 6;
 
     try {
       // Ensure both followerId and followingId are provided
