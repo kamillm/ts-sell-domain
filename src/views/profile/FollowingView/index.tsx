@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import clsx from "clsx";
 import { Flex, GradientText, Image } from "@/components";
+import toast from "react-hot-toast";
 import { Follower, useContextFollower } from "@/contexts";
 // assets
 
@@ -12,16 +13,43 @@ const FollowingItem = ({
   index,
   src,
   name,
-  isfollow,
-  onUnFollow
+  parentDomain,
+  follower
 }: {
   index: number;
   src: string;
   name: string;
-  isfollow: boolean;
-  onUnFollow: (name: string) => void;
+  follower: any;
+  parentDomain: any;
 }) => {
   const TLD = useGetDomainTLD();
+  const [buttonMessage, setbuttonMessage] = useState<"Unfollow" | "Follow">("Unfollow");
+
+  const onUnFollow = async (parentID: string, followerID: string) => {
+    try {
+      try {
+        const toastId = toast.loading("Unfollowing...");
+        const followerRequestBody = {
+          followerId: parentID,
+          followingId: followerID
+        };
+        await fetch("/api/domain/followers/delete/deleteFollower", {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(followerRequestBody)
+        });
+        toast.dismiss(toastId);
+        setbuttonMessage("Follow");
+        toast.success("Unfollowed successfully");
+      } catch (e) {
+        console.log(e);
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  };
   return (
     <Flex
       align="items-center"
@@ -57,10 +85,10 @@ const FollowingItem = ({
         </Flex>
       </Flex>
       <button
-        onClick={() => onUnFollow(name)}
+        onClick={() => onUnFollow(parentDomain.id, follower.id)}
         className={clsx("rounded-3xl inline-flex items-center justify-center p-3", "w-[113px] border border-primary")}
       >
-        <span className="text-[12px] text-primary">{"Unfollow"}</span>
+        <span className="text-[12px] text-primary">{buttonMessage}</span>
       </button>
     </Flex>
   );
@@ -165,12 +193,12 @@ const FollowingView: React.FC<{ domain: any }> = ({ domain }) => {
         ) : (
           following.map((following, index) => (
             <FollowingItem
+              follower={following}
+              parentDomain={domain}
+              // follower={domain.followingIds.includes(follower.id)}
               key={`follower-item-${index}`}
-              isfollow={false}
               index={index + 1}
-              src={
-                "https://images.pexels.com/photos/417074/pexels-photo-417074.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"
-              }
+              src={following.mainImgUrl}
               name={following.domainName}
               onUnFollow={onUnFollow}
             />
