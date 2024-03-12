@@ -1,22 +1,44 @@
 import React, { useEffect, useState } from "react";
 import { Flex, GradientText } from "@/components";
-import { DOMAIN_ITEMS, DOMAIN_TAB_LIST } from "@/utils/constants";
+import { DOMAIN_TAB_LIST } from "@/utils/constants";
 import { SortbyName } from "..";
 import clsx from "clsx";
 import { MdOutlineSearch } from "react-icons/md";
+import { useDomainLookup } from "@/utils/web3/useDomainLookup";
 
 const TabView: React.FC = () => {
   const [tabIndex, setTabIndex] = useState<number>(1);
   const [searchedDomain, setSearchedDomain] = useState<string>("");
   const [domains, setDomains] = useState<any>([]);
+  const [isFetching, setIsFetching] = useState<boolean>(true);
+  const { userDomains, allOwnedDomains, domainList, domainUrisList } = useDomainLookup();
+
+  useEffect(() => {
+    setTimeout(() => {
+      setIsFetching(false);
+    }, 3000);
+  }, []);
+
+  useEffect(() => {
+    if (
+      userDomains !== undefined &&
+      allOwnedDomains !== undefined &&
+      domainList !== undefined &&
+      domainUrisList !== undefined
+    ) {
+      setIsFetching(false);
+    }
+  }, [userDomains, allOwnedDomains, domainList, domainUrisList]);
 
   useEffect(() => {
     if (tabIndex === 1) {
-      setDomains([...DOMAIN_ITEMS].sort((a, b) => a.name.localeCompare(b.name)));
+      setDomains([...domainList].sort((a, b) => a.name.localeCompare(b.name)));
     } else if (tabIndex === 2) {
-      setDomains([...DOMAIN_ITEMS].sort((a, b) => a.name.length - b.name.length));
+      setDomains([...domainList].sort((a, b) => a.name.length - b.name.length));
+    } else if (tabIndex === 3) {
+      setDomains([...domainList].sort((a, b) => new Date(a.registrant).getTime() - new Date(b.registrant).getTime()));
     } else if (tabIndex === 4) {
-      setDomains([...DOMAIN_ITEMS].sort((a, b) => new Date(a.expiration).getTime() - new Date(b.expiration).getTime()));
+      setDomains([...domainList].sort((a, b) => new Date(a.expiration).getTime() - new Date(b.expiration).getTime()));
     }
   }, [tabIndex, searchedDomain]);
 
@@ -100,7 +122,13 @@ const TabView: React.FC = () => {
           <p className="text-main-900 text-[16px] w-[130px]  small:hidden text-center">{"Expiration"}</p>
         </Flex>
       </Flex>
-      <SortbyName items={domains} />
+      <SortbyName
+        domainList={domains}
+        allOwnedDomains={allOwnedDomains}
+        domainUrisList={domainUrisList}
+        userDomains={userDomains}
+        isFetching={isFetching}
+      />
     </Flex>
   );
 };

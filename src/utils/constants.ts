@@ -438,7 +438,7 @@ export const DOMAIN_ITEMS = [
     name: "zns",
     isprimary: true,
     tokenId: 2,
-    registrant: "....C47Ed08",
+    registrant: "2028-05-21",
     price: "366 USDT",
     expiration: "2028-05-21"
   },
@@ -447,7 +447,7 @@ export const DOMAIN_ITEMS = [
     name: "12345",
     isprimary: false,
     tokenId: 2,
-    registrant: "....C47Ed08",
+    registrant: "2018-05-21",
     price: "366 USDT",
     expiration: "2025-08-21"
   },
@@ -456,7 +456,7 @@ export const DOMAIN_ITEMS = [
     name: "125",
     isprimary: false,
     tokenId: 2,
-    registrant: "....C47Ed08",
+    registrant: "2020-05-21",
     price: "366 USDT",
     expiration: "2025-08-21"
   }
@@ -464,8 +464,16 @@ export const DOMAIN_ITEMS = [
 
 // Get month
 export const monthNames = [
-  "January", "February", "March",
-  "April", "May", "June", "July",
-  "August", "September", "October",
-  "November", "December"
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December"
 ];

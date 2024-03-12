@@ -16,6 +16,7 @@ const CheckoutModal = ({ showModal, setShowModal }: { showModal: boolean; setSho
           onClick={onHandleClose}
           className="absolute w-[30px] h-[30px] -right-7 -top-7 cursor-pointer mobile:-right-1 mobile:-top-8"
         />
+
         <CheckoutSection />
       </div>
     </div>

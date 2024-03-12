@@ -16,7 +16,7 @@ import { useGetDomainTLD } from "@/utils/web3/useGetDomainTLD";
 import { useGetChainName } from "@/utils/web3/useGetChainName";
 // import { set } from "nprogress";
 
-const CheckoutSection: React.FC = () => {
+const CheckoutSection = () => {
   const router = useRouter();
   const { creditValue } = useCredit();
   const { localstorage, setLocalStorage } = useContextLocalStorage();
@@ -27,7 +27,7 @@ const CheckoutSection: React.FC = () => {
 
   //web3
   const { address, isConnected, chainId } = useAccount();
-  const { data } = useBalance({ address: address });
+  const { data }: any = useBalance({ address: address });
   const symbol = data?.symbol;
   const { data: hash, isPending, error, isError, writeContract } = useWriteContract();
   const { isSuccess, isLoading } = useWaitForTransactionReceipt({
@@ -185,15 +185,18 @@ const CheckoutSection: React.FC = () => {
   };
 
   const onCheckOut = () => {
-    writeContract({
-      abi: baseAbi,
-      address: contractAddress as `0x${string}`,
-      functionName: "registerDomains",
-      value: parseEther(totalPrice.toFixed(8)),
-      args: [address, domainNamesRef.current, expiresRef.current, "0x0000000000000000000000000000000000000000"]
-    });
-
-    toast.success("CheckOut");
+    if (Number(String(data.value)) > totalPrice) {
+      writeContract({
+        abi: baseAbi,
+        address: contractAddress as `0x${string}`,
+        functionName: "registerDomains",
+        value: parseEther(totalPrice.toFixed(8)),
+        args: [address, domainNamesRef.current, expiresRef.current, "0x0000000000000000000000000000000000000000"]
+      });
+      toast.success("successful");
+    } else {
+      toast.error("Not enough balance");
+    }
   };
   return (
     <div>

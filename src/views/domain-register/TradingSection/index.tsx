@@ -19,6 +19,12 @@ const TradingSection: React.FC = () => {
             "small:grid-cols-1"
           )}
         >
+          {FAVORITE_ITEMS.length === 0 && (
+            <p className="border border-main-200 rounded-lg inline-flex justify-center items-center w-full py-[100px] text-[30px] text-main-200 font-700 text-center desktop:text-[22px] font-space_grotesk">
+              {"You don't have trending domains"}
+            </p>
+          )}
+
           {FAVORITE_ITEMS.map((item, index) => (
             <FollowerItem {...item} index={index + 1} key={`follower-item-${index}`} />
           ))}

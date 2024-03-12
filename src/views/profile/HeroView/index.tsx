@@ -1,19 +1,18 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { Container, Flex, GradientText, Image } from "@/components";
 import { QRCode } from "react-qrcode-logo";
 import toast, { Toaster } from "react-hot-toast";
-import { type PutBlobResult } from "@vercel/blob";
-import { upload } from "@vercel/blob/client";
 // assets
 import { monthNames } from "@/utils/constants";
-import { MdOutlineEmail as Email } from "react-icons/md";
+import { MdOutlineEmail as Email, MdFavoriteBorder, MdOutlineFavorite } from "react-icons/md";
 import { FaInstagram as Instagram } from "react-icons/fa";
 import { TfiTwitter as Twitter } from "react-icons/tfi";
 import { LiaDiscord as Discord, LiaTelegram as Telegram } from "react-icons/lia";
 
 import { CiLinkedin as Linkedin } from "react-icons/ci";
 // icons
+
 import { BsCopy } from "react-icons/bs";
 import { LuLink } from "react-icons/lu";
 import { GoThumbsdown, GoThumbsup } from "react-icons/go";
@@ -23,6 +22,8 @@ import { IoMdCloseCircle } from "react-icons/io";
 import { RxUpdate } from "react-icons/rx";
 import { MdOutlineAccessTime, MdOutlineLocationOn, MdOutlineWidgets, MdOutlineEdit } from "react-icons/md";
 import clsx from "clsx";
+import { useContextFavorite } from "@/contexts/FavoriteProvider";
+import TwitterModal from "@/components/Modal/TwitterModal";
 
 const HeroView: React.FC<{ domainName?: string; editmode?: boolean; owner?: boolean; domain: any; user: any }> = ({
   domainName = "",
@@ -32,13 +33,23 @@ const HeroView: React.FC<{ domainName?: string; editmode?: boolean; owner?: bool
   owner = false
 }) => {
   const router = useRouter();
+  const { favorite, setFavorite } = useContextFavorite();
+  const [isfollow, setIsFollow] = useState<boolean>(false);
+
   const [bannerImg, setBannerImg] = useState<string>("/img/profile/banner.png");
   const [avatarImg] = useState<string>("/img/home/badges/con2.png");
   const [showModal, setShowModal] = useState<boolean>(false);
+  const [postTwitter, setPostTwitter] = useState<boolean>(false);
   // const [isFollow, setFollow] = useState<boolean>(false);
 
   domain = domain.domain;
   user = user.user;
+
+  useEffect(() => {
+    let favoriteItems = JSON.parse(favorite);
+    const isInclude = favoriteItems.includes(name);
+    setIsFollow(isInclude);
+  }, [favorite]);
 
   // bannerURL: null;
   // bio: "Add your bio here";
@@ -131,25 +142,24 @@ const HeroView: React.FC<{ domainName?: string; editmode?: boolean; owner?: bool
     );
   };
 
-  const onSelectBannerImg = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const onSelectBannerImg = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
       setBannerImg(URL.createObjectURL(e.target.files[0]));
     }
   };
 
-  const onSelectMainImg = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    console.log("Start uploading");
-    if (e.target.files && e.target.files.length > 0) {
-      console.log("Start uploading");
-      // setBannerImg(URL.createObjectURL(e.target.files[0]));
-      const file = e.target.files[0];
-      console.log(file);
-      const newBlob = await upload(file.name, file, {
-        access: "public",
-        handleUploadUrl: "/api/upload/avatar?id=" + domainData.id
-      });
-      console.log(newBlob);
+  const onHandleFavorite = () => {
+    let favoriteItems = JSON.parse(favorite);
+    let newArray;
+    if (isfollow) {
+      toast.success("Removed from Favorites");
+      newArray = favoriteItems.filter((item: string) => item !== domainName);
+    } else {
+      toast.success("Added to Favorites");
+      newArray = [...favoriteItems, name];
     }
+    localStorage.setItem("favorite", JSON.stringify(newArray));
+    setFavorite(JSON.stringify(newArray));
   };
 
   return (
@@ -168,6 +178,7 @@ const HeroView: React.FC<{ domainName?: string; editmode?: boolean; owner?: bool
             className="w-full h-full object-cover"
             alt="profile banner"
           />
+
           <Flex align="items-center" justifyContent="justify-center">
             <div className="absolute group -bottom-1/3 tablet:-bottom-[70px] w-[200px] h-[200px] tablet:w-[140px] tablet:h-[140px] rounded-full bg-main-200 flex justify-center items-center">
               <div className="relative">
@@ -199,6 +210,15 @@ const HeroView: React.FC<{ domainName?: string; editmode?: boolean; owner?: bool
               )}
             </div>
           </Flex>
+          <Flex className="absolute space-x-[10px] left-4 top-4">
+            <label className="p-2 bg-black/40 rounded-xl text-main-400 cursor-pointer" onClick={onHandleFavorite}>
+              {isfollow ? (
+                <MdOutlineFavorite className="w-5 h-5 text-favorite" />
+              ) : (
+                <MdFavoriteBorder className="w-5 h-5 text-favorite" />
+              )}
+            </label>
+          </Flex>
           <Flex className="absolute space-x-[10px] right-4 top-4">
             {editmode && owner && (
               <>
@@ -217,7 +237,7 @@ const HeroView: React.FC<{ domainName?: string; editmode?: boolean; owner?: bool
               <LuLink className="w-5 h-5" />
             </label>
             <label
-              onClick={() => copyToClipboard("Twitter Link", "Twitter Share link Copied")}
+              onClick={() => setPostTwitter(true)}
               className="p-2 bg-black/40 rounded-xl text-main-400 cursor-pointer"
             >
               <FaXTwitter className="w-5 h-5" />
@@ -411,7 +431,7 @@ const HeroView: React.FC<{ domainName?: string; editmode?: boolean; owner?: bool
                   <FaPlus className="absolute w-[24px] h-[24px] text-verified/45" />
                 </label>
                 <p className="text-[12px] font-700 font-space_grotesk">Upload from your pc</p>
-                <input className="hidden" id="avatar-file" type="file" onChange={onSelectMainImg} />
+                <input className="hidden" id="avatar-file" type="file" />
               </Flex>
               <Flex direction="flex-col" align="items-center" className="space-y-4">
                 <label>
@@ -447,6 +467,7 @@ const HeroView: React.FC<{ domainName?: string; editmode?: boolean; owner?: bool
           </Flex>
         </div>
       </div>
+      <TwitterModal showModal={postTwitter} setShowModal={setPostTwitter} domainName={domainData?.name} postlink={""} />
       <Toaster />
     </>
   );

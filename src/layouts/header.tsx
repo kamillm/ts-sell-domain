@@ -15,11 +15,18 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useDomainDetails } from "@/utils/web3/useDomainDetails";
 import { useContextFavorite } from "@/contexts/FavoriteProvider";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
+import toast, { Toaster } from "react-hot-toast";
 
 export default function Header() {
   const router = useRouter();
   const queryClient = useQueryClient();
   const { isConnect } = useConnect();
+
+  useEffect(() => {
+    if (isConnect) {
+      toast.success("Connected your wallet");
+    }
+  }, [isConnect]);
 
   const wrapperRef = useRef<any>(null);
   const menuButtonRef = useRef<any>(null);
@@ -231,6 +238,7 @@ export default function Header() {
         </Flex>
         <ProfileMenu showDropdown={showDropdown} wrapperRef={wrapperRef} setShowDropdown={setShowDropdown} />
       </Container>
+      <Toaster />
     </div>
   );
 }
