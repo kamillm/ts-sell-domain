@@ -200,7 +200,7 @@ const FollowingView: React.FC<{ domain: any }> = ({ domain }) => {
               index={index + 1}
               src={following.mainImgUrl}
               name={following.domainName}
-              onUnFollow={onUnFollow}
+              // onUnFollow={onUnFollow}
             />
           ))
         )}
