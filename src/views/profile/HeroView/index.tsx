@@ -3,6 +3,8 @@ import { useRouter } from "next/router";
 import { Container, Flex, GradientText, Image } from "@/components";
 import { QRCode } from "react-qrcode-logo";
 import toast, { Toaster } from "react-hot-toast";
+import { type PutBlobResult } from "@vercel/blob";
+import { upload } from "@vercel/blob/client";
 // assets
 import { monthNames } from "@/utils/constants";
 import { MdOutlineEmail as Email } from "react-icons/md";
@@ -129,9 +131,23 @@ const HeroView: React.FC<{ domainName?: string; editmode?: boolean; owner?: bool
     );
   };
 
-  const onSelectBannerImg = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const onSelectBannerImg = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
       setBannerImg(URL.createObjectURL(e.target.files[0]));
+    }
+  };
+
+  const onSelectMainImg = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    console.log("Start uploading");
+    if (e.target.files && e.target.files.length > 0) {
+      console.log("Start uploading");
+      // setBannerImg(URL.createObjectURL(e.target.files[0]));
+      const file = e.target.files[0];
+      const newBlob = await upload(file.name, file, {
+        access: "public",
+        handleUploadUrl: "/api/upload/upload?id=" + domainData.id
+      });
+      console.log(newBlob);
     }
   };
 
@@ -394,7 +410,7 @@ const HeroView: React.FC<{ domainName?: string; editmode?: boolean; owner?: bool
                   <FaPlus className="absolute w-[24px] h-[24px] text-verified/45" />
                 </label>
                 <p className="text-[12px] font-700 font-space_grotesk">Upload from your pc</p>
-                <input className="hidden" id="avatar-file" type="file" />
+                <input className="hidden" id="avatar-file" type="file" onChange={onSelectMainImg} />
               </Flex>
               <Flex direction="flex-col" align="items-center" className="space-y-4">
                 <label>
