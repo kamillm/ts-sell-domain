@@ -1,63 +1,3 @@
-// import { handleUpload, type HandleUploadBody } from "@vercel/blob/client";
-// import type { NextApiResponse, NextApiRequest } from "next";
-
-// import { PrismaClient } from "@prisma/client";
-// const prisma = new PrismaClient();
-
-// export default async function handler(request: NextApiRequest, response: NextApiResponse) {
-//   const { id } = request.query;
-//   const body = request.body as HandleUploadBody;
-
-//   try {
-//     if (!isNaN(Number(id))) {
-//       let updatedDomain;
-//       await handleUpload({
-//         body,
-//         request,
-//         onBeforeGenerateToken: async (pathname) =>
-//           /* clientPayload */
-//           {
-//             // Generate a client token for the browser to upload the file
-//             // ⚠️ Authenticate and authorize users before generating the token.
-//             // Otherwise, you're allowing anonymous uploads.
-
-//             return {
-//               allowedContentTypes: ["image/jpeg", "image/png", "image/gif", "image/webp"],
-//               maxFileSize: 6 * 1024 * 1024, // 6mb
-//               tokenPayload: JSON.stringify({
-//                 domainId: id
-//               })
-//             };
-//           },
-//         onUploadCompleted: async ({ blob, tokenPayload }) => {
-//           console.log("blob upload completed", blob, tokenPayload);
-
-//           try {
-//             // Run any logic after the file upload completed
-//             // const { userId } = JSON.parse(tokenPayload);
-//             // updatedDomain = await prisma.domain.update({
-//             //   where: {
-//             //     id: Number(id)
-//             //   },
-//             //   data: {
-//             //     mainImgUrl: blob.url
-//             //   }
-//             // });
-//             // await db.update({ avatar: blob.url, userId });
-//           } catch (error) {
-//             throw new Error("Could not update user");
-//           }
-//         }
-//       });
-
-//       return response.status(200).json(updatedDomain);
-//     }
-//   } catch (error) {
-//     // The webhook will retry 5 times waiting for a 200
-//     return response.status(400).json({ error: (error as Error).message });
-//   }
-// }
-
 import { handleUpload, type HandleUploadBody } from "@vercel/blob/client";
 import type { NextApiResponse, NextApiRequest } from "next";
 
@@ -67,37 +7,33 @@ const prisma = new PrismaClient();
 export default async function handler(request: NextApiRequest, response: NextApiResponse) {
   const { id } = request.query;
   const body = request.body as HandleUploadBody;
-  let updatedDomain;
+
   try {
+    let updatedDomain;
     const jsonResponse = await handleUpload({
       body,
       request,
-      onBeforeGenerateToken: async (
-        pathname
+      onBeforeGenerateToken: async () =>
         /* clientPayload */
-      ) => {
-        // Generate a client token for the browser to upload the file
-        // ⚠️ Authenticate and authorize users before generating the token.
-        // Otherwise, you're allowing anonymous uploads.
+        {
+          // Generate a client token for the browser to upload the file
+          // TODO: ⚠️ Authenticate and authorize users before generating the token.
+          // Otherwise, you're allowing anonymous uploads.
 
-        return {
-          allowedContentTypes: ["image/jpeg", "image/png", "image/gif"],
-          tokenPayload: JSON.stringify({
-            // optional, sent to your server on upload completion
-            // you could pass a user id from auth, or a value from clientPayload
-          })
-        };
-      },
-      onUploadCompleted: async ({ blob, tokenPayload }) => {
+          return {
+            allowedContentTypes: ["image/jpeg", "image/png", "image/webp", "image/gif"],
+            maximumSizeInBytes: 8 * 1024 * 1024 // 8mb
+          };
+        },
+      onUploadCompleted: async ({ blob }) => {
         // Get notified of client upload completion
         // ⚠️ This will not work on `localhost` websites,
         // Use ngrok or similar to get the full upload flow
 
-        console.log("blob upload completed", blob, tokenPayload);
+        // console.log("blob upload completed", blob, tokenPayload);
 
         try {
           // Run any logic after the file upload completed
-          // const { userId } = JSON.parse(tokenPayload);
           updatedDomain = await prisma.domain.update({
             where: {
               id: Number(id)
@@ -106,14 +42,14 @@ export default async function handler(request: NextApiRequest, response: NextApi
               mainImgUrl: blob.url
             }
           });
-          // await db.update({ avatar: blob.url, userId });
+          response.status(200).json(updatedDomain);
         } catch (error) {
           throw new Error("Could not update user");
         }
       }
     });
 
-    return response.status(200).json(updatedDomain);
+    return response.status(200).json(jsonResponse);
   } catch (error) {
     // The webhook will retry 5 times waiting for a 200
     return response.status(400).json({ error: (error as Error).message });
