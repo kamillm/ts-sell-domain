@@ -81,5 +81,5 @@ enum Chain {
     X1
     OPBNB
     BASE
-    POLYGON
+    POLY
 }
