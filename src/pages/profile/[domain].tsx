@@ -25,6 +25,7 @@ const MyProfile: NextPage = () => {
 
   const [userDetails, setUserDetails] = useState<any>({});
   const [domainDetails, setDomainDetails] = useState<any>({});
+  const [isLoading, setLoading] = useState<boolean>(true);
 
   const chainName = useGetChainName();
   const { address } = useAccount();
@@ -122,6 +123,7 @@ const MyProfile: NextPage = () => {
       };
 
       fetchData();
+      setLoading(false);
     }
   }, [domain]); // Specify dependencies
 
@@ -135,21 +137,36 @@ const MyProfile: NextPage = () => {
     setDomain(Array.isArray(router.query.domain) ? router.query.domain[0] : router.query.domain || "");
   }, [router.query.domain]);
 
+  useEffect(() => {
+    setTimeout(() => {
+      setLoading(false);
+    }, 3000);
+  }, []);
+
   return (
     <Flex direction="flex-col">
-      {domainStatus === "true" ? (
-        <>
-          <HeroView domain={domainDetails} user={userDetails} editmode={editmode === "true"} owner={owner === "true"} />
-          <TabView domain={domainDetails} user={userDetails} />
-        </>
-      ) : domainStatus === "false" ? (
+      {isLoading ? (
         <div className="text-main-300 h-[50vh] pt-[100px] inline-flex items-center justify-center text-[50px] uppercase">
           <TransactionLoading size={60} />
         </div>
       ) : (
-        <p className="text-main-300 h-[50vh] pt-[100px] inline-flex items-center justify-center text-[50px] uppercase">
-          No profile Found
-        </p>
+        <>
+          {domainStatus === "true" ? (
+            <>
+              <HeroView
+                domain={domainDetails}
+                user={userDetails}
+                editmode={editmode === "true"}
+                owner={owner === "true"}
+              />
+              <TabView domain={domainDetails} user={userDetails} />
+            </>
+          ) : (
+            <p className="text-main-300 h-[50vh] pt-[100px] inline-flex items-center justify-center text-[50px] uppercase">
+              No profile Found
+            </p>
+          )}
+        </>
       )}
     </Flex>
   );
