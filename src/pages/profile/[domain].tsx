@@ -38,6 +38,13 @@ const MyProfile: NextPage = () => {
     }
   }, [domain, address]);
 
+
+  useEffect(() => {
+    if ((domainData as { owner: string })?.owner === address) {
+      setIsOwner(true);
+    }
+  }, [domain, address]);
+
   let walletAddress = address as string;
   let chain = chainName as string;
 

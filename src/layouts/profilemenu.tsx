@@ -11,6 +11,7 @@ import toast, { Toaster } from "react-hot-toast";
 import NetworkBtn from "@/components/NetworkBtn/NetworkBtn";
 import clsx from "clsx";
 import { DOMAIN_ITEMS } from "@/utils/constants";
+import { useGetChainName } from "@/utils/web3/useGetChainName";
 
 const ProfileMenu = ({
   showDropdown,
@@ -35,6 +36,7 @@ const ProfileMenu = ({
   const balance = data?.formatted.slice(0, 5);
   const symbol = data?.symbol;
   const { disconnect } = useDisconnect();
+  const chainName = useGetChainName();
 
   const createUser = async (walletAddress: string, chainName: string) => {
     if (walletAddress != "" && chainName != "") {
@@ -65,24 +67,6 @@ const ProfileMenu = ({
   };
 
   useEffect(() => {
-    const getChainName = (chainId: number) => {
-      if (chainId) {
-        if (chainId === 84532) {
-          return "BASE";
-        }
-        if (chainId === 204) {
-          return "OPBNB";
-        }
-        if (chainId === 195) {
-          return "X1";
-        }
-        if (chainId === 80085) {
-          return "BERA";
-        }
-      }
-    };
-
-    const chainName = getChainName(chainId as number);
     if (isConnected) {
       const fetchUser = async () => {
         try {
@@ -95,7 +79,7 @@ const ProfileMenu = ({
       };
       fetchUser();
     }
-  }, [isConnected, address, chainId]);
+  }, [address, chainId]);
 
   const onHover = (type: string, action: boolean) => {
     if (type === "copy") {

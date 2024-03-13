@@ -5,7 +5,6 @@ export const useGetChainName = () => {
     if (chainId === 80001) {
       return "POLY";
     }
-
     if (chainId === 84532) {
       return "BASE";
     }

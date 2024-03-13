@@ -26,7 +26,7 @@ export default function Layout({ children }: ComponentProps) {
   const { isConnected, chainId } = useAccount();
 
   useEffect(() => {
-    if (isConnected && chainId !== 84532) {
+    if (isConnected && chainId !== 80001) {
       setWrongChain(true);
     } else {
       setWrongChain(false);

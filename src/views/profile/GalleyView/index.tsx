@@ -22,9 +22,6 @@ const GalleryView = () => {
   useEffect(() => {
     const fetchNFTs = async () => {
       const ownerAddr = "0x2d8dE1F9C47f0CDe92bBb15DC1Dfd8dCB8d5D8B5";
-      console.log("fetching NFTs for address:", ownerAddr);
-      console.log("...");
-
       const nfts = await alchemy.nft.getNftsForOwner(ownerAddr);
 
       const nftInfo = nfts.ownedNfts.map((nft) => ({
@@ -32,9 +29,8 @@ const GalleryView = () => {
         name: nft.name ?? "",
         collection: nft.collection?.name
       }));
-
       setUserNfts(nftInfo);
-      console.log(userNfts);
+
     };
 
     fetchNFTs();

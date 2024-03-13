@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { Container, Flex, GradientText, Image } from "@/components";
 import { QRCode } from "react-qrcode-logo";
@@ -23,6 +23,8 @@ import { IoMdCloseCircle } from "react-icons/io";
 import { RxUpdate } from "react-icons/rx";
 import { MdOutlineAccessTime, MdOutlineLocationOn, MdOutlineWidgets, MdOutlineEdit } from "react-icons/md";
 import clsx from "clsx";
+import { useTokenUriLookup } from "@/utils/web3/useTokenUriLookup";
+import { useGetChainName } from "@/utils/web3/useGetChainName";
 
 const HeroView: React.FC<{ domainName?: string; editmode?: boolean; owner?: boolean; domain: any; user: any }> = ({
   domainName = "",
@@ -35,6 +37,8 @@ const HeroView: React.FC<{ domainName?: string; editmode?: boolean; owner?: bool
   const [bannerImg, setBannerImg] = useState<string>("/img/profile/banner.png");
   const [avatarImg] = useState<string>("/img/home/badges/con2.png");
   const [showModal, setShowModal] = useState<boolean>(false);
+  const [svgString, setSvgString] = useState<string | null>(null);
+  const chainName = useGetChainName();
   // const [isFollow, setFollow] = useState<boolean>(false);
 
   domain = domain.domain;
@@ -94,7 +98,8 @@ const HeroView: React.FC<{ domainName?: string; editmode?: boolean; owner?: bool
     followingCount: domain?.followingIds.length || 0
   });
 
-  console.log();
+  const [showDomainUriAsAvatar, setShowDomainUriAsAvatar] = useState<boolean>(!domainData?.mainImgUrl);
+
   // Define the USER_SOCIAL_LINKS array
   const USER_SOCIAL_LINKS = [
     { id: 1, icon: Instagram, link: domainData.instagram, isVerify: domainData.instagramVerified, label: "Instagram" },
@@ -184,24 +189,87 @@ const HeroView: React.FC<{ domainName?: string; editmode?: boolean; owner?: bool
     }
   };
 
-  // const decodeImageData = (dataUri: string) => {
-  //   if (!dataUri) {
-  //     console.error("Invalid dataUri:", dataUri);
-  //     return null;
-  //   }
-  //   const base64Json = dataUri.split(",")[1];
-  //   const jsonString = atob(base64Json);
-  //   const jsonData = JSON.parse(jsonString);
-  //   const imageWithPrefix = jsonData?.image;
-  //   if (!imageWithPrefix) {
-  //     console.error("Invalid image property:", imageWithPrefix);
-  //     return null;
-  //   }
-  //   const base64Image = imageWithPrefix.split(",")[1];
-  //   const decodedImage = atob(base64Image);
-  //   return decodedImage;
-  // };
+  const { domainUri } = useTokenUriLookup(domainData.domainName.split(".")[0]);
 
+  useEffect(() => {
+    const decodeImageData = (dataUri: string) => {
+      if (!dataUri) {
+        console.error("Invalid dataUri:", dataUri);
+        return null;
+      }
+      const base64Json = dataUri.split(",")[1];
+      const jsonString = atob(base64Json);
+      const jsonData = JSON.parse(jsonString);
+      const imageWithPrefix = jsonData?.image;
+      if (!imageWithPrefix) {
+        console.error("Invalid image property:", imageWithPrefix);
+        return null;
+      }
+      const base64Image = imageWithPrefix.split(",")[1];
+      const decodedImage = atob(base64Image);
+      return decodedImage;
+    };
+    const svgSrc = decodeImageData(domainUri as string);
+    setSvgString(svgSrc);
+  }, [domainUri]);
+
+  // useEffect(() => {
+  const handleUpdateProfile = async (id: number) => {
+    try {
+      const response = await fetch("/api/domain/update/updateDomain", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          id: id,
+          mainImageUrl: "",
+          chain: chainName
+        })
+      });
+
+      if (response.ok) {
+        // Handle success
+        console.log(response.json());
+        console.log("Profile updated successfully");
+        setShowDomainUriAsAvatar(true);
+      } else {
+        // Handle error
+        console.error("Error updating profile:", response.statusText);
+        // setShowDomainUriAsAvatar(false);
+      }
+    } catch (error) {
+      console.error("Error updating profile:", error);
+    }
+  };
+
+  //   if (showDomainUriAsAvatar) {
+  //     const handleProfileImg = async () => {
+  //       await handleUpdateProfile(domainData.id);
+  //     };
+  //     handleProfileImg();
+  //   }
+  // }, [showDomainUriAsAvatar]);
+
+  const SVGMain = ({ svgString }: { svgString: SVGRectElement }) => (
+    <svg
+      viewBox="-1 0 140 140"
+      className="w-[185px] h-[185px] object-cover rounded-full tablet:w-[130px] tablet:h-[130px]"
+      dangerouslySetInnerHTML={{
+        __html: svgString as unknown as string
+      }}
+    />
+  );
+
+  const SVGChoice = ({ svgString }: { svgString: SVGRectElement }) => (
+    <svg
+      viewBox="-1 0 140 140"
+      className="w-[132px] h-[132px] rounded-full cursor-pointer small:w-[110px] small:h-[110px] object-top "
+      dangerouslySetInnerHTML={{
+        __html: svgString as unknown as string
+      }}
+    />
+  );
   // console.log(domainData);
 
   return (
@@ -223,13 +291,17 @@ const HeroView: React.FC<{ domainName?: string; editmode?: boolean; owner?: bool
           <Flex align="items-center" justifyContent="justify-center">
             <div className="absolute group -bottom-1/3 tablet:-bottom-[70px] w-[200px] h-[200px] tablet:w-[140px] tablet:h-[140px] rounded-full bg-main-200 flex justify-center items-center">
               <div className="relative">
-                <Image
-                  src={domainData?.mainImgUrl || avatarImg}
-                  width={185}
-                  height={185}
-                  className="object-cover rounded-full tablet:w-[130px] tablet:h-[130px]"
-                  alt="profile avatar"
-                />
+                {showDomainUriAsAvatar ? (
+                  <SVGMain svgString={svgString as unknown as SVGRectElement} />
+                ) : (
+                  <Image
+                    src={domainData?.mainImgUrl}
+                    width={185}
+                    height={185}
+                    className="object-cover rounded-full tablet:w-[130px] tablet:h-[130px]"
+                    alt="profile avatar"
+                  />
+                )}
 
                 {user?.verified && (
                   <Image
@@ -466,14 +538,15 @@ const HeroView: React.FC<{ domainName?: string; editmode?: boolean; owner?: bool
                 <input className="hidden" id="avatar-file" type="file" onChange={onSelectMainImg} />
               </Flex>
               <Flex direction="flex-col" align="items-center" className="space-y-4">
-                <label>
-                  <Image
+                <label onClick={() => handleUpdateProfile(domainData.id)}>
+                  {/* <Image
                     src={"/img/domain_preview.png"}
                     width={132}
                     height={132}
                     alt="domain_preview"
                     className="rounded-full cursor-pointer small:w-[110px] small:h-[110px]"
-                  />
+                  /> */}
+                  <SVGChoice svgString={svgString as unknown as SVGRectElement} />
                 </label>
                 <p className="text-[12px] font-700 font-space_grotesk">Use your Domain Name</p>
               </Flex>

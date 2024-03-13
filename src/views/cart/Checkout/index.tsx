@@ -9,8 +9,9 @@ import toast, { Toaster } from "react-hot-toast";
 import { useRouter } from "next/router";
 import TransactionLoading from "@/components/Loaders/TransactionLoading";
 import { useAccount, useBalance, useWriteContract, useWaitForTransactionReceipt } from "wagmi";
-import { baseAbi } from "@/utils/web3/baseAbi";
-// import { polyAbi } from "@/utils/web3/polyAbi";
+// import { baseAbi } from "@/utils/web3/baseAbi";
+import { polyAbi } from "@/utils/web3/polyAbi";
+
 import { parseEther } from "viem";
 import { useContractAddressByChain } from "@/utils/web3/useContractAddressByChain";
 import { useGetDomainTLD } from "@/utils/web3/useGetDomainTLD";
@@ -187,11 +188,11 @@ const CheckoutSection: React.FC = () => {
 
   const onCheckOut = () => {
     writeContract({
-      abi: baseAbi,
+      abi: polyAbi,
       address: contractAddress as `0x${string}`,
       functionName: "registerDomains",
-      value: parseEther(totalPrice.toFixed(8)),
-      args: [address, domainNamesRef.current, expiresRef.current, "0x0000000000000000000000000000000000000000"]
+      value: parseEther(totalPrice.toString()),
+      args: [address, domainNamesRef.current, expiresRef.current, "0x0000000000000000000000000000000000000000", 0]
     });
 
     toast.success("CheckOut");
@@ -206,7 +207,7 @@ const CheckoutSection: React.FC = () => {
         <Flex direction="flex-col" className="space-y-1">
           <Flex align="items-center" justifyContent="justify-between">
             <p className="text-[14px] font-400 capitalize">{"Total price"}</p>
-            <p className="text-[20px] font-500 text-primary">{`${totalPrice.toFixed(8)} ${symbol}`}</p>
+            <p className="text-[20px] font-500 text-primary">{`${totalPrice} ${symbol}`}</p>
           </Flex>
           <Flex align="items-center" justifyContent="justify-between">
             <p className="text-[14px] font-400 capitalize">{"Available Credits"}</p>
@@ -215,7 +216,7 @@ const CheckoutSection: React.FC = () => {
           <Flex align="items-center" justifyContent="justify-between">
             <p className="text-[14px] font-400 capitalize">{"Subtotal"}</p>
             <p className="text-[20px] font-500 text-primary">
-              {isCredit ? totalPrice - creditPrice : totalPrice.toFixed(8)} {symbol}
+              {isCredit ? totalPrice - creditPrice : totalPrice} {symbol}
             </p>
           </Flex>
         </Flex>
