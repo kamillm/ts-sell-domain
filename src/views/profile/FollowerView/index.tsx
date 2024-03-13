@@ -3,6 +3,7 @@ import clsx from "clsx";
 import { Flex, GradientText, Image } from "@/components";
 // assets
 import { useContextFollower } from "@/contexts";
+import { useRouter } from "next/router";
 import toast from "react-hot-toast";
 // import { useRouter } from "next/router";
 import { useGetDomainTLD } from "@/utils/web3/useGetDomainTLD";

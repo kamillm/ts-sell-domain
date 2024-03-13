@@ -8,15 +8,18 @@ import toast from "react-hot-toast";
 // import { useDomainDetails } from "@/utils/web3/useDomainDetails";
 import { useGetChainName } from "@/utils/web3/useGetChainName";
 import { useAccount } from "wagmi";
+import { useDomainDetails } from "@/utils/web3/useDomainDetails";
+
 
 const MyProfile: NextPage = () => {
   const router = useRouter();
   // const slug = router.query.domain;
+
+  const [isOwner, setIsOwner] = useState<boolean>(false);
   const searchParams = useSearchParams();
   const editmode = searchParams.get("editmode");
-  const owner = searchParams.get("owner");
-
-  const [domain, setDomain] = useState<string | string[] | undefined>(router.query.domain);
+  // const owner = isOwner;
+  const [domain, setDomain] = useState<string | undefined>(router.query.domain as string);
   const [domainStatus, setDomainStatus] = useState<"true" | "loading" | "false" | "error">("false");
 
   const [userDataReceived, setUserDataReceived] = useState<boolean>(false);
@@ -24,6 +27,17 @@ const MyProfile: NextPage = () => {
 
   const [userDetails, setUserDetails] = useState<any>({});
   const [domainDetails, setDomainDetails] = useState<any>({});
+
+  // const domainName = router.query.domain.
+  const { domainData } = useDomainDetails(domain?.split(".")[0] as string);
+  const chainName = useGetChainName();
+  const { address } = useAccount();
+
+  useEffect(() => {
+    if ((domainData as { owner: string })?.owner === address) {
+      setIsOwner(true);
+    }
+  }, [domain, address]);
 
   const chainName = useGetChainName();
   const { address } = useAccount();
@@ -138,7 +152,7 @@ const MyProfile: NextPage = () => {
     <Flex direction="flex-col">
       {domainStatus === "true" ? (
         <>
-          <HeroView domain={domainDetails} user={userDetails} editmode={editmode === "true"} owner={owner === "true"} />
+          <HeroView domain={domainDetails} user={userDetails} editmode={editmode === "true"} owner={isOwner} />
           <TabView domain={domainDetails} user={userDetails} />
         </>
       ) : domainStatus === "false" ? (

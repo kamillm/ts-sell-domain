@@ -2,6 +2,9 @@ import { useAccount } from "wagmi";
 export const useGetDomainTLD = () => {
   const { chainId } = useAccount();
   if (chainId) {
+    if (chainId === 80001) {
+      return "poly";
+    }
     if (chainId === 84532) {
       return "base";
     }

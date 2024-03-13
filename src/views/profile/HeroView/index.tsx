@@ -184,6 +184,52 @@ const HeroView: React.FC<{ domainName?: string; editmode?: boolean; owner?: bool
     }
   };
 
+  const onSelectMainImg = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    console.log("Start uploading");
+
+    if (e.target.files && e.target.files.length > 0) {
+      const toastId = toast.loading("Uploading Image", { duration: 10000 });
+      console.log("Start uploading");
+      // setBannerImg(URL.createObjectURL(e.target.files[0]));
+      const file = e.target.files[0];
+      console.log(file);
+      try {
+        const newBlob = await upload(file.name, file, {
+          access: "public",
+          handleUploadUrl: "/api/upload/avatar?id=" + domainData.id
+        });
+        toast.dismiss(toastId);
+        // console.log(newBlob, "newBlob");
+        toast.success("Image Uploaded");
+        setShowModal(false);
+        setDomainData({ ...domainData, mainImgUrl: newBlob.url });
+      } catch (e) {
+        console.log(e);
+        // console.log(newBlob);
+      }
+    }
+  };
+
+  // const decodeImageData = (dataUri: string) => {
+  //   if (!dataUri) {
+  //     console.error("Invalid dataUri:", dataUri);
+  //     return null;
+  //   }
+  //   const base64Json = dataUri.split(",")[1];
+  //   const jsonString = atob(base64Json);
+  //   const jsonData = JSON.parse(jsonString);
+  //   const imageWithPrefix = jsonData?.image;
+  //   if (!imageWithPrefix) {
+  //     console.error("Invalid image property:", imageWithPrefix);
+  //     return null;
+  //   }
+  //   const base64Image = imageWithPrefix.split(",")[1];
+  //   const decodedImage = atob(base64Image);
+  //   return decodedImage;
+  // };
+
+  // console.log(domainData);
+
   return (
     <>
       <Flex

@@ -2,6 +2,10 @@ import { useAccount } from "wagmi";
 export const useGetChainName = () => {
   const { chainId } = useAccount();
   if (chainId) {
+    if (chainId === 80001) {
+      return "POLY";
+    }
+
     if (chainId === 84532) {
       return "BASE";
     }
