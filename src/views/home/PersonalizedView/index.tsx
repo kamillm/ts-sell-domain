@@ -10,25 +10,25 @@ const PersonalizedView: React.FC = () => {
       <Flex
         align="items-center"
         justifyContent="justify-evenly"
-        className="space-x-10 tablet:flex-col tablet:space-x-0 tablet:items-center tablet:space-y-[53px]"
+        className="space-x-10 desktop:flex-col desktop:space-x-0 desktop:items-center desktop:space-y-[53px]"
       >
         <Flex className="flex-none" justifyContent="justify-center">
           <Image
             src="/img/home/iphone.png"
             alt="create identity"
-            width={248}
+            width={600}
             height={520}
-            className="desktop:w-[300px]"
+            className="w-[500px] desktop:w-[600px]"
           />
         </Flex>
-        <Flex direction="flex-col" className="space-y-[35px] font-space_grotesk tablet:items-center">
-          <p className="font-space_grotesk font-700 text-[48px] uppercase desktop:text-[30px] mobile:text-[24px] small:text-center">
+        <Flex direction="flex-col" className="space-y-[35px] font-space_grotesk desktop:items-center">
+          <p className="font-space_grotesk font-700 text-[48px] uppercase desktop:text-[30px] mobile:text-[24px] desktop:text-center">
             Get your personalized <span className="text-primary">page</span>
           </p>
 
           <Flex
             direction="flex-col"
-            className="max-w-[614px] w-full text-main-400 text-[16px] font-400 desktop:text-[14px] mobile:text-[12px]"
+            className="max-w-[614px] w-full text-main-400 text-[16px] font-400 desktop:text-[14px] mobile:text-[12px] desktop:text-center"
           >
             <p>
               {

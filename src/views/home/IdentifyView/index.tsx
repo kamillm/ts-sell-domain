@@ -12,39 +12,39 @@ import { BsArrowLeft, BsArrowRight } from "react-icons/bs";
 
 function IdentifyView() {
   const router = useRouter();
-  const [active, setActive] = useState<number>(0);
-  const [direction, setDirection] = useState<string>("");
+  // const [active, setActive] = useState<number>(0);
+  // const [direction, setDirection] = useState<string>("");
 
-  const moveLeft = () => {
-    let newActive: number = active;
-    newActive--;
-    setActive(newActive < 0 ? GENERAL_CARD_LIST_1.length - 1 : newActive);
-    setDirection("left");
-  };
+  // const moveLeft = () => {
+  //   let newActive: number = active;
+  //   newActive--;
+  //   setActive(newActive < 0 ? GENERAL_CARD_LIST_1.length - 1 : newActive);
+  //   setDirection("left");
+  // };
 
-  const moveRight = () => {
-    let newActive = active;
-    setActive((newActive + 1) % GENERAL_CARD_LIST_1.length);
-    setDirection("right");
-  };
+  // const moveRight = () => {
+  //   let newActive = active;
+  //   setActive((newActive + 1) % GENERAL_CARD_LIST_1.length);
+  //   setDirection("right");
+  // };
 
-  const generateItems = () => {
-    let items = [];
-    let level;
-    for (var i = active - 1; i < active + 2; i++) {
-      let index = i;
-      if (i < 0) {
-        index = GENERAL_CARD_LIST_1.length + i;
-      } else if (i >= GENERAL_CARD_LIST_1.length) {
-        index = i % GENERAL_CARD_LIST_1.length;
-      }
+  // const generateItems = () => {
+  //   let items = [];
+  //   let level;
+  //   for (var i = active - 1; i < active + 2; i++) {
+  //     let index = i;
+  //     if (i < 0) {
+  //       index = GENERAL_CARD_LIST_1.length + i;
+  //     } else if (i >= GENERAL_CARD_LIST_1.length) {
+  //       index = i % GENERAL_CARD_LIST_1.length;
+  //     }
 
-      level = active - i;
+  //     level = active - i;
 
-      items.push(<GeneralCard key={index} {...GENERAL_CARD_LIST_1[index]} level={level} />);
-    }
-    return items;
-  };
+  //     items.push(<GeneralCard key={index} {...GENERAL_CARD_LIST_1[index]} level={level} />);
+  //   }
+  //   return items;
+  // };
   return (
     <Container>
       <Flex
@@ -53,7 +53,7 @@ function IdentifyView() {
         className="space-x-12 laptop:flex-col laptop:space-x-0 laptop:space-y-20"
       >
         <div className="w-1/2 laptop:w-full overflow-x-clip relative">
-          <div id="carousel1" className="noselect">
+          {/* <div id="carousel1" className="noselect">
             <div
               className="arrow arrow-left inline-flex justify-center items-center bg-main-200 p-2"
               onClick={moveLeft}
@@ -67,8 +67,8 @@ function IdentifyView() {
             >
               <BsArrowRight />
             </div>
-          </div>
-          {/* <Swiper
+          </div> */}
+          <Swiper
             effect="cards"
             centeredSlides={true}
             loop={true}
@@ -98,7 +98,7 @@ function IdentifyView() {
                 <GeneralCard {...item} />
               </SwiperSlide>
             ))}
-          </Swiper> */}
+          </Swiper>
         </div>
         <div className="w-1/2 laptop:w-full">
           <Flex direction="flex-col" className="space-y-[35px] font-space_grotesk laptop:items-center">

@@ -7,6 +7,7 @@ import { usePriceToRenew } from "@/utils/web3/usePriceToRenew";
 import clsx from "clsx";
 import toast, { Toaster } from "react-hot-toast";
 import { useGetDomainTLD } from "@/utils/web3/useGetDomainTLD";
+import { formatPrice } from "@/utils/func";
 
 const PeriodCounter = ({ index, item }: { index: number; item: any }) => {
   const { localstorage, setLocalStorage } = useContextLocalStorage();
@@ -64,7 +65,9 @@ const PeriodCounter = ({ index, item }: { index: number; item: any }) => {
         {/* {item.status ? "Available" : "Not Available"} */}
         Available
       </span>
-      <p className="text-[16px] text-primary font-500 small:hidden">{item.price ? item.price + " " + symbol : "N/A"}</p>
+      <p className="text-[16px] text-primary font-500 small:hidden">
+        {item.price ? formatPrice(item.price) + " " + symbol : "N/A"}
+      </p>
       <Flex className="space-x-[10px]">
         <Flex className="space-x-5">
           <Flex className="space-x-3" align="items-center">

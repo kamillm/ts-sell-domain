@@ -3,7 +3,7 @@ import { LuMinusCircle, LuPlusCircle } from "react-icons/lu";
 import clsx from "clsx";
 import { useCredit } from "@/contexts";
 import { Flex, Link } from "@/components";
-import { ascii, gtEq, ltEq } from "@/utils/func";
+import { ascii, formatPrice, gtEq, ltEq } from "@/utils/func";
 import { useContextLocalStorage } from "@/contexts";
 import toast, { Toaster } from "react-hot-toast";
 import { useRouter } from "next/router";
@@ -211,16 +211,16 @@ const CheckoutSection = () => {
         <Flex direction="flex-col" className="space-y-1">
           <Flex align="items-center" justifyContent="justify-between">
             <p className="text-[14px] font-400 capitalize">{"Total price"}</p>
-            <p className="text-[20px] font-500 text-primary">{`${totalPrice} ${symbol}`}</p>
+            <p className="text-[20px] font-500 text-primary">{`${formatPrice(totalPrice)} ${symbol}`}</p>
           </Flex>
           <Flex align="items-center" justifyContent="justify-between">
             <p className="text-[14px] font-400 capitalize">{"Available Credits"}</p>
-            <p className="text-[20px] font-500 text-primary">{`${isCredit ? creditPrice : 0} ${symbol}`}</p>
+            <p className="text-[20px] font-500 text-primary">{`${formatPrice(isCredit ? creditPrice : 0)} ${symbol}`}</p>
           </Flex>
           <Flex align="items-center" justifyContent="justify-between">
             <p className="text-[14px] font-400 capitalize">{"Subtotal"}</p>
             <p className="text-[20px] font-500 text-primary">
-              {isCredit ? totalPrice - creditPrice : totalPrice} {symbol}
+              {formatPrice(isCredit ? totalPrice - creditPrice : totalPrice)} {symbol}
             </p>
           </Flex>
         </Flex>
