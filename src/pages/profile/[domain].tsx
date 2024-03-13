@@ -9,6 +9,7 @@ import toast from "react-hot-toast";
 import { useGetChainName } from "@/utils/web3/useGetChainName";
 import { useAccount } from "wagmi";
 import TransactionLoading from "@/components/Loaders/TransactionLoading";
+import NotFound from "@/components/NotFound";
 
 const MyProfile: NextPage = () => {
   const router = useRouter();
@@ -162,9 +163,12 @@ const MyProfile: NextPage = () => {
               <TabView domain={domainDetails} user={userDetails} />
             </>
           ) : (
-            <p className="text-main-300 h-[50vh] pt-[100px] inline-flex items-center justify-center text-[50px] uppercase">
-              No profile Found
-            </p>
+            <div className="py-[200px] px-[30px] small:px-[10px]">
+              <NotFound label="You don't have profile" />
+            </div>
+            // <p className="text-main-300 h-[50vh] pt-[100px] inline-flex items-center justify-center text-[50px] uppercase">
+            //   No profile Found
+            // </p>
           )}
         </>
       )}

@@ -3,6 +3,7 @@ import { CATEGORY_LIST } from "@/utils/constants";
 import clsx from "clsx";
 import React, { useState } from "react";
 import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
+import toast, { Toaster } from "react-hot-toast";
 
 const ProfileView: React.FC<{ domain: any }> = ({ domain }) => {
   const [isDrop, setIsDrop] = useState<boolean>(false);
@@ -47,12 +48,15 @@ const ProfileView: React.FC<{ domain: any }> = ({ domain }) => {
       if (response.ok) {
         // Handle success
         console.log(response.json());
-        console.log("Profile updated successfully");
+        toast.success("Updated your profile");
+        console.log("Updated your profile");
       } else {
         // Handle error
+        toast.error("Error happened");
         console.error("Error updating profile:", response.statusText);
       }
     } catch (error) {
+      toast.error("Error happened");
       console.error("Error updating profile:", error);
     }
   };
@@ -150,6 +154,7 @@ const ProfileView: React.FC<{ domain: any }> = ({ domain }) => {
           </button>
         </div>
       </Flex>
+      <Toaster />
     </div>
   );
 };

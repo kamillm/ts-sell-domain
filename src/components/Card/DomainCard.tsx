@@ -33,11 +33,11 @@ const DomainCard: React.FC<DomainCardProps & { level: number }> = ({ name, tld, 
         </div>
         <Image src="/img/zns-logo.png" alt="ZNS logo" width={40} height={40} className="absolute left-2 top-2" />
       </div>
-      <Flex direction="flex-col">
-        <p className="text-start font-500 bg-primary_gradient_text text-transparent bg-clip-text text-[34px] tablet:text-[26px]">
+      <Flex direction="flex-col" className="mt-3">
+        <p className="text-start font-900 bg-primary_gradient_text text-transparent bg-clip-text text-[40px] tablet:text-[35px]">
           {name}
         </p>
-        <Flex justifyContent="justify-between">
+        <Flex justifyContent="justify-between" align="items-end">
           <p className="text-[28px] tablet:text-[24px] font-700">.{tld}</p>
           <QRCode
             size={60}

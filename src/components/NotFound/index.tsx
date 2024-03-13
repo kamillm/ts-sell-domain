@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Flex } from "..";
-import { MdOutlineSearch, MdOutlineShoppingCart } from "react-icons/md";
+import { MdOutlineSearch, MdErrorOutline } from "react-icons/md";
 import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/router";
 import { Autocomplete } from "@mui/material";
@@ -64,14 +64,14 @@ const NotFound: React.FC<{ label: string }> = ({ label }) => {
       <Flex
         direction="flex-col"
         align="items-center"
-        className="w-full py-[20px] small:px-[60px] bg-black/40 rounded-2xl border border-main-200"
+        className="w-full py-[20px] small:px-[20px] bg-black/40 rounded-2xl border border-main-200"
       >
         <Flex
           align="items-center"
           className="text-[36px] small:text-[20px] font-500 space-x-[15px] tablet:justify-center"
         >
-          <MdOutlineShoppingCart />
-          <p className="uppercase font-space_grotesk">{label}</p>
+          <MdErrorOutline className="small:hidden" />
+          <p className="text-center uppercase font-space_grotesk">{label}</p>
         </Flex>
         <p className="text-primary text-[16px] font-400 text-center">{"Please choose your domain"}</p>
       </Flex>

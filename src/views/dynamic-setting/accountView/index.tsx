@@ -2,8 +2,13 @@ import React from "react";
 import { Flex, GradientText, Image } from "@/components";
 import { USER_SOCIAL_LINKS } from "@/utils/constants";
 import { MdOutlineVerified } from "react-icons/md";
+import toast, { Toaster } from "react-hot-toast";
 
 const AccountView: React.FC<{ domain: any }> = ({ domain }) => {
+  const onHandle = () => {
+    toast.success("Updated information");
+  };
+
   return (
     <div className="w-full">
       <div className="uppercase text-[36px] font-500 font-space_grotesk border-b-2 border-primary/30 pb-3  small:text-center">
@@ -32,11 +37,15 @@ const AccountView: React.FC<{ domain: any }> = ({ domain }) => {
         ))}
 
         <div className="pt-10  w-[141px] tablet:w-full">
-          <button className="w-full bg-primary text-[16px] font-500 px-[38px] py-[11px] rounded-3xl text-black ">
+          <button
+            onClick={onHandle}
+            className="w-full bg-primary text-[16px] font-500 px-[38px] py-[11px] rounded-3xl text-black"
+          >
             Update
           </button>
         </div>
       </Flex>
+      <Toaster />
     </div>
   );
 };

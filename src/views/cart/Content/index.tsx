@@ -57,21 +57,21 @@ const PeriodCounter = ({ index, item }: { index: number; item: any }) => {
         "tablet:flex-col tablet:space-y-2"
       )}
     >
-      <p className="text-[20px] small:flex-1 font-500 w-[150px] truncate">
+      <p className="text-[20px] small:flex-1 font-500 w-[150px] break-all tablet:w-full desktop:w-[300px] tablet:text-center">
         {item.name}.{TLD}
       </p>
       <span className="small:hidden text-verified text-[16px] font-400">
         {/* {item.status ? "Available" : "Not Available"} */}
         Available
       </span>
-      <p className="text-[16px] text-primary font-500 small:hidden">{item.price + " " + symbol}</p>
+      <p className="text-[16px] text-primary font-500 small:hidden">{item.price ? item.price + " " + symbol : "N/A"}</p>
       <Flex className="space-x-[10px]">
         <Flex className="space-x-5">
           <Flex className="space-x-3" align="items-center">
             <button onClick={() => handlePeriod(item.name, false)}>
               <LuMinus className="w-[12px] h-[12px]" />
             </button>
-            <div className="p-1 rounded-lg px-6 text-[14px] font-500">{`${item.year} Year`}</div>
+            <div className="p-1 rounded-lg text-[14px] font-500">{`${item.year} Year`}</div>
             <button onClick={() => handlePeriod(item.name, true)}>
               <LuPlus className="w-[12px] h-[12px]" />
             </button>

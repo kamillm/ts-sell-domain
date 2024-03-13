@@ -14,30 +14,31 @@ const CartView: React.FC = () => {
 
   return (
     <Flex direction="flex-col" align="items-center" className="pt-[200px]">
-      <div className="uppercase text-[60px] font-500 text-center small:text-[36px]">
-        <GradientText>Your Cart</GradientText>
-      </div>
-
       {JSON.parse(localstorage).length === 0 ? (
         <NotFound label="Your cart is empty" />
       ) : (
-        <Flex direction="flex-row" justifyContent="justify-between" className="space-x-[30px] pt-[100px] w-full">
-          <Flex direction="flex-col" className="flex-1 space-y-[30px] desktop:w-full">
-            <CountSection />
-            <ContentSection />
-            <Flex justifyContent="justify-end" className="hidden desktop:flex">
-              <button
-                onClick={() => setShowModal(true)}
-                className="bg-primary text-[18px] font-600 p-2 rounded-xl w-[180px] text-black"
-              >
-                Confirm
-              </button>
-            </Flex>
-          </Flex>
-          <div className="w-[425px] desktop:hidden">
-            <CheckoutSection />
+        <>
+          <div className="uppercase text-[60px] font-500 text-center small:text-[36px]">
+            <GradientText>Your Cart</GradientText>
           </div>
-        </Flex>
+          <Flex direction="flex-row" justifyContent="justify-between" className="space-x-[30px] pt-[100px] w-full">
+            <Flex direction="flex-col" className="flex-1 space-y-[30px] desktop:w-full">
+              <CountSection />
+              <ContentSection />
+              <Flex justifyContent="justify-end" className="hidden desktop:flex">
+                <button
+                  onClick={() => setShowModal(true)}
+                  className="bg-primary text-[18px] font-600 p-2 rounded-xl w-[180px] text-black"
+                >
+                  Confirm
+                </button>
+              </Flex>
+            </Flex>
+            <div className="w-[425px] desktop:hidden">
+              <CheckoutSection />
+            </div>
+          </Flex>
+        </>
       )}
 
       <CheckoutModal setShowModal={setShowModal} showModal={showModal} />

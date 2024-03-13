@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { Page } from "@/components/Page";
 import { useRouter } from "next/router";
 import toast from "react-hot-toast";
+import NotFound from "@/components/NotFound";
 // import { useDomainDetails } from "@/utils/web3/useDomainDetails";
 
 const Setting: NextPage = () => {
@@ -139,9 +140,12 @@ const Setting: NextPage = () => {
             <TabView domainName={domainDetails?.domainName} domain={domainDetails.domain} user={userDetails.user} />
           </>
         ) : (
-          <p className="w-full text-main-300 h-[50vh] pt-[100px] inline-flex items-center justify-center text-[50px] uppercase">
-            No profile
-          </p>
+          <div className="py-[200px]">
+            <NotFound label="You don't have profile" />
+          </div>
+          // <p className="w-full text-main-300 h-[50vh] pt-[100px] inline-flex items-center justify-center text-[50px] uppercase">
+          //   No profile
+          // </p>
         )}
       </Container>
     </Page>
