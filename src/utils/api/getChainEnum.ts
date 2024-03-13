@@ -18,6 +18,9 @@ export default function getChainEnum(chainName: string) {
     case "BASE":
       chain = Chain.BASE;
       break;
+    case "POLY":
+      chain = Chain.POLY;
+      break;
     default:
       throw new Error("Invalid Chain / getChainEnum: Chain not found.");
   }
