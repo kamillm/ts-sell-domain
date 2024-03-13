@@ -10,7 +10,6 @@ import { useGetChainName } from "@/utils/web3/useGetChainName";
 import { useAccount } from "wagmi";
 import { useDomainDetails } from "@/utils/web3/useDomainDetails";
 
-
 const MyProfile: NextPage = () => {
   const router = useRouter();
   // const slug = router.query.domain;
@@ -38,9 +37,6 @@ const MyProfile: NextPage = () => {
       setIsOwner(true);
     }
   }, [domain, address]);
-
-  const chainName = useGetChainName();
-  const { address } = useAccount();
 
   let walletAddress = address as string;
   let chain = chainName as string;
