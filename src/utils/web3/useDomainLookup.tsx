@@ -1,5 +1,6 @@
 import { useReadContracts } from "wagmi";
-import { baseAbi } from "./baseAbi";
+// import { baseAbi } from "./baseAbi";
+import { polyAbi } from "./polyAbi";
 import { useContractAddressByChain } from "./useContractAddressByChain";
 import { useUserLookup } from "@/utils/web3/useUserLookup";
 
@@ -13,7 +14,7 @@ export const useDomainLookup = () => {
   const contractCallConfigs: any = allOwnedDomains?.map(
     (domainId) =>
       ({
-        abi: baseAbi,
+        abi: polyAbi,
         address: contractAddress as `0x${string}`,
         functionName: "registryLookupById",
         args: [domainId]
@@ -26,7 +27,7 @@ export const useDomainLookup = () => {
   const contractCallUris: any = allOwnedDomains?.map(
     (domainId) =>
       ({
-        abi: baseAbi,
+        abi: polyAbi,
         address: contractAddress as `0x${string}`,
         functionName: "tokenURI",
         args: [domainId]

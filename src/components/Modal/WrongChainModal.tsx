@@ -4,7 +4,6 @@ import { Flex } from "@/components";
 
 export default function WrongChainModal() {
   const { switchChain } = useSwitchChain();
-
   return (
     <div
       className={
@@ -15,18 +14,18 @@ export default function WrongChainModal() {
         <Flex direction="flex-col" justifyContent="justify-between" className="space-y-5">
           <div className="text-left">
             In Our Testing Phase We Only Support <br />
-            <span className="text-sky-500">Base Sepolia </span>
+            <span className="text-purple-600">Polygon Mumbai </span>
+
             Network
           </div>
           <div className="text-left">
-            {" "}
             It Looks Like You Are Connected To An <div className="text-danger">Unsupported Network</div>
           </div>
           <button
-            onClick={() => switchChain({ chainId: 84532 })}
+            onClick={() => switchChain({ chainId: 80001 })}
             className="w-full bg-primary text-black rounded-3xl p-2 text-[20px] small:text-[16px] font-400"
           >
-            Switch To Base Sepolia
+            Switch To Polygon Mumbai
           </button>
         </Flex>
       </div>

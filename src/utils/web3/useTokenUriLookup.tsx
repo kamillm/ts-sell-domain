@@ -3,13 +3,19 @@ import { polyAbi } from "./polyAbi";
 import { useReadContract } from "wagmi";
 import { useContractAddressByChain } from "./useContractAddressByChain";
 
-export const useDomainDetails = (domainName: string) => {
+export const useTokenUriLookup = (domainName: string) => {
   const contractAddress = useContractAddressByChain();
-  const { data: domainData, queryKey: domainQuery } = useReadContract({
+  const { data: domainId } = useReadContract({
     abi: polyAbi,
     address: contractAddress as `0x${string}`,
-    functionName: "registryLookupByName",
+    functionName: "domainLookup",
     args: [domainName]
   });
-  return { domainData, domainQuery };
+  const { data: domainUri } = useReadContract({
+    abi: polyAbi,
+    address: contractAddress as `0x${string}`,
+    functionName: "tokenURI",
+    args: [domainId]
+  });
+  return { domainUri };
 };
